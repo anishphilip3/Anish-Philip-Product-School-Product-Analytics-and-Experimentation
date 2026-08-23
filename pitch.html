@@ -1,152 +1,425 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FinWise, A Product-Led Growth Strategy, Pitch</title>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FinWise — A Product-Led Growth Strategy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Lato:wght@400;700&family=Poppins:wght@700;800;900&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&display=swap');@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap');
-:root{--bg:#07162C;--fg:#ffffff;--muted:#ffffff;--accent:#60a5fa;--accent2:#79c0ff;--line:rgba(255,255,255,0.08);--card:rgba(255,255,255,0.035)}*{box-sizing:border-box}html,body{margin:0;padding:0}body{background:var(--bg);color:var(--fg);font-family:'Lato',sans-serif;overflow-x:hidden;position:relative}body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(96,165,250,0.10),transparent 60%),radial-gradient(ellipse 60% 40% at 90% 90%,rgba(124,140,255,0.08),transparent 60%);pointer-events:none;z-index:0}main{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:80px 40px 0}h1,h2,h3{font-family:'Poppins',sans-serif;margin:0}a{color:var(--accent);text-decoration:none}code{font-family:'IBM Plex Mono',monospace}
-.hero{text-align:center;margin-bottom:90px}.hero .badge{display:inline-block;font-family:'Poppins',sans-serif;font-size:10.5px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;color:var(--accent2);background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.30);border-radius:999px;padding:6px 14px;margin-bottom:24px}.hero h1{font-size:clamp(38px,6.5vw,72px);font-weight:900;line-height:1.04;margin:0 0 20px;background:linear-gradient(135deg,#fff,#79c0ff);-webkit-background-clip:text;background-clip:text;color:transparent}.hero .lead{font-size:clamp(17px,2.2vw,24px);color:#ffffff;max-width:760px;margin:0 auto 26px;line-height:1.5}.hero .meta{font-family:'Poppins',sans-serif;font-size:13px;color:var(--muted);margin:0 0 26px}.ctas{display:inline-flex;gap:12px;flex-wrap:wrap;justify-content:center}.cta{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#07162C;padding:12px 26px;border-radius:999px;font-family:'Poppins',sans-serif;font-weight:800;font-size:14px}.cta.alt{background:transparent;border:1px solid var(--line);color:var(--fg)}
-section.block{margin-bottom:84px}.eyebrow{font-family:'Poppins',sans-serif;font-size:11px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;color:var(--accent2);margin-bottom:10px}.block h2{font-size:clamp(28px,4vw,42px);font-weight:800;margin:0 0 22px;color:#fff}.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}.card{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:14px;padding:20px 22px}.card .c-label{font-family:'Poppins',sans-serif;font-size:10.5px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:var(--accent2);margin-bottom:8px}.card h3{font-size:17px;font-weight:800;color:#fff;margin:0 0 10px}.card .c-body{font-size:13.5px;color:#ffffff;line-height:1.6}.card .c-body em{color:var(--muted)}.verdict{display:inline-block;font-family:'Poppins',sans-serif;font-weight:900;letter-spacing:.04em;border-radius:999px;padding:8px 20px;font-size:15px;margin-bottom:16px}.verdict.tbd{background:rgba(96,165,250,0.15);color:#79c0ff;border:1px solid rgba(96,165,250,0.4)}footer{text-align:center;color:var(--muted);font-size:12px;padding:40px 20px;border-top:1px solid var(--line);margin-top:40px}
-</style></head><body><main>
+:root{--bg:#07162C;--fg:#e8eefb;--muted:#ffffff;--accent:#60a5fa;--sky:#38bdf8;--teal:#34d399;--amber:#fbbf24;--rose:#fb7185;--violet:#a78bfa;--mint:#6ee7b7;--line:rgba(255,255,255,0.08);--card:rgba(255,255,255,0.035);--card-border:rgba(255,255,255,0.08);--shadow:0 4px 24px rgba(0,0,0,0.25);--sans:'Lato',sans-serif;--heading:'Poppins',sans-serif;--mono:'IBM Plex Mono',monospace}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-snap-type:y mandatory;scroll-behavior:smooth;overflow-x:hidden}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--heading);margin:0;line-height:1.1}
+a{color:var(--accent);text-decoration:none}
 
-<section class="hero">
-  <span class="badge">Product Experimentation Certification</span>
-  <h1>FinWise, A Product-Led Growth Strategy</h1>
-  <p class="lead">Turning FinWise's flat 2% trial conversion into a compounding, product-led growth motion — from diagnosis to experiment to pricing recommendation.</p>
-  <p class="meta">Anish Philip · Product Experimentation · Jun 2026</p>
-  <div class="ctas">
-    <a class="cta" href="https://github.com/anishphilip3/Anish-Philip-Product-School-Product-Analytics-and-Experimentation" target="_blank" rel="noopener">View deliverables &rarr;</a>
-    <a class="cta alt" href="https://github.com/anishphilip3/Anish-Philip-Product-School-Product-Analytics-and-Experimentation/blob/main/02-solution/onboarding-prototype.html" target="_blank" rel="noopener">&#x1F517; Onboarding prototype</a>
-  </div>
-</section>
+/* progress bar */
+#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--sky),var(--teal));z-index:100;width:0;transition:width .15s ease}
 
-<section class="block">
-  <div class="eyebrow">Strategy &middot; M1</div>
-  <h2>The growth bet</h2>
-  <div class="grid">
-    <div class="card">
-      <div class="c-label">Hypothesis</div>
-      <h3>The core belief</h3>
-      <div class="c-body">If we add an in-trial milestone guiding users to FinWise's core value action (connect data → first modeling output), then trial→paid conversion rises ~1–2pp (from 2% toward 3–4%), because a 2% rate means most users never hit the Aha moment before the paywall.</div>
-    </div>
-    <div class="card">
-      <div class="c-label">The bet</div>
-      <h3>Collaboration growth loop</h3>
-      <div class="c-body">Bet on activation and collaboration, not acquisition. Make FinWise multiplayer: owner invites accountant → they manage books together → more seats join → FinWise becomes system of record → upgrades → each collaborator seeds a new workspace. The loop restarts with a bigger base.</div>
-    </div>
-  </div>
-</section>
+/* dot nav */
+.dot-nav{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:90;display:flex;flex-direction:column;gap:10px;align-items:center}
+.dot-nav .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.2);cursor:pointer;transition:.2s;border:none;padding:0}
+.dot-nav .dot.on{background:var(--accent);width:10px;height:10px;box-shadow:0 0 8px rgba(96,165,250,0.5)}
+.dot-nav .dot:hover{background:rgba(255,255,255,0.5)}
 
-<section class="block">
-  <div class="eyebrow">Activation &middot; M2</div>
-  <h2>The Aha moment</h2>
-  <div class="grid">
-    <div class="card">
-      <div class="c-label">Aha moment</div>
-      <h3>When value lands</h3>
-      <div class="c-body">A user connects their data and sees their first personalized financial snapshot — one plain-language insight about their money. Not a feature: a realization. It predicts retention because financial visibility is a recurring need.</div>
-    </div>
-    <div class="card">
-      <div class="c-label">The solution</div>
-      <h3>Sample-data on-ramp</h3>
-      <div class="c-body">Only ~39% of trial users ever import data. We added an "Explore with sample data" path so users reach a modeling output immediately — value first, asks later. Five screens, three to value: Welcome → Connect (bank or sample) → Snapshot ✨ (the Aha) → Invite → Success.</div>
-    </div>
-  </div>
-</section>
+/* sections */
+section{min-height:100vh;scroll-snap-align:start;display:grid;place-items:center;padding:60px 40px;position:relative;overflow:hidden}
+section::before{content:'';position:absolute;inset:0;pointer-events:none}
 
-<section class="block">
-  <div class="eyebrow">Retention &middot; M3</div>
-  <h2>The habit mechanic</h2>
-  <div class="grid">
-    <div class="card">
-      <div class="c-label">Mechanic</div>
-      <h3>"Money Momentum" — forgiving weekly streak</h3>
-      <div class="c-body">A weekly habit loop: open FinWise → review snapshot → act on ≥1 insight. Rewards are deeper financial reports that unlock at milestones (4-week: Monthly Trend, 12-week: Quarterly Forecast, 52-week: Year in Review). A grace week auto-banks monthly — miss a week, no reset, no guilt. Matches the weekly cadence of financial activity. Rejected leaderboards (privacy) and points (extrinsic decay).</div>
-    </div>
-  </div>
-</section>
+/* eyebrow */
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px;display:inline-block}
 
-<section class="block">
-  <div class="eyebrow">Metrics &middot; M4</div>
-  <h2>The signals</h2>
-  <div class="grid">
-    <div class="card">
-      <div class="c-label">Leading</div>
-      <h3>Import Usage %</h3>
-      <div class="c-body">Stuck at a ~40% ceiling — the gateway to the North Star. This is the dial the sample-data on-ramp targets. Modeling Usage % (the Aha metric) is already growing organically.</div>
-    </div>
-    <div class="card">
-      <div class="c-label">Lagging</div>
-      <h3>Trial→Paid conversion; 1-year retention</h3>
-      <div class="c-body">Conversion flat at ~2% for 13 months. 1-year retention at 40% (60% churn). NDR/ARR growth earned by lifting activation → conversion + retention.</div>
-    </div>
-    <div class="card">
-      <div class="c-label">Data pattern</div>
-      <h3>The 2% is structural</h3>
-      <div class="c-body">Modeling Usage nearly doubled (index 100 → 187) while conversion never moved (r ≈ 0.24, not significant). The 2% ceiling is a pricing/paywall problem, not an activation-depth problem. This split the strategy into two experiments: grow the pool (M5) and break the ceiling (M6).</div>
-    </div>
-  </div>
-</section>
+/* card */
+.card{background:var(--card);border:1px solid var(--card-border);border-radius:14px;padding:24px 26px;position:relative;backdrop-filter:blur(8px)}
+.card h3{font-size:18px;font-weight:800;margin-bottom:10px;color:#fff}
+.card p{font-size:14px;color:var(--fg);line-height:1.65;opacity:.9}
+.card .label{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px;display:block}
 
-<section class="block">
-  <div class="eyebrow">Experiment &middot; M5</div>
-  <h2>The validation</h2>
-  <div class="grid">
-    <div class="card">
-      <div class="c-label">Method</div>
-      <h3>A/B test — 50/50 split</h3>
-      <div class="c-body">Clean per-user randomization. Chosen over MAB (no scarce-conversion pressure), Holdout (signal appears in first session), Geo-Test (no marketplace effects), and Switchback (no temporal carry-over).</div>
-    </div>
-    <div class="card">
-      <div class="c-label">Hypothesis</div>
-      <h3>Sample-data on-ramp lifts activation</h3>
-      <div class="c-body">If we add an "Explore with sample data" path on the Get-Started screen, then more trial users reach their first modeling output. Primary metric: % reaching first modeling output within 7 days. Success: significant (p < 0.05), ≥5pp absolute lift.</div>
-    </div>
-    <div class="card">
-      <div class="c-label">Guardrails</div>
-      <h3>Conversion + read date</h3>
-      <div class="c-body">Guardrail: trial→paid conversion must not significantly drop. Read date: ~6 weeks, pre-set — no peeking. If successful: ship → Holdout → pricing experiment (M6). If not: instrument Get-Started to find the true drop-off.</div>
-    </div>
-  </div>
-</section>
+/* pill button */
+.pill{display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:999px;font-family:var(--heading);font-weight:800;font-size:13px;text-decoration:none;transition:.2s;cursor:pointer;border:none}
+.pill:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(96,165,250,0.3)}
+.pill.primary{background:var(--accent);color:var(--bg)}
+.pill.outline{background:transparent;border:1px solid var(--line);color:var(--fg)}
+.pill.outline:hover{border-color:var(--accent)}
 
-<section class="block">
-  <div class="eyebrow">Monetization &middot; M6</div>
-  <h2>The model</h2>
-  <div class="verdict tbd">Stage 2 Revenue Expansion &middot; Freemium (Reverse-Trial)</div>
-  <div class="grid">
-    <div class="card">
-      <div class="c-label">Recommendation</div>
-      <h3>Reverse-trial freemium</h3>
-      <div class="c-body">Move from a time-limited trial to a reverse-trial freemium model. Day 1–14: full premium access. Day 15+: permanent free tier (import + basic modeling). The paywall sits at the feature boundary, not a time boundary — users upgrade because they need more. Targets Get-Started Import Usage % (stuck at ~40%).</div>
-    </div>
-    <div class="card">
-      <div class="c-label">Model signal</div>
-      <h3>Cluster at the boundary</h3>
-      <div class="c-body">Conversions should cluster tightly at the paywall boundary (where users outgrow basic modeling), not scatter. ARPU must not decline. Free-tier users must show higher Import Usage % than current trial users. Cohort-based test, read at 8 weeks.</div>
-    </div>
-  </div>
-</section>
+/* chip */
+.chip{display:inline-block;font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:5px 14px;border-radius:999px;border:1px solid}
 
-<section class="block">
-  <div class="eyebrow">Reflection &middot; The Story</div>
-  <h2>What I learned</h2>
-  <div class="grid">
-    <div class="card">
-      <div class="c-label">Friction</div>
-      <h3>The hard part</h3>
-      <div class="c-body">I kept reaching for pricing as the fix. The data forced me to see it was an activation problem first — the connect-a-bank wall was the real friction. Pricing came after, and only because the data proved the 2% was structural.</div>
-    </div>
-    <div class="card">
-      <div class="c-label">Aha</div>
-      <h3>The moment it clicked</h3>
-      <div class="c-body">Realizing the 2% conversion number was a symptom, not the disease. When modeling usage nearly doubled and conversion didn't budge, the funnel diagnosis changed my entire strategy — from "fix activation depth" to "fix the paywall."</div>
-    </div>
-    <div class="card">
-      <div class="c-label">Takeaways</div>
-      <h3>What stuck</h3>
-      <div class="c-body">Experimentation is a system, not a tactic. Stage before method. Model follows value. The read date set up front, and knowing when NOT to change the price, were the lessons that stuck. Every module handed the next its reason to exist.</div>
+/* grid */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px}
+
+/* wrapper */
+.wrap{max-width:1000px;width:100%;text-align:left}
+
+/* browser frame */
+.browser-frame{border:1px solid var(--card-border);border-radius:12px;overflow:hidden;background:#0d1f3c;box-shadow:var(--shadow)}
+.browser-frame .bar{height:32px;background:rgba(255,255,255,0.04);display:flex;align-items:center;gap:6px;padding:0 12px}
+.browser-frame .bar span{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.12)}
+.browser-frame .bar span:first-child{background:#fb7185}
+.browser-frame .bar span:nth-child(2){background:#fbbf24}
+.browser-frame .bar span:nth-child(3){background:#34d399}
+.browser-frame .body{padding:24px;text-align:center;min-height:160px;display:grid;place-items:center}
+.browser-frame .body .placeholder{font-family:var(--mono);font-size:12px;color:rgba(255,255,255,0.35);letter-spacing:.04em}
+
+/* callout */
+.callout{border-left:4px solid var(--teal);background:rgba(52,211,153,0.06);border-radius:0 12px 12px 0;padding:20px 24px;font-size:15px;line-height:1.65;color:var(--fg)}
+.callout em{color:var(--teal);font-style:normal;font-weight:700}
+
+/* stat card */
+.stat-card{text-align:center;padding:20px 16px}
+.stat-card .num{font-family:var(--heading);font-size:clamp(36px,5vw,52px);font-weight:900;line-height:1}
+.stat-card .lab{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,0.5);margin-top:8px}
+
+/* brief row */
+.brief-row{display:grid;grid-template-columns:140px 1fr;gap:16px;padding:16px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.brief-row:last-child{border-bottom:none}
+.brief-row .k{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase}
+.brief-row .v{font-size:14px;line-height:1.6;opacity:.9}
+
+/* responsive */
+@media(max-width:768px){
+  .g2,.g3{grid-template-columns:1fr}
+  section{padding:40px 20px}
+  .wrap{max-width:100%}
+  .brief-row{grid-template-columns:1fr;gap:6px}
+  .dot-nav{right:10px;gap:8px}
+  .dot-nav .dot{width:6px;height:6px}
+}
+
+/* hero glow */
+.hero-glow{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(96,165,250,0.12),transparent 70%);top:-200px;right:-100px;pointer-events:none}
+.hero-glow2{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(167,139,250,0.08),transparent 70%);bottom:-100px;left:-100px;pointer-events:none}
+
+/* slide color keys */
+.s-cover .eyebrow{color:var(--sky)}
+.s-bet .card{border-top:3px solid var(--accent)}.s-bet .eyebrow{color:var(--accent)}
+.s-solution .card{border-top:3px solid var(--teal)}.s-solution .eyebrow{color:var(--teal)}
+.s-mechanic .card{border-top:3px solid var(--amber)}.s-mechanic .eyebrow{color:var(--amber)}
+.s-signals .card{border-top:3px solid var(--rose)}.s-signals .eyebrow{color:var(--rose)}
+.s-validation .card{border-top:3px solid var(--violet)}.s-validation .eyebrow{color:var(--violet)}
+.s-model .card{border-top:3px solid var(--sky)}.s-model .eyebrow{color:var(--sky)}
+.s-story .card{border-top:3px solid var(--mint)}.s-story .eyebrow{color:var(--mint)}
+
+/* subtle section bg variations */
+.s-bet::before{background:radial-gradient(ellipse 70% 50% at 80% 20%,rgba(96,165,250,0.04),transparent)}
+.s-solution::before{background:radial-gradient(ellipse 60% 50% at 20% 80%,rgba(52,211,153,0.04),transparent)}
+.s-mechanic::before{background:radial-gradient(ellipse 60% 50% at 80% 80%,rgba(251,191,36,0.04),transparent)}
+.s-signals::before{background:radial-gradient(ellipse 60% 50% at 50% 20%,rgba(251,113,133,0.04),transparent)}
+.s-validation::before{background:radial-gradient(ellipse 60% 50% at 20% 50%,rgba(167,139,250,0.04),transparent)}
+.s-model::before{background:radial-gradient(ellipse 60% 50% at 80% 50%,rgba(56,189,248,0.04),transparent)}
+.s-story::before{background:radial-gradient(ellipse 60% 50% at 50% 80%,rgba(110,231,183,0.04),transparent)}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav class="dot-nav" id="dotNav"></nav>
+
+<!-- ======= COVER ======= -->
+<section class="s-cover" id="s0">
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="wrap" style="text-align:center">
+    <div class="chip" style="color:var(--sky);border-color:rgba(56,189,248,0.4);background:rgba(56,189,248,0.08);margin-bottom:28px">Product Experimentation Certification</div>
+    <h1 style="font-size:clamp(40px,7vw,76px);font-weight:900;margin-bottom:20px;background:linear-gradient(135deg,#fff 30%,#79c0ff 100%);-webkit-background-clip:text;background-clip:text;color:transparent;line-height:1.04">FinWise, A Product-Led<br>Growth Strategy</h1>
+    <p style="font-size:clamp(17px,2.2vw,22px);color:var(--fg);max-width:700px;margin:0 auto 24px;opacity:.85;line-height:1.55">Turning FinWise's flat 2% trial conversion into a compounding, product-led growth motion — from diagnosis to experiment to pricing recommendation.</p>
+    <p style="font-family:var(--mono);font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:30px">Anish Philip · Product Experimentation · Aug 2026</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a class="pill primary" href="https://github.com/anishphilip3/Anish-Philip-Product-School-Product-Analytics-and-Experimentation" target="_blank" rel="noopener">View repo →</a>
+      <a class="pill outline" href="#s1">Start the pitch ↓</a>
     </div>
   </div>
 </section>
 
-<footer>Anish Philip &middot; Product Experimentation &middot; Jun 2026 &middot; Certification submission</footer>
-</main></body></html>
+<!-- ======= SLIDE 5 — THE BET ======= -->
+<section class="s-bet" id="s1">
+  <div class="wrap">
+    <span class="eyebrow">Strategy · M1</span>
+    <h2 style="font-size:clamp(32px,5vw,48px);font-weight:900;margin-bottom:28px">The growth bet</h2>
+    <div class="g2">
+      <div class="card">
+        <span class="label" style="color:var(--accent)">Hypothesis</span>
+        <h3>The core belief</h3>
+        <p>If we add an in-trial milestone guiding users to FinWise's core value action (connect data → first modelling output), then trial→paid conversion rises ~1–2pp (from 2% toward 3–4%), because a 2% rate means most users never hit the Aha moment before the paywall.</p>
+      </div>
+      <div class="card">
+        <span class="label" style="color:var(--accent)">The bet</span>
+        <h3>Collaboration growth loop</h3>
+        <p>Bet on a Collaboration growth loop, not acquisition. Make FinWise multiplayer: owner invites accountant → they manage books together → more seats join → FinWise becomes the system of record → upgrades → each collaborator seeds a new workspace. Deliberately NOT doing Content or Referral loops — those feed a top of funnel that already doesn't convert.</p>
+      </div>
+    </div>
+    <div style="margin-top:22px">
+      <div class="browser-frame">
+        <div class="bar"><span></span><span></span><span></span></div>
+        <div class="body">
+          <div>
+            <p class="placeholder">Growth-Loop Visualization — Interactive Presentation</p>
+            <a class="pill primary" href="https://anishphilip3.github.io/Anish-Philip-Product-School-Product-Analytics-and-Experimentation/01-bet/the-bet-presentation.html" target="_blank" rel="noopener" style="margin-top:14px">Open growth-loop deck →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= SLIDE 6 — THE SOLUTION ======= -->
+<section class="s-solution" id="s2">
+  <div class="wrap">
+    <span class="eyebrow">Activation · M2</span>
+    <h2 style="font-size:clamp(32px,5vw,48px);font-weight:900;margin-bottom:28px">The Aha moment</h2>
+    <div class="callout" style="margin-bottom:24px">
+      A user <em>connects their data</em> and sees their first personalized financial snapshot — one plain-language insight about their money. Not a feature: a <em>realization</em>. It predicts retention because financial visibility is a recurring need.
+    </div>
+    <div class="g2">
+      <div class="card" style="display:flex;flex-direction:column;justify-content:space-between">
+        <div>
+          <span class="label" style="color:var(--teal)">Onboarding prototype</span>
+          <h3>Sample-data on-ramp</h3>
+          <p>Five screens, three to value: Welcome → Connect (bank <strong>or</strong> sample data) → Snapshot ✨ (the Aha) → Invite → Success. Value first, asks later — one job per screen.</p>
+        </div>
+        <div style="margin-top:16px">
+          <a class="pill primary" href="https://anishphilip3.github.io/Anish-Philip-Product-School-Product-Analytics-and-Experimentation/02-solution/onboarding-prototype.html" target="_blank" rel="noopener" style="background:var(--teal);color:var(--bg)">View prototype →</a>
+        </div>
+      </div>
+      <div class="browser-frame">
+        <div class="bar"><span></span><span></span><span></span></div>
+        <div class="body">
+          <div>
+            <p class="placeholder" style="margin-bottom:12px">Onboarding Flow Preview</p>
+            <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+              <span class="chip" style="color:var(--teal);border-color:rgba(52,211,153,0.4);font-size:9px">1 · Welcome</span>
+              <span style="color:rgba(255,255,255,0.2)">→</span>
+              <span class="chip" style="color:var(--teal);border-color:rgba(52,211,153,0.4);font-size:9px">2 · Connect</span>
+              <span style="color:rgba(255,255,255,0.2)">→</span>
+              <span class="chip" style="color:var(--bg);border-color:var(--teal);background:var(--teal);font-size:9px">3 · Aha ✨</span>
+              <span style="color:rgba(255,255,255,0.2)">→</span>
+              <span class="chip" style="color:var(--teal);border-color:rgba(52,211,153,0.4);font-size:9px">4 · Invite</span>
+              <span style="color:rgba(255,255,255,0.2)">→</span>
+              <span class="chip" style="color:var(--teal);border-color:rgba(52,211,153,0.4);font-size:9px">5 · Success</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= SLIDE 7 — THE MECHANIC ======= -->
+<section class="s-mechanic" id="s3">
+  <div class="wrap">
+    <span class="eyebrow">Retention · M3</span>
+    <h2 style="font-size:clamp(32px,5vw,48px);font-weight:900;margin-bottom:28px">The habit mechanic</h2>
+    <div class="g2">
+      <div class="card">
+        <span class="label" style="color:var(--amber)">Mechanic</span>
+        <h3>"Money Momentum"</h3>
+        <p style="margin-bottom:14px"><strong>Trigger:</strong> weekly notification. <strong>Action:</strong> open FinWise → review snapshot → act on ≥1 insight. <strong>Reward:</strong> deeper financial reports that unlock at milestones (4wk: Monthly Trend, 12wk: Quarterly Forecast, 52wk: Year in Review).</p>
+        <p>A grace week auto-banks monthly — miss a week, no reset. Rejected leaderboards (privacy violation) and points (extrinsic decay). Works via <strong>loss aversion</strong>, <strong>owner identity</strong>, and <strong>goal gradient</strong>.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <div class="card" style="flex:1">
+          <span class="label" style="color:var(--amber)">Why forgiving</span>
+          <h3>No punishing streaks</h3>
+          <p>Hard streaks cause anxiety and rage-quits. A finance tool using that pattern feels manipulative. Grace weeks protect months of built habit.</p>
+        </div>
+        <div class="browser-frame">
+          <div class="bar"><span></span><span></span><span></span></div>
+          <div class="body" style="min-height:80px">
+            <div>
+              <p class="placeholder">Wireframe Preview</p>
+              <a class="pill primary" href="https://anishphilip3.github.io/Anish-Philip-Product-School-Product-Analytics-and-Experimentation/03-mechanic/gamification-mechanic.html" target="_blank" rel="noopener" style="margin-top:10px;background:var(--amber);color:var(--bg)">View wireframe →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= SLIDE 8 — THE SIGNALS ======= -->
+<section class="s-signals" id="s4">
+  <div class="wrap">
+    <span class="eyebrow">Metrics · M4</span>
+    <h2 style="font-size:clamp(32px,5vw,48px);font-weight:900;margin-bottom:28px">The signals</h2>
+    <div class="g2" style="margin-bottom:22px">
+      <div class="card">
+        <span class="label" style="color:var(--rose)">Leading indicators</span>
+        <h3>What we move</h3>
+        <p><strong>Import Usage %</strong> (Get-Started) — stuck at a ~40% ceiling, the gateway to the North Star. This is the dial the sample-data on-ramp targets.</p>
+        <p style="margin-top:8px"><strong>Modelling Usage %</strong> — the Aha metric, already growing organically.</p>
+      </div>
+      <div class="card">
+        <span class="label" style="color:var(--rose)">Lagging indicators</span>
+        <h3>What we prove</h3>
+        <p><strong>Trial→Paid conversion</strong> (~2%, flat 13 months)</p>
+        <p style="margin-top:6px"><strong>1-year retention</strong> (40%, 60% churn)</p>
+        <p style="margin-top:6px"><strong>NDR / ARR growth</strong></p>
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid var(--rose);border-left:4px solid var(--amber);background:linear-gradient(135deg,rgba(251,113,133,0.04),rgba(251,191,36,0.04));box-shadow:var(--shadow)">
+      <span class="label" style="color:var(--amber)">The data pattern</span>
+      <h3 style="font-size:20px;margin-bottom:12px">The 2% ceiling is structural</h3>
+      <p style="font-size:15px;opacity:.95">Modelling Usage nearly doubled (index 100 → 187) while conversion never moved (r ≈ 0.24, not significant). The 2% ceiling is structural — a pricing/paywall problem, not activation-depth. This split the strategy: <strong>(A)</strong> lift Import Usage to grow the pool, <strong>(B)</strong> restructure pricing to break the ceiling.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======= SLIDE 9 — THE VALIDATION ======= -->
+<section class="s-validation" id="s5">
+  <div class="wrap">
+    <span class="eyebrow">Experiment · M5</span>
+    <h2 style="font-size:clamp(32px,5vw,48px);font-weight:900;margin-bottom:28px">The validation</h2>
+    <div class="card" style="border-top:3px solid var(--violet);box-shadow:var(--shadow)">
+      <div style="margin-bottom:18px">
+        <span class="chip" style="color:var(--violet);border-color:rgba(167,139,250,0.5);background:rgba(167,139,250,0.1)">A/B Test · 50/50 Split</span>
+      </div>
+      <div class="brief-row">
+        <span class="k" style="color:var(--violet)">Method</span>
+        <span class="v">A/B test — clean per-user randomization, 50/50 split. Chosen over MAB (no scarce-conversion pressure), Holdout (signal in first session), Geo-Test (no marketplace effects), Switchback (no temporal carry-over).</span>
+      </div>
+      <div class="brief-row">
+        <span class="k" style="color:var(--accent)">Hypothesis</span>
+        <span class="v">If we add an "Explore with sample data" path on the Get-Started screen, then more trial users reach their first modelling output. <strong>Primary metric:</strong> % reaching first modelling output within 7 days. <strong>Success:</strong> significant (p &lt; 0.05), ≥5pp absolute lift.</span>
+      </div>
+      <div class="brief-row">
+        <span class="k" style="color:var(--rose)">Guardrail</span>
+        <span class="v">Trial→paid conversion must not significantly drop.</span>
+      </div>
+      <div class="brief-row">
+        <span class="k" style="color:var(--amber)">Read date</span>
+        <span class="v">~6 weeks, pre-set — no peeking.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= SLIDE 10 — THE MODEL ======= -->
+<section class="s-model" id="s6">
+  <div class="wrap">
+    <span class="eyebrow">Monetization · M6</span>
+    <h2 style="font-size:clamp(32px,5vw,48px);font-weight:900;margin-bottom:24px">The model</h2>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px">
+      <span class="chip" style="color:var(--sky);border-color:rgba(56,189,248,0.5);background:rgba(56,189,248,0.1)">Stage 2 Revenue Expansion</span>
+      <span class="chip" style="color:var(--teal);border-color:rgba(52,211,153,0.5);background:rgba(52,211,153,0.1)">Freemium (Reverse-Trial)</span>
+    </div>
+    <div class="g2" style="margin-bottom:22px">
+      <div class="card">
+        <span class="label" style="color:var(--sky)">Recommendation</span>
+        <h3>Reverse-trial freemium</h3>
+        <p>Move trial → reverse-trial freemium. <strong>Day 1–14:</strong> full premium. <strong>Day 15+:</strong> permanent free tier (import + basic modeling). Paywall at the feature boundary, not a time boundary. Validates 'packaging matched to value.' Targets Get-Started Import Usage % (stuck at ~40%).</p>
+      </div>
+      <div class="card">
+        <span class="label" style="color:var(--sky)">Supporting signal</span>
+        <h3>Cluster at the boundary</h3>
+        <p>Conversions should cluster tightly at the paywall boundary, not scatter. ARPU must not decline. Free-tier users must show higher Import Usage % than current trial users. Cohort-based test, read at 8 weeks.</p>
+      </div>
+    </div>
+    <div style="display:flex;gap:0;overflow:hidden;border-radius:12px;border:1px solid var(--card-border)">
+      <div style="flex:1;padding:18px 20px;background:rgba(52,211,153,0.08);border-right:1px solid var(--line);text-align:center">
+        <p style="font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin-bottom:6px">Day 1–14</p>
+        <p style="font-size:14px;font-weight:700">Full Premium</p>
+      </div>
+      <div style="flex:1;padding:18px 20px;background:rgba(251,191,36,0.06);border-right:1px solid var(--line);text-align:center">
+        <p style="font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);margin-bottom:6px">Day 15+</p>
+        <p style="font-size:14px;font-weight:700">Free Tier</p>
+      </div>
+      <div style="flex:1;padding:18px 20px;background:rgba(251,113,133,0.06);text-align:center">
+        <p style="font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--rose);margin-bottom:6px">Paywall</p>
+        <p style="font-size:14px;font-weight:700">Feature Boundary</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= SLIDE 11 — THE STORY ======= -->
+<section class="s-story" id="s7">
+  <div class="wrap">
+    <span class="eyebrow">Reflection · The Story</span>
+    <h2 style="font-size:clamp(32px,5vw,48px);font-weight:900;margin-bottom:28px">What I learned</h2>
+    <div class="g3">
+      <div class="card">
+        <span class="label" style="color:var(--rose)">Biggest friction</span>
+        <h3>The hard part</h3>
+        <p>I kept reaching for pricing as the fix. The data forced me to see it was an activation problem first — the connect-a-bank wall was the real friction. Pricing came after, and only because the data proved the 2% was structural.</p>
+      </div>
+      <div class="card">
+        <span class="label" style="color:var(--amber)">Key Aha moment</span>
+        <h3>When it clicked</h3>
+        <p>Realizing the 2% conversion number was a symptom, not the disease. When modelling usage nearly doubled and conversion didn't budge, the funnel diagnosis changed my entire strategy — from "fix activation depth" to "fix the paywall."</p>
+      </div>
+      <div class="card">
+        <span class="label" style="color:var(--teal)">Course takeaways</span>
+        <h3>What stuck</h3>
+        <p>Experimentation is a system, not a tactic. Stage before method. Model follows value. The read date set up front, and knowing when NOT to change the price, were the lessons that stuck. Every module handed the next its reason to exist.</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:36px">
+      <div class="card" style="display:inline-block;border-top:3px solid var(--mint);box-shadow:var(--shadow);text-align:center;max-width:500px">
+        <p style="font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mint);margin-bottom:10px">Submit on the Learning Platform</p>
+        <p style="font-size:14px;margin-bottom:16px;opacity:.8">Submit your repo URL and this pitch page on the Learning Platform to complete the certification.</p>
+        <a class="pill primary" href="https://github.com/anishphilip3/Anish-Philip-Product-School-Product-Analytics-and-Experimentation" target="_blank" rel="noopener" style="background:var(--mint);color:var(--bg)">github.com/.../Anish-Philip-Product-School-... →</a>
+      </div>
+    </div>
+    <p style="text-align:center;font-family:var(--mono);font-size:11px;color:rgba(255,255,255,0.3);margin-top:32px">Anish Philip · Product Experimentation · Aug 2026 · Certification Submission</p>
+  </div>
+</section>
+
+<script>
+(function(){
+  var secs=[].slice.call(document.querySelectorAll('section'));
+  var n=secs.length;
+  var dotNav=document.getElementById('dotNav');
+  var progress=document.getElementById('progress');
+
+  secs.forEach(function(_,i){
+    var d=document.createElement('button');
+    d.className='dot'+(i===0?' on':'');
+    d.setAttribute('aria-label','Go to slide '+(i+1));
+    d.onclick=function(){secs[i].scrollIntoView({behavior:'smooth'})};
+    dotNav.appendChild(d);
+  });
+  var dots=[].slice.call(dotNav.querySelectorAll('.dot'));
+
+  function update(){
+    var scrollTop=window.pageYOffset||document.documentElement.scrollTop;
+    var docH=document.documentElement.scrollHeight-window.innerHeight;
+    var pct=docH>0?(scrollTop/docH)*100:0;
+    progress.style.width=pct+'%';
+
+    var cur=0;
+    secs.forEach(function(s,i){
+      if(scrollTop>=s.offsetTop-window.innerHeight*0.4) cur=i;
+    });
+    dots.forEach(function(d,i){d.classList.toggle('on',i===cur)});
+  }
+
+  window.addEventListener('scroll',update,{passive:true});
+  update();
+
+  document.addEventListener('keydown',function(e){
+    var scrollTop=window.pageYOffset||document.documentElement.scrollTop;
+    var cur=0;
+    secs.forEach(function(s,i){if(scrollTop>=s.offsetTop-100)cur=i;});
+
+    if(e.key==='ArrowDown'||e.key===' '){
+      e.preventDefault();
+      if(cur<n-1)secs[cur+1].scrollIntoView({behavior:'smooth'});
+    }else if(e.key==='ArrowUp'){
+      e.preventDefault();
+      if(cur>0)secs[cur-1].scrollIntoView({behavior:'smooth'});
+    }else if(e.key==='Home'){
+      e.preventDefault();
+      secs[0].scrollIntoView({behavior:'smooth'});
+    }else if(e.key==='End'){
+      e.preventDefault();
+      secs[n-1].scrollIntoView({behavior:'smooth'});
+    }
+  });
+})();
+</script>
+</body>
+</html>

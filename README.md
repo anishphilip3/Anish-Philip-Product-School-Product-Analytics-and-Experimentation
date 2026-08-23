@@ -2,7 +2,7 @@
 
 _A complete, evidence-backed experimentation strategy for **FinWise Co.**, a product-led, reverse-trial SaaS for small-business financial management. Built one deliverable per module._
 
-> **Anish Philip · Product Experimentation · Jun 2026**
+> **Anish Philip · Product Experimentation · Aug 2026**
 
 ---
 
