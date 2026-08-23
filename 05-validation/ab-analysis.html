@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Landing-Page A/B — The Call</title>
+<style>
+  :root{
+    --bg:#0e1119; --surface:#161a24; --surface2:#1b2030; --line:#28304a; --line2:#333d5c;
+    --ink:#eaf0ff; --muted:#98a4c6; --dim:#697596;
+    --blue:#4c8dff; --amber:#cf7d10; --green:#35b37e; --red:#e5484d; --violet:#a78bfa;
+    --mono:'SFMono-Regular',ui-monospace,'Consolas',monospace;
+    --sans:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--ink);min-height:100vh;
+    background:radial-gradient(1000px 560px at 88% -8%,#182038 0%,transparent 55%),var(--bg);
+    padding:32px 20px 56px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1020px;margin:0 auto}
+  .eyebrow{font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);margin-bottom:10px}
+  h1{font-size:31px;font-weight:850;letter-spacing:-.025em;line-height:1.05}
+  .sub{font-size:14.5px;color:var(--muted);margin-top:9px;max-width:74ch;line-height:1.5}
+  .illus{display:inline-flex;align-items:center;gap:8px;margin-top:14px;background:rgba(207,125,16,.14);border:1px solid #6b4a12;color:#f0b45a;
+    font-size:12px;font-weight:700;padding:8px 13px;border-radius:9px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:16px}
+  .sec{margin-top:16px;padding:20px 22px}
+  .sh{font-size:16px;font-weight:800;letter-spacing:-.01em;margin-bottom:4px}
+  .shs{font-size:12.5px;color:var(--muted);margin-bottom:14px}
+  .hypbox{margin-top:16px;padding:14px 18px;border-radius:12px;background:var(--surface2);border:1px solid var(--line);border-left:3px solid var(--blue);font-size:13.5px;line-height:1.5;color:var(--muted)}
+  .hypbox b{color:var(--ink)}
+
+  .charts{display:grid;grid-template-columns:1fr 1.25fr;gap:16px;margin-top:16px}
+  @media(max-width:760px){.charts{grid-template-columns:1fr}}
+  .legend{display:flex;gap:14px;margin-bottom:8px;flex-wrap:wrap}
+  .lg{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--ink);font-weight:600}
+  .lg .sw{width:11px;height:11px;border-radius:3px}
+  .chart-h svg{display:block;width:100%;height:auto}
+
+  .cmp{width:100%;border-collapse:collapse;margin-top:6px;font-size:13.5px}
+  .cmp th{text-align:left;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);font-weight:800;padding:9px 10px;border-bottom:1px solid var(--line)}
+  .cmp td{padding:11px 10px;border-bottom:1px solid var(--line)}
+  .cmp td.metric{font-weight:700}
+  .cmp .num{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+  .cmp .win{font-size:11px;font-weight:800;padding:3px 9px;border-radius:6px}
+  .cmp .win.a{background:rgba(76,141,255,.16);color:#8fb4ff}
+  .cmp .win.b{background:rgba(53,179,126,.16);color:#6fe0ad}
+  .best{color:#fff;font-weight:800}
+
+  .lenses{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:4px}
+  @media(max-width:760px){.lenses{grid-template-columns:1fr 1fr}}
+  .lens{border:1px solid var(--line);border-radius:12px;padding:14px;border-top-width:3px}
+  .lens.ok{border-top-color:var(--green)}.lens.warn{border-top-color:var(--amber)}
+  .lens .lt{font-size:12px;font-weight:800;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+  .lens .lv{font-size:12px;color:var(--muted);line-height:1.5}
+  .lens .lv b{color:var(--ink)}
+
+  .verdict{margin-top:16px;padding:22px 24px;border-radius:16px;background:linear-gradient(135deg,#2a1c3f,#3b2168);border:1px solid #5b3f78;text-align:center}
+  .verdict .k{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#c9a6f5;margin-bottom:10px}
+  .verdict .scn{font-size:26px;font-weight:850;letter-spacing:-.02em;color:#fff}
+  .verdict .arrow{color:var(--violet);margin:0 10px}
+  .verdict .call{font-size:26px;font-weight:850;letter-spacing:-.02em;color:#e9d5ff}
+  .verdict .why{font-size:13px;color:#cbb8e6;margin-top:12px;line-height:1.55;max-width:70ch;margin-left:auto;margin-right:auto}
+
+  .ans{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:4px}
+  .ans td{padding:13px 12px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.55;color:var(--muted)}
+  .ans td.q{font-weight:800;color:var(--ink);width:170px;white-space:nowrap}
+  .ans td b{color:var(--ink)}
+  .foot{margin-top:16px;font-size:11.5px;color:var(--dim);line-height:1.6}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Module 5 · Part 2 — Read a Real Result</div>
+    <h1>Landing-Page A/B — The Call</h1>
+    <p class="sub">Another team's test: two landing pages (n=20, 10 per group). Their hypothesis was that Version B (simplified CTA + enhanced design) would beat A on conversion <i>and</i> engagement. My job: read the data with no attachment and make a defensible call.</p>
+    <div class="illus">📊 Real data — computed from the experiment CSV (20 users, 10/group).</div>
+  </header>
+
+  <div class="card sec">
+    <div class="sh">The result</div>
+    <div class="shs">Version A vs Version B, averaged across the test</div>
+    <div class="charts">
+      <div>
+        <div class="legend"><span class="lg"><span class="sw" style="background:var(--violet)"></span>Avg session duration (min) — 180s vs 207s</span></div>
+        <div class="chart-h" id="dur"></div>
+      </div>
+      <div>
+        <div class="legend">
+          <span class="lg"><span class="sw" style="background:var(--blue)"></span>Conversion %</span>
+          <span class="lg"><span class="sw" style="background:var(--green)"></span>Feature engagement %</span>
+        </div>
+        <div class="chart-h" id="ce"></div>
+      </div>
+    </div>
+    <table class="cmp">
+      <thead><tr><th>Metric</th><th style="text-align:right">Version A</th><th style="text-align:right">Version B</th><th>Winner</th></tr></thead>
+      <tbody>
+        <tr><td class="metric">Conversion rate</td><td class="num best">70%</td><td class="num">50%</td><td><span class="win a">A · +20pp</span></td></tr>
+        <tr><td class="metric">Avg session duration</td><td class="num">3.0 min</td><td class="num best">3.5 min</td><td><span class="win b">B · +0.5 min</span></td></tr>
+        <tr><td class="metric">Feature engagement %</td><td class="num">56.3%</td><td class="num best">57.9%</td><td><span class="win b">B · +1.6pp</span></td></tr>
+        <tr><td class="metric">Sample size (per group)</td><td class="num">10</td><td class="num">10</td><td><span class="win" style="background:rgba(207,125,16,.16);color:#f0b45a">n=20 total</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card sec">
+    <div class="sh">Reading the numbers — the four lenses</div>
+    <div class="shs">Applied before any ship / kill / iterate decision</div>
+    <div class="lenses">
+      <div class="lens warn"><div class="lt">⚠ Significance</div><div class="lv">Conversion gap (70% vs 50%) yields <b>p ≈ 0.36</b> (χ² = 0.83, df=1). <b>Not significant</b> at n=20 — the sample is far too small to trust either direction.</div></div>
+      <div class="lens warn"><div class="lt">⚠ Practical (vs MDE)</div><div class="lv">A 20pp gap looks large, but at <b>n=10/group</b> the MDE is ~30pp — we <b>can't detect</b> a real difference this small. Session gap (+27s) is similarly underpowered.</div></div>
+      <div class="lens warn"><div class="lt">⚠ Confidence interval</div><div class="lv">Conversion diff 95% CI spans roughly <b>[−15pp, +55pp]</b> — it includes zero <i>and</i> massive effects. The interval is too wide to act on.</div></div>
+      <div class="lens warn"><div class="lt">⚠ Guardrail</div><div class="lv">Conversion is the metric that <b>pays</b>. B trades conversion for session time — but engagement is only <b>+1.6pp</b>, barely a signal. Guardrail bends.</div></div>
+    </div>
+  </div>
+
+  <div class="verdict">
+    <div class="k">The scenario &amp; the call</div>
+    <div><span class="scn">Mixed Signal</span><span class="arrow">→</span><span class="call">Investigate</span></div>
+    <div class="why">The primary business metric (conversion) and the secondary (session duration) point in <b style="color:#fff">opposite directions</b>, but <b style="color:#fff">neither is statistically significant</b> at n=20. Shipping B trades the metric that pays for one that doesn't — yet. Killing B throws away a session-time signal worth understanding. The disciplined move is to <b style="color:#fff">re-run at proper power</b> (~500/arm) and isolate the engagement driver before deciding.</div>
+  </div>
+
+  <div class="card sec">
+    <div class="sh">The answer</div>
+    <table class="ans">
+      <tr><td class="q">Support or refute?</td><td><b>Inconclusive / refuted as stated.</b> B was meant to win <i>both</i> metrics — it shows longer sessions but <b>lower conversion</b> (70% vs 50%). Feature engagement is roughly flat (+1.6pp). However, <b>neither difference is significant at n=20</b>.</td></tr>
+      <tr><td class="q">Which scenario?</td><td><b>Mixed Signal</b> — A converts more, B has longer sessions; but the sample is too small for either gap to be trustworthy.</td></tr>
+      <tr><td class="q">Recommendation</td><td>Keep <b>A live as the conversion baseline</b> (protect the revenue metric) and <b>investigate</b> — do not roll out B on session time alone, and don't kill a possible engagement signal either.</td></tr>
+      <tr><td class="q">Next steps</td><td>① <b>Re-run at proper power</b> — n=10/group is noise; target ~500/arm to detect a 5pp conversion difference. ② <b>Isolate the driver</b> — B bundled two changes (CTA + design); test B's design with A's CTA. ③ <b>Segment by traffic source</b> — Organic users convert higher in both groups; Paid users barely convert. ④ <b>Measure downstream</b> — does B's longer sessions → better week-4 retention? Set the read date up front.</td></tr>
+    </table>
+  </div>
+
+  <div class="foot"><b>Method note:</b> all figures computed from the experiment CSV (20 users: 10 per group). Both metrics on chart 2 share a single 0–80% axis (no dual-scale distortion). At n=20, χ² = 0.83 (p ≈ 0.36) for conversion — far from significance. The MDE at this sample size is ~30pp, meaning the test can only reliably detect very large effects. The Mixed-Signal → Investigate call holds, with the added recommendation to re-run at proper power.</div>
+</div>
+
+<script>
+  const ns='http://www.w3.org/2000/svg';
+  function bars(el,cfg){
+    const W=cfg.W,H=cfg.H,pl=cfg.pl,pr=cfg.pr,pt=cfg.pt,pb=cfg.pb;
+    const svg=document.createElementNS(ns,'svg');svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.style.width='100%';
+    const plot=W-pl-pr, ph=H-pt-pb;
+    const Y=v=>pt+(1-v/cfg.yMax)*ph;
+    cfg.yTicks.forEach(t=>{
+      const ln=document.createElementNS(ns,'line');ln.setAttribute('x1',pl);ln.setAttribute('x2',W-pr);ln.setAttribute('y1',Y(t));ln.setAttribute('y2',Y(t));ln.setAttribute('stroke','var(--line)');ln.setAttribute('stroke-width','1');svg.appendChild(ln);
+      const tx=document.createElementNS(ns,'text');tx.setAttribute('x',pl-7);tx.setAttribute('y',Y(t)+3.5);tx.setAttribute('text-anchor','end');tx.setAttribute('fill','var(--dim)');tx.setAttribute('font-size','10');tx.setAttribute('font-family','var(--mono)');tx.textContent=cfg.yFmt(t);svg.appendChild(tx);
+    });
+    const gN=cfg.groups.length, gW=plot/gN;
+    cfg.groups.forEach((g,gi)=>{
+      const bN=g.bars.length, bw=Math.min(cfg.barW||46,(gW-16)/bN-6), tot=bN*bw+(bN-1)*6, x0=pl+gi*gW+(gW-tot)/2;
+      g.bars.forEach((b,bi)=>{
+        const x=x0+bi*(bw+6), y=Y(b.v), h=Y(0)-y;
+        const r=document.createElementNS(ns,'rect');r.setAttribute('x',x);r.setAttribute('y',y);r.setAttribute('width',bw);r.setAttribute('height',Math.max(0,h));r.setAttribute('rx','4');r.setAttribute('fill',b.color);svg.appendChild(r);
+        const vt=document.createElementNS(ns,'text');vt.setAttribute('x',x+bw/2);vt.setAttribute('y',y-6);vt.setAttribute('text-anchor','middle');vt.setAttribute('fill','var(--ink)');vt.setAttribute('font-size','11.5');vt.setAttribute('font-weight','800');vt.setAttribute('font-family','var(--mono)');vt.textContent=b.lbl;svg.appendChild(vt);
+      });
+      const gt=document.createElementNS(ns,'text');gt.setAttribute('x',pl+gi*gW+gW/2);gt.setAttribute('y',H-pb+18);gt.setAttribute('text-anchor','middle');gt.setAttribute('fill','var(--muted)');gt.setAttribute('font-size','12');gt.setAttribute('font-weight','700');gt.textContent=g.label;svg.appendChild(gt);
+    });
+    el.appendChild(svg);
+  }
+  bars(document.getElementById('dur'),{
+    W:340,H:230,pl:34,pr:14,pt:26,pb:30,yMax:5,yTicks:[0,1,2,3,4,5],yFmt:v=>v,barW:60,
+    groups:[
+      {label:'Version A',bars:[{v:3.0,color:'var(--violet)',lbl:'3.0'}]},
+      {label:'Version B',bars:[{v:3.5,color:'var(--violet)',lbl:'3.5'}]}
+    ]
+  });
+  bars(document.getElementById('ce'),{
+    W:440,H:230,pl:34,pr:14,pt:26,pb:30,yMax:80,yTicks:[0,20,40,60,80],yFmt:v=>v+'%',barW:44,
+    groups:[
+      {label:'Version A',bars:[{v:70,color:'var(--blue)',lbl:'70%'},{v:56.3,color:'var(--green)',lbl:'56.3%'}]},
+      {label:'Version B',bars:[{v:50,color:'var(--blue)',lbl:'50%'},{v:57.9,color:'var(--green)',lbl:'57.9%'}]}
+    ]
+  });
+</script>
+</body>
+</html>

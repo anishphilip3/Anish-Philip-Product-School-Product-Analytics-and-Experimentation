@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Mechanic — FinWise M3</title>
+<style>
+  :root{
+    --paper:#ffffff; --paper2:#f4f7f4; --ink:#16241e; --muted:#5e6b64; --dim:#9aa89f; --line:#e3e8e3;
+    --green:#12805a; --green-d:#0e4a34; --green-dd:#0a3325; --mint:#57d3a3; --gold:#bd8500; --gold-soft:#f7edcf; --coral:#cf4f3b; --coral-soft:#f8e6e2;
+    --cream:#f2efe6;
+    --serif:'Georgia','Iowan Old Style','Times New Roman',serif;
+    --sans:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:var(--sans);color:var(--ink);overflow:hidden;background:var(--paper);-webkit-font-smoothing:antialiased}
+  .stage{position:relative;height:100vh;width:100vw;overflow:hidden}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:8vh 9vw;background:var(--paper);animation:fade .5s ease}
+  .slide.active{display:flex}
+  @keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+  .slide.dark{background:radial-gradient(1100px 700px at 82% -10%,#155c40 0%,transparent 55%),linear-gradient(160deg,var(--green-d),var(--green-dd));color:var(--cream)}
+  .slide.dark .kicker{color:var(--mint)}
+  .slide.dark .muted{color:#bcd3c7}
+
+  .kicker{font-family:var(--sans);font-size:13px;font-weight:800;letter-spacing:.26em;text-transform:uppercase;color:var(--green);margin-bottom:22px}
+  h1{font-family:var(--serif);font-size:clamp(46px,9vw,110px);font-weight:700;letter-spacing:-.01em;line-height:.98}
+  h1 em{font-style:italic;color:var(--mint)}
+  h2{font-family:var(--serif);font-size:clamp(30px,5vw,56px);font-weight:700;letter-spacing:-.01em;line-height:1.06;margin-bottom:30px;max-width:22ch}
+  h2 em{font-style:italic;color:var(--green)}
+  .lead{font-size:clamp(18px,2.2vw,26px);color:var(--muted);line-height:1.5;max-width:30ch;font-weight:400}
+  .sub{font-size:clamp(15px,1.7vw,19px);color:var(--muted);line-height:1.6;max-width:64ch}
+  .muted{color:var(--muted)}
+  .foot{position:absolute;left:9vw;bottom:5vh;font-size:12.5px;color:var(--dim);font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+  .mark{display:inline-block;width:11px;height:11px;background:var(--gold);transform:rotate(45deg);margin-right:12px;vertical-align:middle}
+
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:52px;margin-top:14px}
+  .stat .n{font-family:var(--serif);font-size:clamp(46px,7vw,86px);font-weight:700;line-height:.9;letter-spacing:-.02em}
+  .stat.r .n{color:var(--coral)} .stat.a .n{color:var(--gold)} .stat.g .n{color:var(--green)}
+  .stat .h{font-size:17px;font-weight:800;margin:16px 0 7px;padding-top:14px;border-top:1px solid var(--line)}
+  .stat .d{font-size:14.5px;color:var(--muted);line-height:1.5}
+
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+  .bullets{list-style:none;display:flex;flex-direction:column;gap:20px}
+  .bullets li{font-size:clamp(16px,1.9vw,21px);line-height:1.45;padding-left:30px;position:relative}
+  .bullets li::before{content:"";position:absolute;left:0;top:.5em;width:11px;height:11px;background:var(--green);transform:rotate(45deg)}
+  .bullets li b{font-weight:800}
+  .quote{font-family:var(--serif);font-size:clamp(22px,3vw,40px);line-height:1.25;font-weight:400;max-width:24ch}
+  .quote em{font-style:italic;color:var(--mint)}
+
+  .rows{display:flex;flex-direction:column;gap:0;margin-top:8px}
+  .row{display:grid;grid-template-columns:200px 1fr;gap:34px;align-items:baseline;padding:22px 0;border-top:1px solid var(--line)}
+  .row:last-child{border-bottom:1px solid var(--line)}
+  .row .n{font-family:var(--serif);font-size:clamp(30px,4vw,50px);font-weight:700;line-height:1;letter-spacing:-.02em}
+  .row.g .n{color:var(--green)}.row.a .n{color:var(--gold)}.row.r .n{color:var(--coral)}
+  .row .h{font-size:18px;font-weight:800;margin-bottom:5px}
+  .row .d{font-size:15px;color:var(--muted);line-height:1.5;max-width:60ch}
+
+  .evi{display:grid;grid-template-columns:repeat(3,1fr);gap:38px;margin-top:12px}
+  .evi .ch{background:var(--paper2);border:1px solid var(--line);border-radius:8px;padding:12px 12px 6px}
+  .evi .ch svg{display:block;width:100%;height:auto}
+  .evi .ct{font-family:var(--serif);font-size:clamp(18px,2vw,23px);font-weight:700;margin-top:18px;color:var(--ink)}
+  .evi .ct em{font-style:italic;color:var(--green)}
+  .evi .cs{font-size:14px;color:var(--muted);line-height:1.5;margin-top:7px}
+  @media(max-width:760px){.evi{grid-template-columns:1fr;gap:20px}}
+
+  .mcard{background:var(--paper2);border:1px solid var(--line);border-radius:10px;padding:28px 32px;margin-top:18px}
+  .mcard .tag{font-family:var(--sans);font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:12px}
+  .mcard h3{font-family:var(--serif);font-size:clamp(22px,3vw,34px);font-weight:700;margin-bottom:14px}
+  .mcard h3 em{font-style:italic;color:var(--green)}
+  .mcard .desc{font-size:clamp(15px,1.7vw,19px);color:var(--muted);line-height:1.6;max-width:60ch}
+
+  .ladder{display:flex;gap:18px;margin-top:22px;flex-wrap:wrap}
+  .mile{flex:1;min-width:140px;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:18px 16px;text-align:center}
+  .mile .wk{font-family:var(--serif);font-size:clamp(28px,4vw,42px);font-weight:700;color:var(--green)}
+  .mile .lab{font-size:13px;font-weight:800;margin-top:8px}
+  .mile .rew{font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.4}
+
+  .versus{display:grid;grid-template-columns:1fr 1fr;gap:38px;margin-top:16px}
+  .vbox{border-radius:10px;padding:24px 28px}
+  .vbox.bad{background:var(--coral-soft);border:1px solid #e0b1aa}
+  .vbox.good{background:#e6f4ed;border:1px solid #b3dcc4}
+  .vbox .vt{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px}
+  .vbox.bad .vt{color:var(--coral)}
+  .vbox.good .vt{color:var(--green)}
+  .vbox .vi{font-size:clamp(15px,1.7vw,19px);line-height:1.55;color:var(--ink)}
+  .vbox .vi b{font-weight:800}
+
+  .sc-rows{display:flex;flex-direction:column;gap:18px;margin-top:18px}
+  .sc-row{display:grid;grid-template-columns:160px 1fr 90px;gap:16px;align-items:center}
+  .sc-label{font-size:14px;font-weight:800}
+  .sc-bar{height:14px;border-radius:99px;background:#eaeee9;overflow:hidden;position:relative}
+  .sc-bar .fill{height:100%;border-radius:99px;transition:width .8s cubic-bezier(.22,1,.36,1)}
+  .sc-bar .target{position:absolute;height:100%;border-right:3px dashed var(--gold);top:0}
+  .sc-val{font-family:var(--serif);font-size:16px;font-weight:700;text-align:right}
+
+  .nav{position:fixed;right:24px;bottom:20px;display:flex;align-items:center;gap:14px;z-index:20}
+  .btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.85);color:var(--ink);font-size:19px;cursor:pointer;display:grid;place-items:center;transition:.15s}
+  .btn:hover{border-color:var(--green);color:var(--green)}
+  .counter{font-family:var(--serif);font-size:14px;color:var(--muted);min-width:54px;text-align:center}
+  .dots{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;display:flex;gap:9px;z-index:20}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--line);cursor:pointer;transition:.2s}
+  .dot.on{background:var(--green);width:26px;border-radius:8px}
+  .hint{position:fixed;left:24px;bottom:22px;font-size:11.5px;color:var(--dim);z-index:20}
+  @media(max-width:760px){.stats{grid-template-columns:1fr;gap:22px}.two{grid-template-columns:1fr;gap:24px}.versus{grid-template-columns:1fr;gap:16px}.ladder{flex-direction:column}.sc-row{grid-template-columns:1fr;gap:6px}}
+  @media(prefers-reduced-motion:reduce){.slide{animation:none}}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+
+  <!-- 1 · Title (dark) -->
+  <section class="slide dark active">
+    <div class="kicker">FinWise · Module 3 · Retention &amp; Engagement</div>
+    <h1>The <em>Mechanic</em></h1>
+    <p class="lead" style="margin-top:28px">Why we need a habit mechanic, what we chose, and how we know it's not manipulative.</p>
+    <div class="foot" style="color:#8fb3a1">Product Analytics &amp; Experimentation</div>
+  </section>
+
+  <!-- 2 · The problem -->
+  <section class="slide">
+    <div class="kicker"><span class="mark"></span>The problem</div>
+    <h2>The Aha works <em>once</em>. Then people leave.</h2>
+    <div class="stats">
+      <div class="stat r"><div class="n">60%</div><div class="h">Churn in year 1</div><div class="d">60% of paying customers leave within 12 months — the Aha doesn't repeat itself.</div></div>
+      <div class="stat a"><div class="n">2.6</div><div class="h">Engagement KPI (of 10)</div><div class="d">Across 7 metrics weighted by retention correlation, FinWise scores "Needs work."</div></div>
+      <div class="stat g"><div class="n">1&times;</div><div class="h">Single-player usage</div><div class="d">Almost no multi-seat collaboration — the strongest retention predictor is nearly unused.</div></div>
+    </div>
+    <div class="foot">The Mechanic · 02</div>
+  </section>
+
+  <!-- 3 · Price vs Value diagnosis — with charts -->
+  <section class="slide">
+    <div class="kicker"><span class="mark"></span>The diagnosis · why people really leave</div>
+    <h2>It's a <em>value gap</em>, not a price problem.</h2>
+    <div class="evi">
+      <div>
+        <div class="ch" id="evi1"></div>
+        <div class="ct">Engagement is <em>shallow</em></div>
+        <div class="cs">All four dimensions — Depth, Breadth, Frequency, Retention — sit at 1–3 out of 10.</div>
+      </div>
+      <div>
+        <div class="ch" id="evi2"></div>
+        <div class="ct">Value stops after <em>week 1</em></div>
+        <div class="cs">Users who see the initial snapshot return less each week — the Aha decays without reinforcement.</div>
+      </div>
+      <div>
+        <div class="ch" id="evi3"></div>
+        <div class="ct">Price is <em>not the objection</em></div>
+        <div class="cs">It's a reverse trial — users see full value first. They leave because the value stopped being new, not because it cost too much.</div>
+      </div>
+    </div>
+    <div class="foot">The Mechanic · 03</div>
+  </section>
+
+  <!-- 4 · Why weekly, not daily -->
+  <section class="slide">
+    <div class="kicker"><span class="mark"></span>Why weekly</div>
+    <h2>Money moves <em>weekly</em>. A daily streak would break.</h2>
+    <div class="two">
+      <ul class="bullets">
+        <li><b>Financial transactions batch weekly</b> — payroll, invoices, reconciliation all run on a weekly cycle.</li>
+        <li><b>Daily check-ins would be noise</b> — most business accounts don't change every day. Daily nagging means "nothing to see."</li>
+        <li><b>Weekly matches the natural cadence</b> — the behavior we want is "review your money picture once a week and act on one insight."</li>
+      </ul>
+      <div style="text-align:center">
+        <div id="cadenceChart"></div>
+      </div>
+    </div>
+    <div class="foot">The Mechanic · 04</div>
+  </section>
+
+  <!-- 5 · Why forgiving -->
+  <section class="slide">
+    <div class="kicker"><span class="mark"></span>Why forgiving</div>
+    <h2>One missed week should <em>never</em> erase months of habit.</h2>
+    <div class="versus">
+      <div class="vbox bad">
+        <div class="vt">Punishing streak (the anti-pattern)</div>
+        <div class="vi"><b>Miss one day &rarr; reset to zero.</b> Hard streaks cause anxiety, resentment, and rage-quits. A finance tool using this pattern feels manipulative — "you lost your 47-week streak because you were on holiday" is a betrayal, not motivation.</div>
+      </div>
+      <div class="vbox good">
+        <div class="vt">Forgiving streak (Money Momentum)</div>
+        <div class="vi"><b>Grace week auto-banked monthly.</b> One free pass accumulates each month. Miss a week? The grace covers it — no reset, no guilt. The streak protects <b>months of real progress</b> instead of punishing normal life.</div>
+      </div>
+    </div>
+    <p class="sub" style="margin-top:26px">This is the "something new" design: it keeps the motivational power of streaks (loss aversion, progress) while removing the punishing edge that drives people away.</p>
+    <div class="foot">The Mechanic · 05</div>
+  </section>
+
+  <!-- 6 · The mechanic itself -->
+  <section class="slide">
+    <div class="kicker"><span class="mark"></span>The mechanic</div>
+    <h2>"Money <em>Momentum</em>"</h2>
+    <div class="mcard">
+      <div class="tag">The habit loop</div>
+      <h3>Open FinWise &rarr; review snapshot &rarr; act on <em>&ge;1 insight</em></h3>
+      <div class="desc">Each week a user completes this loop, their streak advances. Rewards aren't points — they're <b>deeper financial insight</b> that only unlocks with sustained use.</div>
+    </div>
+    <div class="ladder">
+      <div class="mile"><div class="wk">4</div><div class="lab">Monthly Trend</div><div class="rew">First month-over-month spending pattern</div></div>
+      <div class="mile"><div class="wk">12</div><div class="lab">Quarterly Forecast</div><div class="rew">Cash-flow forecast for the next 90 days</div></div>
+      <div class="mile"><div class="wk">26</div><div class="lab">Half-Year Review</div><div class="rew">Comprehensive 6-month financial review</div></div>
+      <div class="mile"><div class="wk">52</div><div class="lab">Year in Review</div><div class="rew">Full-year retrospective with YoY trends</div></div>
+    </div>
+    <div class="foot">The Mechanic · 06</div>
+  </section>
+
+  <!-- 7 · Why NOT a leaderboard -->
+  <section class="slide">
+    <div class="kicker"><span class="mark"></span>Why not other mechanics</div>
+    <h2>We rejected <em>leaderboards</em> and <em>points</em>.</h2>
+    <div class="rows">
+      <div class="row r"><div class="n">No</div><div><div class="h">Leaderboard</div><div class="d">Financial data is deeply private. Ranking users against each other on money behavior is a trust violation — it pushes disclosure no one wants and rewards comparison, not clarity.</div></div></div>
+      <div class="row a"><div class="n">No</div><div><div class="h">Points / badges</div><div class="d">Extrinsic rewards decouple the mechanic from real value. When points stop feeling novel, the habit collapses. We want the reward to be the insight itself.</div></div></div>
+      <div class="row g"><div class="n">Yes</div><div><div class="h">Forgiving streak + value milestones</div><div class="d">Loss aversion protects real progress, and each milestone unlocks a genuinely useful financial report — the reward IS the product value.</div></div></div>
+    </div>
+    <div class="foot">The Mechanic · 07</div>
+  </section>
+
+  <!-- 8 · Psychology -->
+  <section class="slide">
+    <div class="kicker"><span class="mark"></span>Why it works · the psychology</div>
+    <h2>Three forces pulling in the <em>same direction</em>.</h2>
+    <div class="two">
+      <ul class="bullets">
+        <li><b>Loss aversion:</b> once you've built a 12-week streak, the thought of losing it is more powerful than the thought of earning the next milestone.</li>
+        <li><b>Owner identity:</b> each week of financial data reviewed becomes part of "my money picture" — the more you invest, the harder it is to walk away (the Hook Model's Investment).</li>
+        <li><b>Goal gradient:</b> "3 more weeks to Quarterly Forecast" — as you get closer, motivation accelerates.</li>
+      </ul>
+      <div style="text-align:center">
+        <div id="psychChart"></div>
+      </div>
+    </div>
+    <div class="foot">The Mechanic · 08</div>
+  </section>
+
+  <!-- 9 · How we measure -->
+  <section class="slide">
+    <div class="kicker"><span class="mark"></span>How we measure it</div>
+    <h2>Two dials move, <em>churn</em> follows.</h2>
+    <div class="sc-rows">
+      <div class="sc-row"><div class="sc-label" style="color:var(--coral)">Weekly Return</div><div class="sc-bar"><span class="fill" style="width:30%;background:var(--coral)"></span><span class="target" style="width:70%"></span></div><div class="sc-val">3 &rarr; <span style="color:var(--green)">7</span></div></div>
+      <div class="sc-row"><div class="sc-label" style="color:var(--gold)">Insight Engagement</div><div class="sc-bar"><span class="fill" style="width:30%;background:var(--gold)"></span><span class="target" style="width:70%"></span></div><div class="sc-val">3 &rarr; <span style="color:var(--green)">7</span></div></div>
+      <div class="sc-row"><div class="sc-label" style="color:var(--green)">Collaboration</div><div class="sc-bar"><span class="fill" style="width:10%;background:var(--green)"></span><span class="target" style="width:50%"></span></div><div class="sc-val">1 &rarr; <span style="color:var(--green)">5</span></div></div>
+      <div class="sc-row"><div class="sc-label" style="color:#8b5cf6">Feature Adoption</div><div class="sc-bar"><span class="fill" style="width:30%;background:#8b5cf6"></span><span class="target" style="width:60%"></span></div><div class="sc-val">3 &rarr; <span style="color:var(--green)">6</span></div></div>
+      <div class="sc-row"><div class="sc-label" style="color:#0891b2">Churn (inverse)</div><div class="sc-bar"><span class="fill" style="width:10%;background:#0891b2"></span><span class="target" style="width:50%"></span></div><div class="sc-val">1 &rarr; <span style="color:var(--green)">5</span></div></div>
+    </div>
+    <p class="sub" style="margin-top:28px"><b>Leading indicators</b> (Weekly Return, Insight Engagement) are the dials the mechanic directly pushes. <b>Lagging outcome</b> (Churn) is what we expect to move as a consequence. Baseline KPI: <b>2.6 &rarr; target 5.5+</b>.</p>
+    <div class="foot">The Mechanic · 09</div>
+  </section>
+
+  <!-- 10 · Honest defense (dark) -->
+  <section class="slide dark">
+    <div class="kicker">The honest defense</div>
+    <div class="quote">Money Momentum converts the <em>one-time Aha</em> into a <em>recurring weekly behavior</em> and accumulates reports that raise switching cost. It won't fix price-driven churn or lock-in — so it pairs with the collaboration loop (Module 1) and pricing (Module 6).</div>
+    <p class="sub" style="margin-top:34px;color:#bcd3c7;max-width:60ch">Next: find the leading indicator that predicts conversion (Module 4) and design the experiment that validates it (Module 5).</p>
+    <div class="foot" style="color:#8fb3a1">The Mechanic · 10</div>
+  </section>
+
+</div>
+
+<div class="dots" id="dots"></div>
+<div class="nav">
+  <button class="btn" id="prev" aria-label="Previous">&#8249;</button>
+  <span class="counter" id="counter">1 / 10</span>
+  <button class="btn" id="next" aria-label="Next">&#8250;</button>
+</div>
+<div class="hint">&larr; &rarr; or Space &middot; F for fullscreen</div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  const dotsWrap=document.getElementById('dots');
+  let i=0;
+  slides.forEach((_,k)=>{const d=document.createElement('span');d.className='dot'+(k===0?' on':'');d.onclick=()=>go(k);dotsWrap.appendChild(d);});
+  const dots=[...document.querySelectorAll('.dot')];
+  function go(n){i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+    dots.forEach((d,k)=>d.classList.toggle('on',k===i));
+    document.getElementById('counter').textContent=(i+1)+' / '+slides.length;}
+  document.getElementById('next').onclick=()=>go(i+1);
+  document.getElementById('prev').onclick=()=>go(i-1);
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(i+1);}
+    else if(e.key==='ArrowLeft'){go(i-1);}
+    else if(e.key.toLowerCase()==='f'){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}
+  });
+  document.getElementById('stage').addEventListener('click',e=>{if(!e.target.closest('.nav')&&!e.target.closest('.dots'))go(i+1);});
+
+  /* ---- Evidence charts ---- */
+  (function(){
+    var GREEN='#12805a',GOLD='#bd8500',CORAL='#cf4f3b',LINE='#d7ded8',DIM='#9aa89f',INK='#16241e';
+
+    /* Chart 1 — Engagement scorecard dimension bars */
+    function mkScorecard(el){
+      var W=300,H=190,pl=80,pr=16,pt=16;
+      var dims=[
+        {name:'Depth',w:3,c:'#2563eb'},{name:'Breadth',w:1.6,c:'#7c3aed'},
+        {name:'Frequency',w:3,c:'#0891b2'},{name:'Retention',w:1,c:'#c026d3'}
+      ];
+      var barH=26,gap=14,maxW=W-pl-pr;
+      var g='';
+      dims.forEach(function(d,i){
+        var y=pt+i*(barH+gap);
+        g+='<text x="'+(pl-8)+'" y="'+(y+barH/2+4)+'" text-anchor="end" font-size="12" font-weight="700" fill="'+INK+'" font-family="Segoe UI,system-ui,sans-serif">'+d.name+'</text>';
+        g+='<rect x="'+pl+'" y="'+y+'" width="'+maxW+'" height="'+barH+'" rx="4" fill="#eaeee9"/>';
+        var fill=d.w/10*maxW;
+        g+='<rect x="'+pl+'" y="'+y+'" width="'+fill+'" height="'+barH+'" rx="4" fill="'+d.c+'"/>';
+        g+='<text x="'+(pl+fill+8)+'" y="'+(y+barH/2+4)+'" font-size="13" font-weight="800" fill="'+d.c+'" font-family="Georgia,serif">'+d.w+'/10</text>';
+      });
+      el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto">'+g+'</svg>';
+    }
+
+    /* Chart 2 — Week-over-week return rate decay */
+    function mkDecay(el){
+      var W=300,H=190,pl=34,pr=16,pt=18,pb=28;
+      var weeks=[1,2,3,4,5,6,7,8];
+      var retention=[100,62,48,38,32,28,25,22];
+      var maxY=100,n=weeks.length;
+      function X(i){return pl+i*(W-pl-pr)/(n-1);}
+      function Y(v){return pt+(1-v/maxY)*(H-pt-pb);}
+      var g='';
+      [0,50,100].forEach(function(t){
+        g+='<line x1="'+pl+'" y1="'+Y(t)+'" x2="'+(W-pr)+'" y2="'+Y(t)+'" stroke="'+LINE+'" stroke-width="1"/>';
+        g+='<text x="'+(pl-5)+'" y="'+(Y(t)+3)+'" text-anchor="end" font-size="9" fill="'+DIM+'" font-family="monospace">'+t+'%</text>';
+      });
+      var area=retention.map(function(v,i){return X(i)+','+Y(v);}).join(' ');
+      g+='<polygon points="'+X(0)+','+Y(0)+' '+area+' '+X(n-1)+','+Y(0)+'" fill="'+CORAL+'" opacity=".12"/>';
+      g+='<polyline points="'+area+'" fill="none" stroke="'+CORAL+'" stroke-width="2.5" stroke-linejoin="round"/>';
+      retention.forEach(function(v,i){g+='<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="3" fill="'+CORAL+'"/>';});
+      g+='<text x="'+X(3)+'" y="'+(Y(retention[3])-10)+'" font-size="10" font-weight="700" fill="'+CORAL+'" text-anchor="middle">38% by wk4</text>';
+      g+='<text x="'+((pl+W-pr)/2)+'" y="'+(H-5)+'" text-anchor="middle" font-size="10" fill="'+DIM+'">weeks after Aha &#8594;</text>';
+      el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto">'+g+'</svg>';
+    }
+
+    /* Chart 3 — Price vs Value diagram */
+    function mkPriceValue(el){
+      var W=300,H=190;
+      var g='';
+      g+='<rect x="30" y="24" width="110" height="140" rx="8" fill="#e6f4ed" stroke="#b3dcc4" stroke-width="1.5"/>';
+      g+='<text x="85" y="52" text-anchor="middle" font-size="13" font-weight="800" fill="'+GREEN+'">Value seen</text>';
+      g+='<text x="85" y="72" text-anchor="middle" font-size="11" fill="'+DIM+'">Full product trial</text>';
+      g+='<text x="85" y="90" text-anchor="middle" font-size="11" fill="'+DIM+'">Connect data &#10003;</text>';
+      g+='<text x="85" y="108" text-anchor="middle" font-size="11" fill="'+DIM+'">Snapshot &#10003;</text>';
+      g+='<text x="85" y="126" text-anchor="middle" font-size="11" fill="'+DIM+'">Insights &#10003;</text>';
+      g+='<text x="85" y="150" text-anchor="middle" font-size="10" font-weight="700" fill="'+GREEN+'">Yet 60% still leave</text>';
+      g+='<defs><marker id="arw" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L6,3 L0,6" fill="'+GOLD+'"/></marker></defs>';
+      g+='<line x1="155" y1="94" x2="175" y2="94" stroke="'+GOLD+'" stroke-width="2" marker-end="url(#arw)"/>';
+      g+='<rect x="180" y="50" width="100" height="88" rx="8" fill="#f8e6e2" stroke="#e0b1aa" stroke-width="1.5"/>';
+      g+='<text x="230" y="76" text-anchor="middle" font-size="13" font-weight="800" fill="'+CORAL+'">Value stops</text>';
+      g+='<text x="230" y="96" text-anchor="middle" font-size="11" fill="'+DIM+'">No new insight</text>';
+      g+='<text x="230" y="114" text-anchor="middle" font-size="11" fill="'+DIM+'">No habit formed</text>';
+      g+='<text x="230" y="128" text-anchor="middle" font-size="10" font-weight="700" fill="'+CORAL+'">&#8594; churn</text>';
+      g+='<text x="'+(W/2)+'" y="'+(H-4)+'" text-anchor="middle" font-size="10" font-weight="700" fill="'+INK+'">Not price &#8212; the value just stopped being new</text>';
+      el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto">'+g+'</svg>';
+    }
+
+    mkScorecard(document.getElementById('evi1'));
+    mkDecay(document.getElementById('evi2'));
+    mkPriceValue(document.getElementById('evi3'));
+
+    /* Cadence chart (slide 4) */
+    function mkCadence(el){
+      if(!el) return;
+      var W=340,H=200,pt=18,pb=20;
+      var days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+      var activity=[85,30,20,15,72,10,8];
+      var barW=32,gap=14,totalW=days.length*(barW+gap)-gap;
+      var sx=(W-totalW)/2;
+      var maxA=100;
+      function Y(v){return pt+(1-v/maxA)*(H-pt-pb);}
+      var g='';
+      days.forEach(function(d,i){
+        var x=sx+i*(barW+gap);
+        var h=(H-pt-pb)*(activity[i]/maxA);
+        var y=H-pb-h;
+        var isHigh=activity[i]>50;
+        g+='<rect x="'+x+'" y="'+y+'" width="'+barW+'" height="'+h+'" rx="4" fill="'+(isHigh?GREEN:'#dde3d8')+'"/>';
+        g+='<text x="'+(x+barW/2)+'" y="'+(H-4)+'" text-anchor="middle" font-size="10" fill="'+INK+'" font-weight="'+(isHigh?'800':'400')+'">'+d+'</text>';
+        if(isHigh) g+='<text x="'+(x+barW/2)+'" y="'+(y-6)+'" text-anchor="middle" font-size="10" font-weight="700" fill="'+GREEN+'">'+activity[i]+'%</text>';
+      });
+      g+='<text x="'+(W/2)+'" y="12" text-anchor="middle" font-size="11" font-weight="800" fill="'+INK+'">Financial activity peaks weekly, not daily</text>';
+      el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto">'+g+'</svg>';
+    }
+    mkCadence(document.getElementById('cadenceChart'));
+
+    /* Psychology chart (slide 8) */
+    function mkPsych(el){
+      if(!el) return;
+      var W=340,H=220;
+      var cx=170,cy=110,r=72;
+      var g='';
+      g+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+LINE+'" stroke-width="1.5" stroke-dasharray="4 3"/>';
+      g+='<circle cx="'+cx+'" cy="'+cy+'" r="28" fill="#e6f4ed" stroke="'+GREEN+'" stroke-width="1.5"/>';
+      g+='<text x="'+cx+'" y="'+(cy+4)+'" text-anchor="middle" font-size="10" font-weight="800" fill="'+GREEN+'">Habit</text>';
+      var angles=[{a:-90,label:'Loss aversion',sub:'Protect the streak',c:CORAL},
+                  {a:150,label:'Owner identity',sub:'My money picture',c:GOLD},
+                  {a:30,label:'Goal gradient',sub:'3 wks to unlock',c:'#2563eb'}];
+      angles.forEach(function(a){
+        var rad=a.a*Math.PI/180;
+        var px=cx+r*Math.cos(rad),py=cy+r*Math.sin(rad);
+        var ox=cx+(r+50)*Math.cos(rad),oy=cy+(r+50)*Math.sin(rad);
+        g+='<line x1="'+px+'" y1="'+py+'" x2="'+ox+'" y2="'+oy+'" stroke="'+a.c+'" stroke-width="2" stroke-dasharray="3 2"/>';
+        g+='<circle cx="'+ox+'" cy="'+oy+'" r="5" fill="'+a.c+'"/>';
+        var tx=cx+(r+78)*Math.cos(rad),ty=cy+(r+78)*Math.sin(rad);
+        g+='<text x="'+tx+'" y="'+(ty-4)+'" text-anchor="middle" font-size="12" font-weight="800" fill="'+INK+'">'+a.label+'</text>';
+        g+='<text x="'+tx+'" y="'+(ty+12)+'" text-anchor="middle" font-size="10" fill="'+DIM+'">'+a.sub+'</text>';
+      });
+      el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto">'+g+'</svg>';
+    }
+    mkPsych(document.getElementById('psychChart'));
+  })();
+</script>
+</body>
+</html>

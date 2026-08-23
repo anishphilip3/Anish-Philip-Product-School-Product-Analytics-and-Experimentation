@@ -4,17 +4,22 @@
 
 ## Method
 
-_Test design (A/B, holdout, switchback, …) and why it fits._
+**A/B test** — clean per-user randomization, 50/50 split. Chosen over MAB (no scarce-conversion pressure), Holdout (signal appears in first session), Geo-Test (no marketplace effects), and Switchback (no temporal carry-over). We have enough traffic and a clean user-level split for the onboarding change.
 
 _____
 
 ## Hypothesis + primary metric
 
-_If we [change], then [primary metric] moves by [target]._
+If we add an "Explore with sample data" path on the Get-Started screen for new trial users, then more of them reach their first modeling output — the North Star activation event.
+
+- **Primary metric:** % of new trial users reaching first modeling output within 7 days
+- **Success threshold:** significant (p < 0.05), ≥5pp absolute lift
+- **If successful:** ship → Holdout → pricing experiment (M6)
+- **If not:** instrument Get-Started to find the true drop-off
 
 _____
 
 ## Guardrail + read date
 
-- **Guardrail:** _the metric that must not degrade (and by how much)._
-- **Read date:** _when you call it, no peeking._
+- **Guardrail:** Trial→Paid conversion must not significantly drop.
+- **Read date:** ~6 weeks, pre-set — no peeking.

@@ -1,0 +1,360 @@
+<title>The Model — Pricing & Monetization</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Georgia,serif;background:#000;overflow:hidden;height:100vh;width:100vw}
+.deck{position:relative;width:100vw;height:100vh}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:5vh 9vw 8vh;opacity:0;pointer-events:none;transition:opacity .45s;overflow-y:auto}
+.slide.active{opacity:1;pointer-events:auto}
+.slide.dark{background:linear-gradient(135deg,#0b3d2e 0%,#14532d 50%,#0b3d2e 100%);color:#fff;justify-content:center}
+.slide.white{background:#fafaf7;color:#1a1a1a}
+
+/* Typography */
+.kicker{font-family:system-ui,sans-serif;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:#BD8500;font-weight:700;margin-bottom:.6rem}
+.kicker::before{content:'◆ '}
+.dark .kicker{color:#f0c040}
+h1{font-size:clamp(2rem,5vw,3.4rem);line-height:1.08;margin-bottom:.8rem;text-align:center}
+.dark h1{color:#fff}
+.white h1{color:#14532d}
+h2{font-size:clamp(1.6rem,3.5vw,2.4rem);line-height:1.15;margin-bottom:1rem;text-align:center}
+.white h2{color:#14532d}
+.lead{font-size:clamp(.95rem,1.8vw,1.15rem);text-align:center;max-width:680px;line-height:1.65;color:#555;margin-bottom:2rem}
+.dark .lead{color:rgba(255,255,255,.8)}
+
+/* Cards */
+.card-row{display:flex;gap:1.5rem;flex-wrap:wrap;justify-content:center;width:100%;max-width:960px;margin-top:1.5rem}
+.card{flex:1;min-width:240px;max-width:320px;background:#fff;border:1px solid #e5e5e5;border-radius:10px;padding:1.5rem;border-top:4px solid #12805A}
+.card.gold{border-top-color:#BD8500}
+.card.coral{border-top-color:#CF4F3B}
+.card h3{font-size:1rem;margin-bottom:.5rem;color:#14532d}
+.card p{font-size:.88rem;line-height:1.55;color:#555}
+.card .tag{display:inline-block;font-family:system-ui,sans-serif;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;padding:.2rem .6rem;border-radius:3px;margin-bottom:.6rem}
+.tag.em{background:#12805A22;color:#12805A}
+.tag.go{background:#BD850022;color:#BD8500}
+.tag.co{background:#CF4F3B22;color:#CF4F3B}
+
+/* Dark cards */
+.dark .card{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.15);border-top-color:#4ade80}
+.dark .card h3{color:#4ade80}
+.dark .card p{color:rgba(255,255,255,.75)}
+
+/* Table */
+.tbl{width:100%;max-width:820px;border-collapse:collapse;margin-top:1.5rem;font-size:.9rem}
+.tbl th{font-family:system-ui,sans-serif;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:#12805A;text-align:left;padding:.6rem 1rem;border-bottom:2px solid #12805A}
+.tbl td{padding:.7rem 1rem;border-bottom:1px solid #e5e5e5;vertical-align:top}
+.tbl td:first-child{font-weight:700;white-space:nowrap;width:160px;color:#14532d}
+.tbl tr:last-child td{border-bottom:none}
+
+/* Callout */
+.callout{max-width:720px;background:#12805A11;border-left:3px solid #12805A;padding:1rem 1.25rem;border-radius:0 6px 6px 0;margin-top:1.5rem;font-size:.9rem;line-height:1.6;color:#555}
+.callout strong{color:#14532d}
+.callout.gold-c{background:#BD850011;border-left-color:#BD8500}
+.callout.gold-c strong{color:#BD8500}
+.callout.coral-c{background:#CF4F3B11;border-left-color:#CF4F3B}
+.callout.coral-c strong{color:#CF4F3B}
+.callout .cl{font-family:system-ui,sans-serif;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;margin-bottom:.3rem}
+
+/* Stat row */
+.stat-row{display:flex;gap:2rem;flex-wrap:wrap;justify-content:center;margin:1.5rem 0}
+.stat{text-align:center}
+.stat .num{font-size:clamp(2rem,5vw,3.2rem);font-weight:700;line-height:1}
+.stat .num.em{color:#12805A}
+.stat .num.go{color:#BD8500}
+.stat .num.co{color:#CF4F3B}
+.stat .lbl{font-family:system-ui,sans-serif;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:#888;margin-top:.3rem}
+
+/* Diagram - staircase */
+.staircase{display:flex;align-items:flex-end;gap:0;margin:2rem auto;max-width:700px}
+.stair{flex:1;display:flex;flex-direction:column;align-items:center}
+.stair-box{width:100%;border-radius:8px;padding:1.2rem 1rem;text-align:center;color:#fff;font-size:.85rem;line-height:1.4}
+.stair-box h4{font-size:.95rem;margin-bottom:.3rem}
+.stair:nth-child(1) .stair-box{background:#14532d;min-height:100px}
+.stair:nth-child(2) .stair-box{background:#12805A;min-height:150px}
+.stair:nth-child(3) .stair-box{background:#BD8500;min-height:200px}
+.stair-label{font-family:system-ui,sans-serif;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:#888;margin-top:.5rem;font-weight:700}
+.stair-arrow{font-size:1.5rem;color:#12805A;align-self:center;margin:0 .3rem;padding-bottom:60px}
+
+/* Funnel */
+.funnel{display:flex;align-items:center;gap:.5rem;margin:2rem auto;max-width:800px;flex-wrap:wrap;justify-content:center}
+.funnel-step{display:flex;align-items:center;gap:.5rem}
+.funnel-box{padding:.8rem 1.2rem;border-radius:8px;font-family:system-ui,sans-serif;font-size:.8rem;font-weight:600;text-align:center;min-width:120px}
+.funnel-box.f1{background:#14532d;color:#fff}
+.funnel-box.f2{background:#12805A;color:#fff}
+.funnel-box.f3{background:#BD8500;color:#fff}
+.funnel-box.f4{background:#CF4F3B;color:#fff}
+.funnel-arr{font-size:1.2rem;color:#aaa}
+
+/* Timeline */
+.timeline{display:flex;gap:0;max-width:700px;margin:2rem auto;position:relative}
+.timeline::before{content:'';position:absolute;top:14px;left:0;right:0;height:3px;background:#12805A}
+.tl-item{flex:1;text-align:center;position:relative;padding-top:2rem}
+.tl-dot{width:12px;height:12px;border-radius:50%;background:#12805A;position:absolute;top:8px;left:50%;transform:translateX(-50%)}
+.tl-item:nth-child(2) .tl-dot{background:#BD8500}
+.tl-item:nth-child(3) .tl-dot{background:#CF4F3B}
+.tl-item h4{font-size:.85rem;color:#14532d;margin-bottom:.2rem}
+.tl-item p{font-size:.78rem;color:#888;line-height:1.4}
+
+/* Nav */
+.nav{position:fixed;bottom:2vh;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:99}
+.dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;border:none;transition:all .3s}
+.dot.active{background:#BD8500;transform:scale(1.3)}
+.white~.nav .dot{background:rgba(0,0,0,.15)}
+.counter{position:fixed;bottom:2vh;right:3vw;font-family:system-ui,sans-serif;font-size:.7rem;color:rgba(255,255,255,.4);z-index:99}
+.hint{position:fixed;bottom:5vh;left:50%;transform:translateX(-50%);font-family:system-ui,sans-serif;font-size:.7rem;color:rgba(255,255,255,.35);z-index:99;letter-spacing:.05em}
+
+/* Verdict card */
+.verdict{max-width:560px;border:2px solid #12805A;border-radius:12px;padding:2rem;text-align:center;margin-top:1.5rem}
+.verdict h3{font-size:1.5rem;color:#12805A;margin-bottom:.5rem}
+.verdict p{font-size:.95rem;color:#555;line-height:1.6}
+
+/* List */
+.check-list{list-style:none;padding:0;max-width:640px;margin-top:1.5rem}
+.check-list li{padding:.6rem 0;border-bottom:1px solid #e5e5e5;font-size:.92rem;padding-left:1.8rem;position:relative;color:#555}
+.check-list li::before{content:'✓';position:absolute;left:0;color:#12805A;font-weight:700}
+.check-list li:last-child{border-bottom:none}
+
+@media(max-width:600px){
+  .card-row{flex-direction:column;align-items:center}
+  .card{max-width:100%}
+  .staircase{flex-direction:column;align-items:stretch}
+  .stair-arrow{transform:rotate(90deg);padding:0;margin:.5rem auto}
+  .funnel{flex-direction:column}
+  .timeline{flex-direction:column;gap:1.5rem}
+  .timeline::before{display:none}
+  .tl-dot{display:none}
+  .tl-item{padding-top:0}
+}
+</style>
+
+<div class="deck">
+  <!-- SLIDE 1: Title -->
+  <div class="slide dark active" data-i="0">
+    <div class="kicker">Module 6</div>
+    <h1>The Model</h1>
+    <p class="lead">Pricing & Monetization &mdash; Building the FinWise Pricing Recommendation</p>
+  </div>
+
+  <!-- SLIDE 2: The problem -->
+  <div class="slide white" data-i="1">
+    <div class="kicker">The Problem</div>
+    <h2>Growth economics under pressure</h2>
+    <p class="lead">FinWise has proven product-market fit, but the numbers tell a clear story: the front door works, the monetization doesn't.</p>
+    <div class="stat-row">
+      <div class="stat"><div class="num em">$10M</div><div class="lbl">ARR (PMF proven)</div></div>
+      <div class="stat"><div class="num co">2%</div><div class="lbl">Trial &rarr; Paid</div></div>
+      <div class="stat"><div class="num go">40%</div><div class="lbl">1-Year Retention</div></div>
+      <div class="stat"><div class="num co">Paid</div><div class="lbl">Acquisition Motion</div></div>
+    </div>
+    <div class="callout">
+      <div class="cl">The signal from Module 4</div>
+      <strong>Modeling Usage nearly doubled while conversion never moved</strong> (r &asymp; 0.24, not significant). The 2% cap is structural &mdash; pricing/paywall/packaging &mdash; not an activation-depth problem. This is the problem Module 6 addresses.
+    </div>
+  </div>
+
+  <!-- SLIDE 3: Stage assessment -->
+  <div class="slide white" data-i="2">
+    <div class="kicker">Step 1 &middot; Monetization Stage</div>
+    <h2>Stage 2: Revenue Expansion</h2>
+    <p class="lead">The right experiment at the wrong stage produces misleading evidence. Name the stage first.</p>
+    <div class="staircase">
+      <div class="stair">
+        <div class="stair-box"><h4>Stage 1</h4>Value Creation<br><em style="font-size:.75rem;opacity:.7">Complete &mdash; $10M ARR</em></div>
+        <div class="stair-label">Done</div>
+      </div>
+      <div class="stair-arrow">&rarr;</div>
+      <div class="stair">
+        <div class="stair-box" style="border:2px solid #fff"><h4>Stage 2</h4>Revenue Expansion<br><em style="font-size:.75rem;opacity:.9">We are here</em></div>
+        <div class="stair-label" style="color:#12805A;font-weight:800">Current</div>
+      </div>
+      <div class="stair-arrow">&rarr;</div>
+      <div class="stair">
+        <div class="stair-box" style="opacity:.5"><h4>Stage 3</h4>Optimization<br><em style="font-size:.75rem;opacity:.7">Not yet</em></div>
+        <div class="stair-label">Later</div>
+      </div>
+    </div>
+    <div class="callout">
+      <div class="cl">Two data points</div>
+      <strong>1.</strong> $10M ARR proves value creation is complete &mdash; Stage 1 is done.<br>
+      <strong>2.</strong> 2% conversion is a structural ceiling (M4 disproved the activation hypothesis) &mdash; the paywall placement and model selection haven't been made. That's Stage 2 work.
+    </div>
+  </div>
+
+  <!-- SLIDE 4: Model selection -->
+  <div class="slide white" data-i="3">
+    <div class="kicker">Step 2 &middot; Pricing Model</div>
+    <h2>Freemium (Reverse-Trial)</h2>
+    <p class="lead">Choose the model that fits how FinWise delivers value, not the one that sounds right for fintech.</p>
+    <div class="card-row">
+      <div class="card" style="opacity:.45">
+        <div class="tag em">Current model</div>
+        <h3>Subscription (Trial)</h3>
+        <p>Time-limited trial &rarr; paid. Produces 2% conversion. 98% of users leave when the clock runs out, before building the habit that makes paying feel natural.</p>
+      </div>
+      <div class="card gold" style="border-width:3px">
+        <div class="tag go">Recommended</div>
+        <h3>Freemium (Reverse-Trial)</h3>
+        <p>14 days of full premium, then a permanent free tier with import + basic modeling. The paid tier captures users who've crossed the value threshold. Habit before money.</p>
+      </div>
+    </div>
+    <div class="callout gold-c">
+      <div class="cl">Key trade-off</div>
+      A pure subscription protects ARPU but leaves the funnel broken at 2%. Trading short-term revenue for a permanent free tier gives users time to build the habit that makes paying inevitable &mdash; and creates a compounding organic base that reduces paid-acquisition dependence.
+    </div>
+  </div>
+
+  <!-- SLIDE 5: Why not the others -->
+  <div class="slide white" data-i="4">
+    <div class="kicker">Model Elimination</div>
+    <h2>Why freemium wins</h2>
+    <p class="lead">Each model was evaluated against how FinWise actually delivers value.</p>
+    <table class="tbl">
+      <tr><th>Model</th><th>Fit</th><th>Verdict</th></tr>
+      <tr><td style="color:#CF4F3B">Subscription</td><td>Value is continuous, but the current trial-to-paid path fails at 2%. Time pressure forces a decision before value is felt.</td><td><strong>Status quo &mdash; the problem</strong></td></tr>
+      <tr><td style="color:#CF4F3B">Transaction</td><td>Financial management is continuous, not discrete moments. Pay-per-use doesn't fit.</td><td><strong>Structural mismatch</strong></td></tr>
+      <tr><td style="color:#CF4F3B">Advertising</td><td>Trust is the currency in fintech. Ads undermine the value proposition.</td><td><strong>Brand conflict</strong></td></tr>
+      <tr><td style="color:#12805A">Freemium</td><td>Free tier drives adoption and habit. Paid tier captures committed users at the feature boundary.</td><td><strong>Structural fix ✓</strong></td></tr>
+    </table>
+  </div>
+
+  <!-- SLIDE 6: The recommendation -->
+  <div class="slide white" data-i="5">
+    <div class="kicker">Step 3 &middot; The Recommendation</div>
+    <h2>Shift the paywall to where value is felt</h2>
+    <p class="lead">The single most important pricing change FinWise should make to address its 2% conversion ceiling.</p>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <h4>Day 1&ndash;14</h4>
+        <p>Full premium access. Every new user experiences forecasting, consolidation, and team features.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <h4>Day 15+</h4>
+        <p>Drop to free tier. Import + basic modeling stay free forever. Advanced features gate behind paid.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <h4>The paywall</h4>
+        <p>Sits at the feature boundary, not a time boundary. Users upgrade because they need more, not because a clock ran out.</p>
+      </div>
+    </div>
+    <div class="callout coral-c">
+      <div class="cl">M4 Leading indicator targeted</div>
+      <strong>Get-Started Import Usage %</strong> &mdash; stuck at ~40%. Removing the time wall lets more users cross the activation threshold and reach their first modeling output (the North Star). The paywall lands where engaged users feel they need more, so conversions should cluster tightly at the boundary.
+    </div>
+  </div>
+
+  <!-- SLIDE 7: The pricing bet -->
+  <div class="slide white" data-i="6">
+    <div class="kicker">The Bet</div>
+    <h2>Packaging matched to value</h2>
+    <p class="lead">Not a price change &mdash; a packaging restructure. Where the paywall sits matters more than what the price is.</p>
+    <div class="card-row">
+      <div class="card">
+        <div class="tag em">Hypothesis</div>
+        <h3>If we move the paywall...</h3>
+        <p><strong>If</strong> we replace the time-limited trial with a reverse-trial freemium model, <strong>then</strong> trial-to-paid conversion will exceed the 2% structural ceiling, <strong>measured by</strong> conversion rate at 30 and 60 days.</p>
+      </div>
+      <div class="card gold">
+        <div class="tag go">Validation signal</div>
+        <h3>Cluster at the boundary</h3>
+        <p>Conversions cluster tightly where users outgrow basic modeling. <strong>If they cluster &rarr; the line is right, scale.</strong> If they're diffuse &rarr; iterate the boundary, not the price.</p>
+      </div>
+      <div class="card coral">
+        <div class="tag co">Guardrails</div>
+        <h3>What we protect</h3>
+        <p>ARPU must not significantly decline. Free-tier users must show higher Import Usage % than current trial users at the same tenure. Read at 8 weeks.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: Validation design -->
+  <div class="slide white" data-i="7">
+    <div class="kicker">Validation</div>
+    <h2>How we test it</h2>
+    <p class="lead">Pricing experiments carry constraints that standard product tests don't. The cost of being wrong is durable.</p>
+    <div class="funnel">
+      <div class="funnel-step"><div class="funnel-box f1">Hypothesis<br><span style="font-size:.65rem;font-weight:400">Value belief &rarr; price</span></div><span class="funnel-arr">&rarr;</span></div>
+      <div class="funnel-step"><div class="funnel-box f2">Design<br><span style="font-size:.65rem;font-weight:400">Cohort-based test</span></div><span class="funnel-arr">&rarr;</span></div>
+      <div class="funnel-step"><div class="funnel-box f3">Analyze<br><span style="font-size:.65rem;font-weight:400">30 & 60-day conversion</span></div><span class="funnel-arr">&rarr;</span></div>
+      <div class="funnel-step"><div class="funnel-box f4">Iterate<br><span style="font-size:.65rem;font-weight:400">Boundary, not price</span></div></div>
+    </div>
+    <table class="tbl">
+      <tr><th>Field</th><th>Decision</th></tr>
+      <tr><td>Method</td><td><strong>Cohort-based test</strong> &mdash; new signups enter reverse-trial; existing trial serves as baseline. True user-level A/B is rare for pricing.</td></tr>
+      <tr><td>Primary metric</td><td>Trial-to-paid conversion at <strong>30 and 60 days</strong></td></tr>
+      <tr><td>Guardrail</td><td>ARPU must not decline; Import Usage % must rise vs. baseline</td></tr>
+      <tr><td>Read date</td><td><strong>8 weeks</strong> &mdash; pricing signals take longer to mature</td></tr>
+      <tr><td>If successful</td><td>Scale the reverse-trial model to all new signups</td></tr>
+      <tr><td>If not</td><td>Iterate the free/paid feature boundary, then retest</td></tr>
+    </table>
+  </div>
+
+  <!-- SLIDE 9: The memo summary -->
+  <div class="slide white" data-i="8">
+    <div class="kicker">The Memo &mdash; In Brief</div>
+    <h2>What goes to leadership</h2>
+    <p class="lead">The memo distilled to what the leadership team needs to decide.</p>
+    <div class="verdict">
+      <h3>Reverse-Trial Freemium</h3>
+      <p>Move from a time-limited trial to a reverse-trial freemium model. The paywall moves from a time boundary to a feature boundary. Validate with a cohort test targeting &gt;2% conversion at 30/60 days.</p>
+    </div>
+    <ul class="check-list">
+      <li><strong>Problem:</strong> 2% conversion is a structural ceiling, not a price or activation problem (M4 evidence)</li>
+      <li><strong>Stage:</strong> Revenue Expansion &mdash; the model and paywall placement are the levers</li>
+      <li><strong>Model:</strong> Freemium fits how FinWise delivers value (continuous, habit-forming)</li>
+      <li><strong>Change:</strong> 14-day premium &rarr; permanent free tier (import + basic modeling) &rarr; paid advanced features</li>
+      <li><strong>Targets:</strong> Get-Started Import Usage % (M4 Leading 1, stuck at ~40%)</li>
+      <li><strong>Bet type:</strong> Packaging matched to value &mdash; watch for conversion clustering at the boundary</li>
+      <li><strong>Not doing:</strong> Changing the price. This restructures when and where users hit the paywall</li>
+    </ul>
+  </div>
+
+  <!-- SLIDE 10: Closing -->
+  <div class="slide dark" data-i="9">
+    <div class="kicker">Module 6 Complete</div>
+    <h1>The Model</h1>
+    <p class="lead">Stage before method. Model follows value. Specific beats safe.<br>Tie it to a leading indicator. Know when not to change the price.</p>
+  </div>
+</div>
+
+<!-- Nav -->
+<div class="nav" id="nav"></div>
+<div class="counter" id="counter"></div>
+<div class="hint">Arrow keys / Space / Click &nbsp;&middot;&nbsp; F&thinsp;Fullscreen</div>
+
+<script>
+(function(){
+  const slides=document.querySelectorAll('.slide');
+  const N=slides.length;
+  let cur=0;
+  const nav=document.getElementById('nav');
+  const counter=document.getElementById('counter');
+
+  for(let i=0;i<N;i++){
+    const d=document.createElement('button');
+    d.className='dot';
+    d.onclick=()=>go(i);
+    nav.appendChild(d);
+  }
+
+  function go(n){
+    cur=Math.max(0,Math.min(N-1,n));
+    slides.forEach((s,i)=>s.classList.toggle('active',i===cur));
+    nav.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
+    counter.textContent=(cur+1)+' / '+N;
+  }
+  go(0);
+
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(cur+1)}
+    if(e.key==='ArrowLeft'){e.preventDefault();go(cur-1)}
+    if(e.key==='f'||e.key==='F'){document.documentElement.requestFullscreen?.()}
+  });
+
+  document.addEventListener('click',e=>{
+    if(e.target.closest('.nav')||e.target.closest('a')||e.target.closest('button'))return;
+    const x=e.clientX/window.innerWidth;
+    x>.5?go(cur+1):go(cur-1);
+  });
+})();
+</script>

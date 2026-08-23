@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Solution — FinWise M2</title>
+<style>
+  :root{
+    --paper:#ffffff; --paper2:#f4f7f4; --ink:#16241e; --muted:#5e6b64; --dim:#9aa89f; --line:#e3e8e3;
+    --green:#12805a; --green-d:#0e4a34; --green-dd:#0a3325; --mint:#57d3a3; --gold:#bd8500; --gold-soft:#f7edcf; --coral:#cf4f3b; --coral-soft:#f8e6e2;
+    --cream:#f2efe6;
+    --serif:'Georgia','Iowan Old Style','Times New Roman',serif;
+    --sans:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:var(--sans);color:var(--ink);overflow:hidden;background:var(--paper);-webkit-font-smoothing:antialiased}
+  .stage{position:relative;height:100vh;width:100vw;overflow:hidden}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:8vh 9vw;background:var(--paper);animation:fade .5s ease}
+  .slide.active{display:flex}
+  @keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  .slide.dark{background:radial-gradient(1100px 700px at 82% -10%,#155c40 0%,transparent 55%),linear-gradient(160deg,var(--green-d),var(--green-dd));color:var(--cream)}
+  .slide.dark .kicker{color:var(--mint)}
+  .slide.dark .muted{color:#bcd3c7}
+  .kicker{font-family:var(--sans);font-size:13px;font-weight:800;letter-spacing:.26em;text-transform:uppercase;color:var(--green);margin-bottom:22px}
+  h1{font-family:var(--serif);font-size:clamp(46px,9vw,110px);font-weight:700;letter-spacing:-.01em;line-height:.98}
+  h1 em{font-style:italic;color:var(--mint)}
+  h2{font-family:var(--serif);font-size:clamp(30px,5vw,54px);font-weight:700;letter-spacing:-.01em;line-height:1.06;margin-bottom:28px;max-width:22ch}
+  h2 em{font-style:italic;color:var(--green)}
+  .lead{font-size:clamp(18px,2.2vw,26px);color:var(--muted);line-height:1.5;max-width:30ch;font-weight:400}
+  .sub{font-size:clamp(15px,1.7vw,19px);color:var(--muted);line-height:1.6;max-width:64ch}
+  .muted{color:var(--muted)}
+  .foot{position:absolute;left:9vw;bottom:5vh;font-size:12.5px;color:var(--dim);font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+  .mark{display:inline-block;width:11px;height:11px;background:var(--gold);transform:rotate(45deg);margin-right:12px;vertical-align:middle}
+
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:52px;margin-top:14px}
+  .stat .n{font-family:var(--serif);font-size:clamp(44px,7vw,82px);font-weight:700;line-height:.9;letter-spacing:-.02em}
+  .stat.g .n{color:var(--coral)} .stat.a .n{color:var(--gold)} .stat.e .n{color:var(--green)}
+  .stat .h{font-size:17px;font-weight:800;margin:16px 0 7px;padding-top:14px;border-top:1px solid var(--line)}
+  .stat .d{font-size:14.5px;color:var(--muted);line-height:1.5}
+
+  /* aha statement */
+  .aha{font-family:var(--serif);font-size:clamp(24px,3.2vw,42px);line-height:1.28;font-weight:400;max-width:22ch}
+  .aha em{font-style:italic;color:var(--green)}
+
+  /* flow chips */
+  .flow{display:flex;align-items:stretch;gap:12px;margin-top:20px;flex-wrap:wrap}
+  .fchip{flex:1;min-width:130px;background:var(--paper2);border:1px solid var(--line);border-radius:8px;padding:16px 14px}
+  .fchip .fn{font-family:var(--sans);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:8px}
+  .fchip .ft{font-size:14.5px;font-weight:700;line-height:1.3}
+  .fchip.aha{background:#eaf6f0;border-color:#bfe4d3}
+  .fchip.aha .fn{color:var(--green)}
+  .farr{align-self:center;color:var(--dim);font-size:22px;flex:none}
+  .flownote{margin-top:16px;font-size:14px;color:var(--green);font-weight:800}
+
+  /* before/after */
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:12px}
+  .ba{border:1px solid var(--line);border-radius:12px;padding:22px}
+  .ba .l{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+  .ba.before .l{color:var(--coral)} .ba.after .l{color:var(--green)}
+  .ba .scr{background:var(--paper2);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:12px}
+  .ba .mock{border-radius:8px;padding:11px;text-align:center;font-size:13px;font-weight:800;margin-bottom:8px}
+  .ba .mock.p{background:var(--green);color:#fff}
+  .ba .mock.n{background:#eaf6f0;color:var(--green-d);border:1.5px dashed var(--green)}
+  .ba .r{font-size:14px;line-height:1.5}
+  .ba.before .r{color:var(--coral)} .ba.after .r{color:var(--green-d)}
+  .ba .r b{font-weight:800}
+
+  /* principles */
+  .prin{display:grid;grid-template-columns:repeat(2,1fr);gap:20px 46px;margin-top:10px}
+  .p1{display:flex;gap:16px;align-items:flex-start}
+  .p1 .d{width:13px;height:13px;background:var(--green);transform:rotate(45deg);margin-top:8px;flex:none}
+  .p1 .t{font-size:clamp(16px,1.8vw,20px);line-height:1.4}
+  .p1 .t b{font-weight:800}
+
+  /* evidence */
+  .evi{display:grid;grid-template-columns:repeat(3,1fr);gap:38px;margin-top:12px}
+  .evi .ch{background:var(--paper2);border:1px solid var(--line);border-radius:8px;padding:12px 12px 6px}
+  .evi .ch svg{display:block;width:100%;height:auto}
+  .evi .ct{font-family:var(--serif);font-size:clamp(18px,2vw,23px);font-weight:700;margin-top:18px}
+  .evi .ct em{font-style:italic;color:var(--green)}
+  .evi .cs{font-size:14px;color:var(--muted);line-height:1.5;margin-top:7px}
+
+  .quote{font-family:var(--serif);font-size:clamp(22px,3vw,40px);line-height:1.25;font-weight:400;max-width:24ch}
+  .quote em{font-style:italic;color:var(--mint)}
+
+  .nav{position:fixed;right:24px;bottom:20px;display:flex;align-items:center;gap:14px;z-index:20}
+  .btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.85);color:var(--ink);font-size:19px;cursor:pointer;display:grid;place-items:center;transition:.15s}
+  .btn:hover{border-color:var(--green);color:var(--green)}
+  .counter{font-family:var(--serif);font-size:14px;color:var(--muted);min-width:54px;text-align:center}
+  .dots{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;display:flex;gap:9px;z-index:20}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--line);cursor:pointer;transition:.2s}
+  .dot.on{background:var(--green);width:26px;border-radius:8px}
+  .hint{position:fixed;left:24px;bottom:22px;font-size:11.5px;color:var(--dim);z-index:20}
+  @media(max-width:760px){.stats,.prin{grid-template-columns:1fr;gap:20px}.two{grid-template-columns:1fr}.flow{flex-direction:column}.farr{transform:rotate(90deg)}.evi{grid-template-columns:1fr}}
+  @media(prefers-reduced-motion:reduce){.slide{animation:none}}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+
+  <!-- 1 · Title -->
+  <section class="slide dark active">
+    <div class="kicker">FinWise · Module 2 · Acquisition &amp; Activation</div>
+    <h1>The <em>Solution</em></h1>
+    <p class="lead" style="margin-top:28px">Getting a brand-new trial user to their Aha moment — in three taps, not three obstacles.</p>
+    <div class="foot" style="color:#8fb3a1">Product Analytics &amp; Experimentation</div>
+  </section>
+
+  <!-- 2 · The gap -->
+  <section class="slide">
+    <div class="kicker"><span class="mark"></span>The gap we're closing</div>
+    <h2>Users arrive — then stall <em>before value</em>.</h2>
+    <div class="stats">
+      <div class="stat g"><div class="n">2%</div><div class="h">Convert to paid</div><div class="d">The M1 leak — value is never felt, so users don't pay.</div></div>
+      <div class="stat a"><div class="n">~39%</div><div class="h">Ever get data in</div><div class="d">Most trial users never even connect data — no data, no insight.</div></div>
+      <div class="stat e"><div class="n">3 taps</div><div class="h">Our target path</div><div class="d">From sign-up to a real insight in three screens.</div></div>
+    </div>
+    <div class="foot">The Solution · 02</div>
+  </section>
+
+  <!-- 3 · Aha definition -->
+  <section class="slide">
+    <div class="kicker"><span class="mark"></span>The Aha moment</div>
+    <div class="aha">A user <em>connects their data</em> and sees their first personalized snapshot — one plain-language insight about their money. Not a feature: a <em>realization</em> — "I can finally see my business at a glance."</div>
+    <p class="sub" style="margin-top:28px">Why it predicts retention: financial visibility is a <b>recurring</b> need, so a user who reaches it has a built-in reason to return — the antidote to the 2% / 40% leak.</p>
+    <div class="foot">The Solution · 03</div>
+  </section>
+
+  <!-- 4 · Evidence -->
+  <section class="slide">
+    <div class="kicker"><span class="mark"></span>The evidence · why we target activation</div>
+    <h2 style="margin-bottom:16px">The drop is at <em>getting data in</em>.</h2>
+    <div class="evi">
+      <div>
+        <div class="ch" id="evi1"></div>
+        <div class="ct">The activation <em>wall</em></div>
+        <div class="cs">Only ~39% of trials get data in; nearly everyone who does reaches an insight. Fix the wall, not the last step.</div>
+      </div>
+      <div>
+        <div class="ch" id="evi2"></div>
+        <div class="ct">It never <em>self-corrects</em></div>
+        <div class="cs">Data-import sits at a ~40% ceiling across 13 months — it won't rise on its own.</div>
+      </div>
+      <div>
+        <div class="ch" id="evi3"></div>
+        <div class="ct">What the on-ramp <em>targets</em></div>
+        <div class="cs">The sample-data on-ramp aims to lift activation past its ceiling — the M5 experiment. <b>(target)</b></div>
+      </div>
+    </div>
+    <div class="foot">The Solution · 04</div>
+  </section>
+
+  <!-- 5 · The flow -->
+  <section class="slide">
+    <div class="kicker"><span class="mark"></span>The solution · the flow</div>
+    <h2>Five screens — <em>three</em> to value.</h2>
+    <div class="flow">
+      <div class="fchip"><div class="fn">1 · Welcome</div><div class="ft">Tap your goal — personalizes the path</div></div>
+      <span class="farr">→</span>
+      <div class="fchip"><div class="fn">2 · Connect</div><div class="ft">Connect a bank <b>or</b> use sample data</div></div>
+      <span class="farr">→</span>
+      <div class="fchip aha"><div class="fn">3 · Snapshot ✨</div><div class="ft">See your first insight — the Aha</div></div>
+      <span class="farr">→</span>
+      <div class="fchip"><div class="fn">4 · Invite</div><div class="ft">Bring in your accountant (post-Aha)</div></div>
+      <span class="farr">→</span>
+      <div class="fchip"><div class="fn">5 · Success</div><div class="ft">Money Momentum begins</div></div>
+    </div>
+    <div class="flownote">Value first, asks later — one job per screen.</div>
+    <div class="foot">The Solution · 05</div>
+  </section>
+
+  <!-- 6 · Friction removed -->
+  <section class="slide">
+    <div class="kicker"><span class="mark"></span>The one friction we removed</div>
+    <h2>The bank wall → a <em>sample-data on-ramp</em>.</h2>
+    <div class="two">
+      <div class="ba before">
+        <div class="l">Before · users stall</div>
+        <div class="scr"><div class="mock p">🔗 Connect my bank</div></div>
+        <div class="r">Not ready to connect a real bank? You're <b>stuck</b> — you never reach an insight, never hit the Aha.</div>
+      </div>
+      <div class="ba after">
+        <div class="l">After · users reach value</div>
+        <div class="scr"><div class="mock p">🔗 Connect my bank</div><div class="mock n">✨ Explore with sample data</div></div>
+        <div class="r">Reach a real insight <b>immediately</b> on sample data — then connect real data as a value-driven choice.</div>
+      </div>
+    </div>
+    <div class="foot">The Solution · 06</div>
+  </section>
+
+  <!-- 7 · Principles -->
+  <section class="slide">
+    <div class="kicker"><span class="mark"></span>Design principles</div>
+    <h2>Four rules the flow obeys.</h2>
+    <div class="prin">
+      <div class="p1"><span class="d"></span><div class="t"><b>One job per screen.</b> Each screen asks for exactly one thing.</div></div>
+      <div class="p1"><span class="d"></span><div class="t"><b>Value before asks.</b> Show the insight before requesting anything.</div></div>
+      <div class="p1"><span class="d"></span><div class="t"><b>Personalize early.</b> The goal tap tailors the very first insight.</div></div>
+      <div class="p1"><span class="d"></span><div class="t"><b>One well-timed nudge.</b> A single weekly prompt — never spam.</div></div>
+    </div>
+    <div class="foot">The Solution · 07</div>
+  </section>
+
+  <!-- 8 · Measure -->
+  <section class="slide">
+    <div class="kicker"><span class="mark"></span>How we'll know it worked</div>
+    <h2>One number: <em>reached the Aha</em>.</h2>
+    <p class="sub"><b>Primary metric:</b> % of new trial users who reach their first modeling output within 7 days (today ~37%). <b>Guardrail:</b> trial→paid conversion must not drop — we activate real value, not vanity taps. This is the leading indicator the M5 experiment moves.</p>
+    <div class="foot">The Solution · 08</div>
+  </section>
+
+  <!-- 9 · Closing -->
+  <section class="slide dark">
+    <div class="kicker">The solution, in one line</div>
+    <div class="quote">Get users to their <em>first insight</em> in three taps — with a sample-data on-ramp so no one stalls at the door — then let the value pull them back.</div>
+    <p class="sub" style="margin-top:34px;color:#bcd3c7;max-width:60ch">▶ Try it: open <b style="color:#eaf6f0">onboarding-prototype.html</b> — pick a goal, connect (or use sample data), and watch the Aha animate.</p>
+    <div class="foot" style="color:#8fb3a1">The Solution · 09</div>
+  </section>
+
+</div>
+
+<div class="dots" id="dots"></div>
+<div class="nav">
+  <button class="btn" id="prev" aria-label="Previous">‹</button>
+  <span class="counter" id="counter">1 / 9</span>
+  <button class="btn" id="next" aria-label="Next">›</button>
+</div>
+<div class="hint">← → or Space · F for fullscreen</div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  const dotsWrap=document.getElementById('dots');
+  let i=0;
+  slides.forEach((_,k)=>{const d=document.createElement('span');d.className='dot'+(k===0?' on':'');d.onclick=()=>go(k);dotsWrap.appendChild(d);});
+  const dots=[...document.querySelectorAll('.dot')];
+  function go(n){i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach((s,k)=>s.classList.toggle('active',k===i));
+    dots.forEach((d,k)=>d.classList.toggle('on',k===i));
+    document.getElementById('counter').textContent=(i+1)+' / '+slides.length;}
+  document.getElementById('next').onclick=()=>go(i+1);
+  document.getElementById('prev').onclick=()=>go(i-1);
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(i+1);}
+    else if(e.key==='ArrowLeft'){go(i-1);}
+    else if(e.key.toLowerCase()==='f'){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}
+  });
+  document.getElementById('stage').addEventListener('click',e=>{if(!e.target.closest('.nav')&&!e.target.closest('.dots'))go(i+1);});
+
+  /* evidence charts (real Module 1 data: avg import 39%, avg modeling 37%) */
+  (function(){
+    const GREEN='#12805a',GOLD='#bd8500',CORAL='#cf4f3b',LINE='#d7ded8',DIM='#9aa89f',INK='#16241e';
+    const imp=[40.17,36.29,42.73,30.63,32.16,30.51,38.55,40.45,39.88,45.42,41.23,45.22,44.26];
+
+    function mkFunnel(el){
+      const W=300,H=176,pt=26,pb=26,plotH=H-pt-pb,max=100;
+      const d=[{l:'Trials',v:100,c:GREEN},{l:'Import',v:39,c:GOLD},{l:'Modeling',v:37,c:CORAL}];
+      const bw=64,gap=(W-d.length*bw)/(d.length+1),Y=v=>pt+(1-v/max)*plotH;let g='';
+      d.forEach((b,k)=>{const x=gap+k*(bw+gap),y=Y(b.v),h=(pt+plotH)-y;
+        g+=`<rect x="${x}" y="${y}" width="${bw}" height="${h}" rx="3" fill="${b.c}"/>`;
+        g+=`<text x="${x+bw/2}" y="${y-7}" text-anchor="middle" font-size="15" font-weight="700" fill="${b.c}" font-family="Georgia,serif">${b.v}%</text>`;
+        g+=`<text x="${x+bw/2}" y="${H-8}" text-anchor="middle" font-size="10.5" fill="${INK}">${b.l}</text>`;});
+      el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">${g}</svg>`;
+    }
+    function mkLine(el){
+      const W=300,H=176,pl=26,pr=12,pt=14,pb=22,max=60,n=imp.length;
+      const X=k=>pl+k*(W-pl-pr)/(n-1),Y=v=>pt+(1-v/max)*(H-pt-pb);let g='';
+      [0,30,60].forEach(t=>{g+=`<line x1="${pl}" y1="${Y(t)}" x2="${W-pr}" y2="${Y(t)}" stroke="${LINE}" stroke-width="1"/><text x="${pl-5}" y="${Y(t)+3}" text-anchor="end" font-size="9" fill="${DIM}" font-family="monospace">${t}%</text>`;});
+      g+=`<line x1="${pl}" y1="${Y(39)}" x2="${W-pr}" y2="${Y(39)}" stroke="${GOLD}" stroke-width="1" stroke-dasharray="3 3"/>`;
+      g+=`<polyline points="${imp.map((v,k)=>X(k)+','+Y(v)).join(' ')}" fill="none" stroke="${GREEN}" stroke-width="2.5" stroke-linejoin="round"/>`;
+      imp.forEach((v,k)=>{g+=`<circle cx="${X(k)}" cy="${Y(v)}" r="2.6" fill="${GREEN}"/>`;});
+      g+=`<text x="${W-pr}" y="${Y(39)-5}" text-anchor="end" font-size="9.5" font-weight="700" fill="${GOLD}" font-family="monospace">~40% ceiling</text>`;
+      el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">${g}</svg>`;
+    }
+    function mkGoal(el){
+      const W=300,H=176,pt=24,pb=26,plotH=H-pt-pb,max=60,bw=72,gap=64;
+      const d=[{l:'Today',v:39,c:DIM},{l:'Target',v:48,c:GREEN}];
+      const Y=v=>pt+(1-v/max)*plotH;let g='',sx=(W-(d.length*bw+gap))/2;
+      d.forEach((b,k)=>{const x=sx+k*(bw+gap),y=Y(b.v),h=(pt+plotH)-y;
+        g+=`<rect x="${x}" y="${y}" width="${bw}" height="${h}" rx="3" fill="${b.c}" ${k===1?'':'opacity="0.5"'}/>`;
+        g+=`<text x="${x+bw/2}" y="${y-7}" text-anchor="middle" font-size="16" font-weight="700" fill="${b.c}" font-family="Georgia,serif">${b.v}%</text>`;
+        g+=`<text x="${x+bw/2}" y="${H-8}" text-anchor="middle" font-size="11" fill="${INK}">${b.l}</text>`;});
+      g+=`<text x="${W-14}" y="${pt+8}" text-anchor="end" font-size="9" font-weight="700" fill="${GREEN}" font-family="monospace">TARGET</text>`;
+      el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto">${g}</svg>`;
+    }
+    mkFunnel(document.getElementById('evi1'));
+    mkLine(document.getElementById('evi2'));
+    mkGoal(document.getElementById('evi3'));
+  })();
+</script>
+</body>
+</html>

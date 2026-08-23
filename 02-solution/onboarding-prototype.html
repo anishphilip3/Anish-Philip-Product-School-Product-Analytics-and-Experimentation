@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinWise — Onboarding</title>
+<style>
+  :root{
+    --green:#0f9d6b; --green-d:#0c7a54; --green-dd:#0a5e42; --mint:#e7f7f0; --mint2:#d3f0e3;
+    --gold:#e0a100; --gold-soft:#fff4d6; --coral:#ef5f52; --coral-soft:#fdeae7;
+    --ink:#16241e; --muted:#5e6b64; --dim:#9aa89f; --line:#e6ece7; --paper:#f3f7f4; --card:#ffffff;
+    --sans:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    --mono:'SFMono-Regular',ui-monospace,'Consolas',monospace;
+    --shadow:0 24px 60px rgba(12,90,60,.22);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--ink);min-height:100vh;display:flex;align-items:center;justify-content:center;gap:40px;flex-wrap:wrap;
+    background:radial-gradient(900px 600px at 50% -12%,#d6efe3 0%,var(--paper) 55%);padding:34px 18px 54px;-webkit-font-smoothing:antialiased}
+
+  /* phone shell */
+  .phone{width:100%;max-width:390px;height:788px;background:var(--card);border-radius:38px;box-shadow:var(--shadow);position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.7);display:flex;flex-direction:column}
+  .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:150px;height:26px;background:#0a5e42;border-bottom-left-radius:16px;border-bottom-right-radius:16px;z-index:30}
+  .top{padding:34px 22px 8px;display:flex;align-items:center;justify-content:space-between}
+  .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:17px;letter-spacing:-.02em}
+  .logo{width:28px;height:28px;border-radius:9px;background:linear-gradient(135deg,var(--green),#3ad29a);display:grid;place-items:center;color:#fff;font-weight:900;font-size:16px;box-shadow:0 4px 10px rgba(15,157,107,.4)}
+  .streakchip{display:none;align-items:center;gap:5px;background:var(--gold-soft);color:#8a6200;font-size:11.5px;font-weight:800;padding:5px 10px;border-radius:99px}
+  .prog{height:5px;background:var(--line);margin:6px 22px 0;border-radius:99px;overflow:hidden}
+  .prog > span{display:block;height:100%;width:20%;background:linear-gradient(90deg,var(--green),#3ad29a);border-radius:99px;transition:width .5s cubic-bezier(.22,1,.36,1)}
+
+  .scroll{flex:1;position:relative;overflow:hidden}
+  .screen{position:absolute;inset:0;padding:16px 22px 22px;display:none;flex-direction:column;overflow-y:auto}
+  .screen.active{display:flex;animation:slidein .42s cubic-bezier(.22,1,.36,1)}
+  .screen.back{animation:slideback .42s cubic-bezier(.22,1,.36,1)}
+  @keyframes slidein{from{opacity:0;transform:translateX(26px)}to{opacity:1;transform:none}}
+  @keyframes slideback{from{opacity:0;transform:translateX(-26px)}to{opacity:1;transform:none}}
+  @media(prefers-reduced-motion:reduce){.screen.active,.screen.back{animation:none}}
+
+  .eyebrow{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:8px}
+  h1{font-size:24px;font-weight:850;letter-spacing:-.02em;line-height:1.15;margin-bottom:8px}
+  .sub{font-size:14px;color:var(--muted);line-height:1.5;margin-bottom:18px}
+  .grow{flex:1;min-height:8px}
+
+  /* goal cards */
+  .goal{display:flex;align-items:center;gap:14px;border:2px solid var(--line);border-radius:18px;padding:15px;margin-bottom:12px;cursor:pointer;background:#fff;transition:.16s;position:relative}
+  .goal:hover{border-color:#bfe4d3;transform:translateY(-2px);box-shadow:0 10px 24px rgba(15,157,107,.1)}
+  .goal:active{transform:scale(.98)}
+  .goal.sel{border-color:var(--green);background:var(--mint)}
+  .goal .emo{width:46px;height:46px;border-radius:13px;background:var(--paper);display:grid;place-items:center;font-size:23px;transition:.16s}
+  .goal.sel .emo{background:#fff;transform:scale(1.08)}
+  .goal .t{font-weight:800;font-size:15px}
+  .goal .d{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .goal .tick{position:absolute;right:15px;width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:14px;font-weight:900;opacity:0;transform:scale(.5);transition:.2s}
+  .goal.sel .tick{opacity:1;transform:scale(1)}
+
+  /* buttons */
+  .btn{display:block;width:100%;border:none;border-radius:16px;padding:16px;font-size:15.5px;font-weight:800;cursor:pointer;font-family:inherit;transition:.16s}
+  .btn.primary{background:var(--green);color:#fff;box-shadow:0 12px 26px rgba(15,157,107,.34)}
+  .btn.primary:hover{background:var(--green-d)}
+  .btn.primary:active{transform:scale(.98)}
+  .btn.primary:disabled{background:#bcd6cb;box-shadow:none;cursor:not-allowed}
+  .btn.line{background:#fff;color:var(--ink);border:2px solid var(--line)}
+  .btn.line:hover{border-color:#bfe4d3}
+  .skip{text-align:center;color:var(--muted);font-size:13px;margin-top:12px;cursor:pointer;padding:6px}
+  .skip:hover{color:var(--ink)}
+  .backbtn{position:absolute;left:16px;top:14px;z-index:12;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer;width:34px;height:34px;border-radius:50%;transition:.15s}
+  .backbtn:hover{background:var(--paper);color:var(--ink)}
+
+  /* connect */
+  .banks{display:flex;gap:10px;margin:4px 0 16px}
+  .bank{flex:1;border:2px solid var(--line);border-radius:14px;padding:14px 6px;text-align:center;font-weight:800;font-size:12px;background:#fff;transition:.2s;position:relative}
+  .bank .bd{width:34px;height:34px;border-radius:10px;margin:0 auto 8px;display:grid;place-items:center;color:#fff;font-weight:900;font-size:15px}
+  .bank .chk{position:absolute;top:6px;right:6px;width:18px;height:18px;border-radius:50%;background:var(--green);color:#fff;font-size:11px;display:grid;place-items:center;opacity:0;transform:scale(.4);transition:.25s}
+  .bank.done .chk{opacity:1;transform:scale(1)}
+  .bank.done{border-color:var(--green);background:var(--mint)}
+  .trust{display:flex;align-items:center;gap:7px;justify-content:center;color:var(--muted);font-size:12px;margin-top:12px}
+  /* connect overlay */
+  .connecting{position:absolute;inset:0;background:rgba(255,255,255,.97);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:20;padding:30px;text-align:center}
+  .connecting.show{display:flex;animation:fadein .3s}
+  @keyframes fadein{from{opacity:0}to{opacity:1}}
+  .spinner{width:64px;height:64px;border-radius:50%;border:5px solid var(--mint2);border-top-color:var(--green);animation:spin 1s linear infinite;margin-bottom:20px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .connecting .cs{font-size:16px;font-weight:800;margin-bottom:6px}
+  .connecting .cd{font-size:13px;color:var(--muted)}
+  .lockpulse{font-size:44px;margin-bottom:14px;animation:pulse 1.2s ease-in-out infinite}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+
+  /* toast */
+  .toast{position:absolute;left:20px;right:20px;bottom:20px;background:var(--ink);color:#fff;border-radius:14px;padding:13px 15px;font-size:13.5px;font-weight:600;display:flex;gap:10px;align-items:center;transform:translateY(160%);transition:transform .4s cubic-bezier(.22,1,.36,1);z-index:25}
+  .toast.show{transform:translateY(0)}
+
+  /* snapshot / aha */
+  .hero{background:linear-gradient(135deg,var(--green-dd),var(--green));color:#fff;border-radius:22px;padding:22px;margin-bottom:14px;position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;right:-30px;top:-30px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.09)}
+  .hero .lab{font-size:12.5px;opacity:.9;font-weight:700}
+  .hero .big{font-size:38px;font-weight:850;letter-spacing:-.02em;margin:6px 0 3px;font-variant-numeric:tabular-nums}
+  .hero .note{font-size:13px;opacity:.94;line-height:1.4}
+  .kpis{display:flex;gap:10px;margin-bottom:14px}
+  .kpi{flex:1;border:1.5px solid var(--line);border-radius:14px;padding:12px}
+  .kpi .k{font-size:11.5px;color:var(--muted);font-weight:700}
+  .kpi .v{font-size:16px;font-weight:850;margin-top:3px;font-variant-numeric:tabular-nums}
+  .insight{display:flex;gap:11px;background:var(--gold-soft);border:1px solid #f0dca0;border-radius:14px;padding:13px;margin-bottom:14px;opacity:0;transform:translateY(10px);transition:.5s}
+  .insight.in{opacity:1;transform:none}
+  .insight .txt{font-size:13px;line-height:1.45}
+  .insight b{color:#8a6200}
+  .chart{border:1.5px solid var(--line);border-radius:14px;padding:14px}
+  .chart .h{font-size:12px;color:var(--muted);font-weight:800;margin-bottom:12px;text-transform:uppercase;letter-spacing:.04em}
+  .barrow{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .barrow .bl{font-size:12px;width:74px;font-weight:600}
+  .bartrack{flex:1;height:12px;background:var(--paper);border-radius:99px;overflow:hidden}
+  .bartrack > span{display:block;height:100%;width:0;border-radius:99px;transition:width .9s cubic-bezier(.22,1,.36,1)}
+  .barrow .bv{font-family:var(--mono);font-size:11.5px;font-weight:700;width:52px;text-align:right;color:var(--muted)}
+
+  /* invite */
+  .rolechips{display:flex;gap:8px;margin-bottom:14px}
+  .rchip{flex:1;text-align:center;border:2px solid var(--line);border-radius:12px;padding:11px 6px;font-size:12.5px;font-weight:700;cursor:pointer;transition:.15s}
+  .rchip:hover{border-color:#bfe4d3}
+  .rchip.sel{border-color:var(--green);background:var(--mint);color:var(--green-d)}
+  .field{width:100%;border:2px solid var(--line);border-radius:14px;padding:14px;font-size:15px;font-family:inherit;margin-bottom:12px}
+  .field:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 4px rgba(15,157,107,.14)}
+
+  /* success */
+  .success{text-align:center;padding-top:34px;display:flex;flex-direction:column;align-items:center}
+  .ring{width:96px;height:96px;border-radius:50%;background:var(--mint);display:grid;place-items:center;font-size:50px;margin-bottom:20px;animation:pop .6s cubic-bezier(.34,1.56,.64,1)}
+  @keyframes pop{0%{transform:scale(0)}70%{transform:scale(1.15)}100%{transform:scale(1)}}
+  .confetti{position:absolute;inset:0;pointer-events:none;z-index:15}
+
+  .aside{max-width:280px;padding-top:40px}
+  .aside .k{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--green);margin-bottom:10px}
+  .aside h2{font-size:25px;font-weight:850;letter-spacing:-.02em;line-height:1.12;margin-bottom:12px}
+  .aside p{font-size:13.5px;color:var(--muted);line-height:1.6;margin-bottom:12px}
+  .aside .tag{display:inline-block;font-size:11.5px;font-weight:700;background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 11px;margin:0 6px 6px 0}
+  @media(max-width:820px){.aside{display:none}}
+</style>
+</head>
+<body>
+  <aside class="aside">
+    <div class="k">FinWise · Module 2 · The Solution</div>
+    <h2>The path to the Aha, made fun.</h2>
+    <p>An interactive onboarding that gets a brand-new trial user to their <b>first financial insight</b> in three taps — with a sample-data on-ramp so no one stalls at the bank-connection wall.</p>
+    <div>
+      <span class="tag">▶ Try every button</span>
+      <span class="tag">Pick a goal</span>
+      <span class="tag">Connect or use sample data</span>
+      <span class="tag">Watch the Aha animate</span>
+    </div>
+  </aside>
+
+  <div class="phone">
+    <div class="notch"></div>
+    <div class="top">
+      <div class="brand"><span class="logo">F</span>FinWise</div>
+      <span class="streakchip" id="streak">🔥 Week 1</span>
+    </div>
+    <div class="prog"><span id="progbar"></span></div>
+
+    <div class="scroll">
+      <button class="backbtn" id="backbtn" onclick="back()" style="display:none">‹</button>
+
+      <!-- 1 · GOAL -->
+      <section class="screen active" id="s1">
+        <div style="height:14px"></div>
+        <div class="eyebrow">Welcome 👋</div>
+        <h1>What do you want to see first?</h1>
+        <p class="sub">Pick one — FinWise tailors your first insight to it. You can change it anytime.</p>
+        <div class="goal" data-goal="cash" onclick="pick(this,'cash')">
+          <div class="emo">💵</div><div><div class="t">My cash flow</div><div class="d">Am I making or losing money?</div></div><div class="tick">✓</div>
+        </div>
+        <div class="goal" data-goal="where" onclick="pick(this,'where')">
+          <div class="emo">🧭</div><div><div class="t">Where my money goes</div><div class="d">What am I spending on?</div></div><div class="tick">✓</div>
+        </div>
+        <div class="goal" data-goal="profit" onclick="pick(this,'profit')">
+          <div class="emo">📈</div><div><div class="t">My profit</div><div class="d">How much do I keep?</div></div><div class="tick">✓</div>
+        </div>
+        <div class="grow"></div>
+        <button class="btn primary" id="s1btn" disabled onclick="go(2)">Continue →</button>
+        <div class="skip" onclick="pick(null,'cash');go(2)">Skip — just show me around</div>
+      </section>
+
+      <!-- 2 · CONNECT -->
+      <section class="screen" id="s2">
+        <div style="height:14px"></div>
+        <div class="eyebrow">1 quick step</div>
+        <h1>Connect your accounts.</h1>
+        <p class="sub">FinWise reads your transactions to build your snapshot. Read-only — we can never move your money.</p>
+        <div class="banks">
+          <div class="bank" data-b="1"><div class="bd" style="background:#1c4587">B</div>BizBank<span class="chk">✓</span></div>
+          <div class="bank" data-b="2"><div class="bd" style="background:#0f9d6b">M</div>MintPay<span class="chk">✓</span></div>
+          <div class="bank" data-b="3"><div class="bd" style="background:#c0392b">C</div>CardCo<span class="chk">✓</span></div>
+        </div>
+        <button class="btn primary" onclick="connect()">🔗 Connect securely</button>
+        <div style="height:10px"></div>
+        <button class="btn line" onclick="sampleData()">✨ Explore with sample data</button>
+        <div class="trust">🔒 256-bit encryption · Read-only · Powered by Plaid</div>
+        <div class="grow"></div>
+        <div class="skip" onclick="sampleData()">Not ready? Use sample data →</div>
+
+        <div class="connecting" id="connecting">
+          <div class="spinner" id="spin"></div>
+          <div class="lockpulse" id="lock" style="display:none">🎉</div>
+          <div class="cs" id="cstat">Connecting securely…</div>
+          <div class="cd" id="cdesc">Establishing an encrypted link</div>
+        </div>
+      </section>
+
+      <!-- 3 · AHA / SNAPSHOT -->
+      <section class="screen" id="s3">
+        <div style="height:8px"></div>
+        <div class="eyebrow">✨ Your first snapshot</div>
+        <div class="hero">
+          <div class="lab" id="heroLab">Net cash flow · last 30 days</div>
+          <div class="big" id="heroBig">+$0</div>
+          <div class="note" id="heroNote">Crunching your numbers…</div>
+        </div>
+        <div class="kpis">
+          <div class="kpi"><div class="k">Money in</div><div class="v" id="kin">$0</div></div>
+          <div class="kpi"><div class="k">Money out</div><div class="v" id="kout">$0</div></div>
+          <div class="kpi"><div class="k">On hand</div><div class="v" id="khand">$0</div></div>
+        </div>
+        <div class="insight" id="insight">
+          <div style="font-size:18px">💡</div>
+          <div class="txt">Your <b>Software</b> spend jumped <b>32%</b> to <b>$3,240</b> last month — your fastest-growing expense.</div>
+        </div>
+        <div class="chart">
+          <div class="h">Where it went · last 30 days</div>
+          <div class="barrow"><span class="bl">Payroll</span><span class="bartrack"><span data-w="100" style="background:var(--green)"></span></span><span class="bv">$22,400</span></div>
+          <div class="barrow"><span class="bl">Inventory</span><span class="bartrack"><span data-w="44" style="background:#3ad29a"></span></span><span class="bv">$9,800</span></div>
+          <div class="barrow"><span class="bl">Marketing</span><span class="bartrack"><span data-w="18" style="background:var(--gold)"></span></span><span class="bv">$4,100</span></div>
+          <div class="barrow"><span class="bl">Software</span><span class="bartrack"><span data-w="14" style="background:var(--coral)"></span></span><span class="bv">$3,240</span></div>
+        </div>
+        <div class="grow"></div>
+        <button class="btn primary" onclick="go(4)">Love it — keep this updated →</button>
+      </section>
+
+      <!-- 4 · INVITE -->
+      <section class="screen" id="s4">
+        <div style="height:14px"></div>
+        <div class="eyebrow">One last thing</div>
+        <h1>Bring in your money person.</h1>
+        <p class="sub">Invite whoever helps run your finances. They see the same live numbers — no more spreadsheet ping-pong.</p>
+        <div class="rolechips">
+          <div class="rchip sel" onclick="rsel(this)">Accountant</div>
+          <div class="rchip" onclick="rsel(this)">Bookkeeper</div>
+          <div class="rchip" onclick="rsel(this)">Co-founder</div>
+        </div>
+        <input class="field" placeholder="name@email.com" value="alex@myaccountant.com">
+        <button class="btn primary" onclick="go(5)">Send invite ✉️</button>
+        <div class="grow"></div>
+        <div class="skip" onclick="go(5)">Maybe later</div>
+      </section>
+
+      <!-- 5 · SUCCESS -->
+      <section class="screen" id="s5">
+        <canvas class="confetti" id="confetti"></canvas>
+        <div class="success">
+          <div class="ring">🎉</div>
+          <h1>You're all set!</h1>
+          <p class="sub" style="max-width:26ch">Your snapshot updates automatically as money moves. We'll nudge you once a week to keep your <b>Money Momentum</b> going.</p>
+          <div style="background:var(--gold-soft);color:#8a6200;font-weight:800;font-size:14px;padding:10px 16px;border-radius:12px;margin-bottom:20px">🔥 Money Momentum started — Week 1</div>
+          <button class="btn primary" onclick="go(3)">Go to my dashboard</button>
+          <div class="skip" onclick="restart()">↺ Replay the demo</div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+<script>
+  var goal='cash', cur=1, maxStep=5;
+  function setProg(){document.getElementById('progbar').style.width=(cur/maxStep*100)+'%';
+    document.getElementById('backbtn').style.display=(cur>1&&cur<5)?'block':'none';
+    document.getElementById('streak').style.display=(cur>=5)?'inline-flex':'none';}
+  function show(n,isBack){
+    for(var k=1;k<=5;k++){var el=document.getElementById('s'+k);el.classList.remove('active','back');}
+    var t=document.getElementById('s'+n);t.classList.add('active');if(isBack)t.classList.add('back');
+    cur=n;setProg();document.querySelector('.scroll').scrollTop=0;
+    if(n===3) revealSnapshot();
+    if(n===5) burst();
+  }
+  function go(n){show(n,false);}
+  function back(){if(cur>1)show(cur-1,true);}
+  function restart(){goal='cash';document.querySelectorAll('.goal').forEach(g=>g.classList.remove('sel'));document.getElementById('s1btn').disabled=true;resetSnapshot();show(1,true);}
+
+  function pick(el,g){goal=g;
+    document.querySelectorAll('.goal').forEach(x=>x.classList.remove('sel'));
+    if(el)el.classList.add('sel');else{var t=document.querySelector('[data-goal="'+g+'"]');if(t)t.classList.add('sel');}
+    document.getElementById('s1btn').disabled=false;}
+  function rsel(el){document.querySelectorAll('.rchip').forEach(x=>x.classList.remove('sel'));el.classList.add('sel');}
+
+  /* connect animation */
+  function connect(){
+    var ov=document.getElementById('connecting');ov.classList.add('show');
+    var banks=document.querySelectorAll('#s2 .bank');
+    var steps=[
+      [700,()=>{document.getElementById('cstat').textContent='Verifying credentials…';document.getElementById('cdesc').textContent='Bank-level security';}],
+      [700,()=>{banks[0].classList.add('done');}],
+      [500,()=>{banks[1].classList.add('done');document.getElementById('cstat').textContent='Importing transactions…';document.getElementById('cdesc').textContent='This is usually instant';}],
+      [500,()=>{banks[2].classList.add('done');}],
+      [600,()=>{document.getElementById('spin').style.display='none';document.getElementById('lock').style.display='block';document.getElementById('cstat').textContent='Connected!';document.getElementById('cdesc').textContent='Building your snapshot';}],
+      [800,()=>{ov.classList.remove('show');resetConnect();go(3);}]
+    ];
+    var t=0;steps.forEach(s=>{t+=s[0];setTimeout(s[1],t);});
+  }
+  function resetConnect(){document.getElementById('spin').style.display='block';document.getElementById('lock').style.display='none';
+    document.getElementById('cstat').textContent='Connecting securely…';document.getElementById('cdesc').textContent='Establishing an encrypted link';
+    document.querySelectorAll('#s2 .bank').forEach(b=>b.classList.remove('done'));}
+  function sampleData(){toast('✨ Loaded realistic sample data');setTimeout(()=>go(3),650);}
+
+  function toast(msg){var t=document.getElementById('toastEl');if(!t){t=document.createElement('div');t.className='toast';t.id='toastEl';document.querySelector('.phone').appendChild(t);}t.textContent=msg;requestAnimationFrame(()=>t.classList.add('show'));clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),1400);}
+
+  /* snapshot reveal with count-ups + bars */
+  var heroV={
+    cash:{lab:'Net cash flow · last 30 days',big:'+$6,200',pos:true,note:"You're cash-flow positive — you brought in more than you spent. 🎉"},
+    where:{lab:'Biggest expense · last 30 days',big:'$22,400',pos:false,note:'Payroll is 48% of your spend. Software is climbing fast.'},
+    profit:{lab:'Profit margin · last 30 days',big:'12%',pos:true,note:'You kept $6,200 of $52,400 in revenue — up from 9%.'}
+  };
+  function resetSnapshot(){
+    document.getElementById('heroBig').textContent='+$0';document.getElementById('heroNote').textContent='Crunching your numbers…';
+    document.getElementById('kin').textContent='$0';document.getElementById('kout').textContent='$0';document.getElementById('khand').textContent='$0';
+    document.getElementById('insight').classList.remove('in');
+    document.querySelectorAll('#s3 .bartrack > span').forEach(b=>b.style.width='0');
+  }
+  function countUp(el,target,prefix,suffix,dur){
+    var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+    if(reduce){el.textContent=prefix+target.toLocaleString()+suffix;return;}
+    var t0=performance.now();
+    function step(t){var p=Math.min(1,(t-t0)/dur);var v=Math.round(target*(1-Math.pow(1-p,3)));
+      el.textContent=prefix+v.toLocaleString()+suffix;if(p<1)requestAnimationFrame(step);}
+    requestAnimationFrame(step);
+  }
+  var snapDone=false;
+  function revealSnapshot(){
+    resetSnapshot();
+    var v=heroV[goal]||heroV.cash;
+    document.getElementById('heroLab').textContent=v.lab;
+    setTimeout(()=>{
+      // hero big
+      var el=document.getElementById('heroBig');
+      if(goal==='cash'){countUp(el,6200,'+$','',900);}
+      else if(goal==='where'){countUp(el,22400,'$','',900);}
+      else{el.textContent='0%';countUp(el,12,'','%',900);}
+      document.getElementById('heroNote').textContent=v.note;
+      countUp(document.getElementById('kin'),52400,'$','',900);
+      countUp(document.getElementById('kout'),46200,'$','',900);
+      countUp(document.getElementById('khand'),48250,'$','',900);
+    },180);
+    setTimeout(()=>{document.querySelectorAll('#s3 .bartrack > span').forEach(b=>{b.style.width=b.dataset.w+'%';});},420);
+    setTimeout(()=>{document.getElementById('insight').classList.add('in');},900);
+  }
+
+  /* confetti */
+  function burst(){
+    var c=document.getElementById('confetti');if(!c)return;
+    var ph=document.querySelector('.phone');c.width=ph.clientWidth;c.height=ph.clientHeight;
+    var ctx=c.getContext('2d');var cols=['#0f9d6b','#3ad29a','#e0a100','#ef5f52','#8a6200'];
+    var parts=[];for(var i=0;i<90;i++){parts.push({x:c.width/2,y:c.height*0.3,vx:(Math.random()-.5)*8,vy:Math.random()*-9-3,g:.28,r:Math.random()*5+3,c:cols[i%cols.length],rot:Math.random()*6,vr:(Math.random()-.5)*.4,life:0});}
+    var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;if(reduce)return;
+    var frames=0;
+    (function anim(){ctx.clearRect(0,0,c.width,c.height);frames++;
+      parts.forEach(p=>{p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;
+        ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.c;ctx.fillRect(-p.r,-p.r,p.r*2,p.r*1.4);ctx.restore();});
+      if(frames<120)requestAnimationFrame(anim);else ctx.clearRect(0,0,c.width,c.height);
+    })();
+  }
+
+  setProg();
+</script>
+</body>
+</html>

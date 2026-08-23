@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Money Momentum — FinWise</title>
+<style>
+  :root{
+    --bg:#eef1f7; --card:#ffffff; --ink:#0f1836; --muted:#64708c; --dim:#98a2be;
+    --brand:#2f4bff; --brand-ink:#1b2ea8; --green:#10b981; --green-soft:#e7f7f0;
+    --amber:#f59e0b; --amber-soft:#fef3e2; --line:#e6e9f2; --track:#eaeef7;
+    --mono:'SFMono-Regular',ui-monospace,'Consolas',monospace;
+    --sans:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    --shadow:0 22px 60px rgba(20,32,80,.16);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--ink);min-height:100vh;display:flex;align-items:flex-start;justify-content:center;gap:34px;flex-wrap:wrap;
+    background:radial-gradient(1000px 620px at 50% -10%,#dfe6fb 0%,var(--bg) 55%);padding:34px 18px 60px;-webkit-font-smoothing:antialiased}
+
+  /* phone */
+  .phone{width:100%;max-width:400px;background:var(--card);border-radius:32px;box-shadow:var(--shadow);overflow:hidden;position:relative;border:1px solid rgba(255,255,255,.7)}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 6px}
+  .brand{display:flex;align-items:center;gap:8px;font-weight:800;letter-spacing:-.02em;font-size:17px}
+  .logo{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--brand),#7b8cff);display:grid;place-items:center;color:#fff;font-weight:900;font-size:15px}
+  .gracechip{display:inline-flex;align-items:center;gap:6px;background:var(--amber-soft);color:#a15c00;font-size:11px;font-weight:800;padding:5px 10px;border-radius:99px}
+  .body{padding:6px 22px 24px}
+
+  /* hero ring */
+  .hero{text-align:center;padding:12px 0 6px}
+  .ringwrap{position:relative;width:172px;height:172px;margin:2px auto 6px}
+  .pulse{position:absolute;inset:14px;border-radius:50%;background:radial-gradient(circle,rgba(16,185,129,.18),transparent 68%);animation:pulse 2.6s ease-in-out infinite}
+  @keyframes pulse{0%,100%{transform:scale(.92);opacity:.55}50%{transform:scale(1.06);opacity:.9}}
+  @media(prefers-reduced-motion:reduce){.pulse{animation:none}}
+  svg.ring{position:relative;transform:rotate(-90deg);display:block}
+  .ring .track{fill:none;stroke:var(--track);stroke-width:12}
+  .ring .prog{fill:none;stroke:var(--green);stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset .7s cubic-bezier(.22,1,.36,1)}
+  .ringmid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .ringmid .num{font-size:52px;font-weight:850;letter-spacing:-.03em;line-height:.9;color:var(--brand)}
+  .ringmid .unit{font-size:11px;font-weight:800;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;margin-top:4px}
+  .htitle{font-size:20px;font-weight:800;letter-spacing:-.01em;margin-top:6px}
+  .hsub{font-size:13.5px;color:var(--muted);line-height:1.5;margin-top:4px;max-width:30ch;margin-left:auto;margin-right:auto}
+
+  /* this week status + CTA */
+  .week{display:flex;align-items:center;gap:12px;background:var(--green-soft);border:1px solid #bfeeda;border-radius:14px;padding:13px 15px;margin:18px 0 12px}
+  .week.pending{background:#f4f6fc;border-color:var(--line)}
+  .week .ic{width:34px;height:34px;border-radius:10px;background:var(--green);color:#fff;display:grid;place-items:center;font-weight:900;font-size:17px;flex:none}
+  .week.pending .ic{background:var(--brand)}
+  .week .t{font-size:13.5px;font-weight:700}
+  .week .d{font-size:12px;color:var(--muted);margin-top:1px}
+  .btn{display:block;width:100%;border:none;border-radius:14px;padding:15px;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;transition:.18s;background:var(--brand);color:#fff;box-shadow:0 10px 24px rgba(47,75,255,.30)}
+  .btn:hover{background:var(--brand-ink)}
+  .btn.done{background:var(--green-soft);color:#0b7a55;box-shadow:none;cursor:default}
+  .demoNote{text-align:center;font-size:11px;color:var(--dim);margin-top:8px}
+
+  /* next unlock */
+  .next{margin:18px 0 8px}
+  .next .row{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;margin-bottom:7px}
+  .next .lab{font-weight:700;color:var(--ink)}
+  .next .cnt{color:var(--muted);font-weight:700;font-family:var(--mono)}
+  .nbar{height:8px;border-radius:99px;background:var(--track);overflow:hidden}
+  .nbar > span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--brand),#7b8cff);transition:width .7s cubic-bezier(.22,1,.36,1)}
+
+  /* milestone ladder */
+  .ladder{margin-top:18px;border-top:1px solid var(--line);padding-top:16px}
+  .lhead{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:12px}
+  .mile{display:flex;align-items:center;gap:12px;padding:9px 0}
+  .mile .b{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-weight:900;font-size:13px;flex:none;font-family:var(--mono)}
+  .mile.done .b{background:var(--green);color:#fff}
+  .mile.nextm .b{background:#e7ebff;color:var(--brand);box-shadow:0 0 0 3px rgba(47,75,255,.14)}
+  .mile.lock .b{background:var(--track);color:var(--dim)}
+  .mile .txt{flex:1}
+  .mile .r{font-size:13.5px;font-weight:700}
+  .mile.lock .r{color:var(--muted)}
+  .mile .w{font-size:11.5px;color:var(--muted);margin-top:1px}
+  .mile .state{font-size:11px;font-weight:800;padding:3px 9px;border-radius:7px}
+  .mile.done .state{background:var(--green-soft);color:#0b7a55}
+  .mile.nextm .state{background:#e7ebff;color:var(--brand-ink)}
+  .mile.lock .state{background:var(--track);color:var(--dim)}
+
+  /* nudge preview */
+  .nudge{margin-top:18px;background:#0f1836;border-radius:16px;padding:14px 15px;color:#fff;display:flex;gap:12px;align-items:flex-start}
+  .nudge .ni{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--brand),#7b8cff);display:grid;place-items:center;font-weight:900;font-size:14px;flex:none}
+  .nudge .nt{font-size:12px;opacity:.7;font-weight:700}
+  .nudge .nb{font-size:13.5px;font-weight:600;line-height:1.4;margin-top:2px}
+  .nudgelbl{font-size:10.5px;color:var(--dim);text-align:center;margin-top:8px}
+
+  /* toast */
+  .toast{position:absolute;left:16px;right:16px;bottom:16px;background:var(--brand);color:#fff;border-radius:14px;padding:15px 16px;box-shadow:0 16px 40px rgba(47,75,255,.4);
+    display:flex;gap:12px;align-items:center;transform:translateY(140%);transition:transform .5s cubic-bezier(.22,1,.36,1)}
+  .toast.show{transform:translateY(0)}
+  .toast .ti{font-size:24px}
+  .toast .tt{font-size:14px;font-weight:800}
+  .toast .td{font-size:12px;opacity:.9;margin-top:1px}
+
+  /* side caption (desktop only) */
+  .caption{max-width:300px;padding-top:40px}
+  .caption .k{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--brand);margin-bottom:10px}
+  .caption h1{font-size:26px;font-weight:850;letter-spacing:-.02em;line-height:1.1;margin-bottom:12px}
+  .caption p{font-size:13.5px;color:var(--muted);line-height:1.6;margin-bottom:12px}
+  .caption .tag{display:inline-block;font-size:11.5px;font-weight:700;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 11px;margin:0 6px 6px 0}
+  @media(max-width:780px){.caption{display:none}}
+</style>
+</head>
+<body>
+  <aside class="caption">
+    <div class="k">FinWise · Gamification Mechanic</div>
+    <h1>Money Momentum</h1>
+    <p>A <b>forgiving weekly streak</b> that turns FinWise's Aha — reviewing your money and acting on one insight — into a habit, before a trial user has consciously decided to stay.</p>
+    <p>It taps <b>loss aversion + owner identity</b>, matched to the <b>weekly</b> cadence money actually moves on. Milestones unlock <b>deeper insight</b>, not hollow points.</p>
+    <div>
+      <span class="tag">Weekly cadence</span>
+      <span class="tag">Grace week = no punishment</span>
+      <span class="tag">Rewards = real value</span>
+      <span class="tag">One nudge, well-timed</span>
+    </div>
+  </aside>
+
+  <div class="phone">
+    <div class="topbar">
+      <div class="brand"><span class="logo">F</span>FinWise</div>
+      <span class="gracechip">🛟 1 grace week banked</span>
+    </div>
+    <div class="body">
+      <div class="hero">
+        <div class="ringwrap">
+          <div class="pulse"></div>
+          <svg class="ring" width="172" height="172" viewBox="0 0 172 172">
+            <circle class="track" cx="86" cy="86" r="72"></circle>
+            <circle class="prog" id="prog" cx="86" cy="86" r="72"></circle>
+          </svg>
+          <div class="ringmid">
+            <div class="num" id="weekNum">7</div>
+            <div class="unit">week streak</div>
+          </div>
+        </div>
+        <div class="htitle">Money Momentum</div>
+        <div class="hsub" id="hsub">You've stayed on top of your money <b>7 weeks</b> running.</div>
+      </div>
+
+      <div class="week" id="weekStatus">
+        <div class="ic" id="weekIc">✓</div>
+        <div><div class="t" id="weekT">This week — reviewed</div><div class="d" id="weekD">Snapshot checked, 1 insight actioned. Momentum safe.</div></div>
+      </div>
+      <button class="btn" id="cta">Do this week's 2-min review →</button>
+      <div class="demoNote">Demo — tap to advance the streak and watch milestones unlock</div>
+
+      <div class="next">
+        <div class="row"><span class="lab" id="nextLab">Next unlock · Quarterly Cash-Flow Forecast</span><span class="cnt" id="nextCnt">5 wks</span></div>
+        <div class="nbar"><span id="nbar" style="width:37%"></span></div>
+      </div>
+
+      <div class="ladder">
+        <div class="lhead">Milestones — rewards are deeper insight</div>
+        <div id="miles"></div>
+      </div>
+
+      <div class="nudge">
+        <div class="ni">F</div>
+        <div><div class="nt">FinWise · Monday 8:02am</div><div class="nb">Your week's money snapshot is ready — a 2-min look keeps your momentum. 👀</div></div>
+      </div>
+      <div class="nudgelbl">The only nudge — one useful moment, not notification spam.</div>
+    </div>
+
+    <div class="toast" id="toast">
+      <span class="ti">🎉</span>
+      <div><div class="tt" id="toastT">Milestone unlocked</div><div class="td" id="toastD"></div></div>
+    </div>
+    <canvas id="miConfetti" style="position:absolute;inset:0;pointer-events:none;z-index:40"></canvas>
+  </div>
+
+<script>
+  const MILES=[
+    {w:4,  r:'Monthly Trend Report',        d:'See the month in one view'},
+    {w:12, r:'Quarterly Cash-Flow Forecast', d:'Look 90 days ahead'},
+    {w:26, r:'Half-Year Money Review',       d:'Your first 6-month story'},
+    {w:52, r:'Year in Review + "Knows Their Numbers"', d:'A full year, owned'}
+  ];
+  const R=72, C=2*Math.PI*R;
+  let week=7;
+  const prog=document.getElementById('prog');
+  prog.style.strokeDasharray=C;
+
+  function bounds(w){
+    let prev=0, next=null;
+    for(const m of MILES){ if(w>=m.w) prev=m.w; }
+    for(const m of MILES){ if(m.w>w){ next=m.w; break; } }
+    return {prev,next};
+  }
+  function nextMile(w){ for(const m of MILES){ if(m.w>w) return m; } return null; }
+
+  function draw(){
+    document.getElementById('weekNum').textContent=week;
+    document.getElementById('hsub').innerHTML='You’ve stayed on top of your money <b>'+week+' week'+(week===1?'':'s')+'</b> running.';
+    const {prev,next}=bounds(week);
+    const p = next===null?1:(week-prev)/(next-prev);
+    prog.style.strokeDashoffset=C*(1-p);
+    const nm=nextMile(week);
+    if(nm){
+      document.getElementById('nextLab').textContent='Next unlock · '+nm.r;
+      document.getElementById('nextCnt').textContent=(nm.w-week)+' wk'+((nm.w-week)===1?'':'s');
+      document.getElementById('nbar').style.width=(p*100)+'%';
+    }else{
+      document.getElementById('nextLab').textContent='All milestones unlocked — you know your numbers.';
+      document.getElementById('nextCnt').textContent='✓';
+      document.getElementById('nbar').style.width='100%';
+    }
+    // ladder
+    const box=document.getElementById('miles'); box.innerHTML='';
+    MILES.forEach(m=>{
+      const done=week>=m.w, isNext=nm&&nm.w===m.w;
+      const cls=done?'done':(isNext?'nextm':'lock');
+      const state=done?'Unlocked':(isNext?'Next':'Locked');
+      const badge=done?'✓':(m.w);
+      const el=document.createElement('div'); el.className='mile '+cls;
+      el.innerHTML='<div class="b">'+badge+'</div><div class="txt"><div class="r">'+m.r+'</div><div class="w">Week '+m.w+' · '+m.d+'</div></div><div class="state">'+state+'</div>';
+      box.appendChild(el);
+    });
+  }
+
+  function toast(m){
+    const t=document.getElementById('toast');
+    document.getElementById('toastT').textContent='Unlocked: '+m.r;
+    document.getElementById('toastD').textContent=m.d+' — '+m.w+'-week momentum!';
+    t.classList.add('show');
+    clearTimeout(window._tt); window._tt=setTimeout(()=>t.classList.remove('show'),3200);
+    burst();
+  }
+  function burst(){
+    var c=document.getElementById('miConfetti'); if(!c) return;
+    if(matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+    var ph=c.parentElement; c.width=ph.clientWidth; c.height=ph.clientHeight;
+    var ctx=c.getContext('2d'); var cols=['#2f4bff','#10b981','#f59e0b','#7b8cff','#34d399'];
+    var parts=[]; for(var i=0;i<80;i++){parts.push({x:c.width/2,y:c.height*0.34,vx:(Math.random()-.5)*8,vy:Math.random()*-9-3,g:.28,r:Math.random()*5+3,c:cols[i%cols.length],rot:Math.random()*6,vr:(Math.random()-.5)*.4});}
+    var f=0;(function anim(){ctx.clearRect(0,0,c.width,c.height);f++;
+      parts.forEach(p=>{p.vy+=p.g;p.x+=p.vx;p.y+=p.vy;p.rot+=p.vr;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.c;ctx.fillRect(-p.r,-p.r,p.r*2,p.r*1.4);ctx.restore();});
+      if(f<120)requestAnimationFrame(anim);else ctx.clearRect(0,0,c.width,c.height);})();
+  }
+
+  document.getElementById('cta').addEventListener('click',()=>{
+    week++;
+    const hit=MILES.find(m=>m.w===week);
+    // update "this week" status to reviewed
+    document.getElementById('weekIc').textContent='✓';
+    document.getElementById('weekStatus').classList.remove('pending');
+    document.getElementById('weekT').textContent='Week '+week+' — reviewed';
+    document.getElementById('weekD').textContent='Snapshot checked, 1 insight actioned. Momentum safe.';
+    draw();
+    if(hit) toast(hit);
+  });
+
+  draw();
+</script>
+</body>
+</html>

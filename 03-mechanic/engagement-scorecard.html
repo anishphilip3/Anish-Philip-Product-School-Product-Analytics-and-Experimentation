@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinWise Engagement Scorecard</title>
+<style>
+  /* Committed LIGHT "measurement instrument" theme — deliberately distinct from the dark course template.
+     Every color painted explicitly so it holds on any host ground. */
+  :root{
+    --paper:#e9edf5; --paper2:#eef2f9; --card:#ffffff; --card2:#f6f8fc;
+    --ink:#0e1730; --muted:#586686; --dim:#8b96b2; --line:#dde3ef; --line2:#c9d2e4;
+    --accent:#2440e6; --accent-soft:#e6ebff;
+    --depth:#2563eb; --breadth:#7c3aed; --freq:#0891b2; --reten:#c026d3;
+    --bad:#e5484d; --mid:#f0a017; --good:#12a150;
+    --mono:'SFMono-Regular',ui-monospace,'Cascadia Code','Consolas',monospace;
+    --sans:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    --shadow:0 10px 34px rgba(20,34,74,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:var(--sans); color:var(--ink); min-height:100vh;
+    background:
+      radial-gradient(900px 500px at 90% -8%, #dfe6f6 0%, transparent 60%),
+      radial-gradient(700px 420px at -5% 5%, #e7ecf8 0%, transparent 55%),
+      var(--paper);
+    padding:34px 20px 60px; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1060px;margin:0 auto}
+  .eyebrow{font-size:11px;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+  h1{font-size:33px;font-weight:850;letter-spacing:-.03em;line-height:1.04;text-wrap:balance}
+  .lede{color:var(--muted);font-size:14.5px;line-height:1.55;margin-top:11px;max-width:72ch}
+  .lede b{color:var(--ink)}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:26px}
+  @media(max-width:820px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+  .panel-h{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+
+  /* gauge instrument */
+  .gaugeCard{padding:22px 24px 20px;position:relative;overflow:hidden}
+  .gaugeCard::before{content:"";position:absolute;inset:0;background-image:radial-gradient(var(--line) 1px,transparent 1px);background-size:16px 16px;opacity:.5;pointer-events:none}
+  .gauge-wrap{position:relative;width:100%;max-width:320px;margin:6px auto 0}
+  svg.gauge{display:block;width:100%;height:auto}
+  .zone{fill:none;stroke-width:17;stroke-linecap:butt}
+  #needle{transform-origin:150px 150px;transition:transform .65s cubic-bezier(.22,1,.36,1)}
+  .readout{position:absolute;left:0;right:0;bottom:2px;text-align:center}
+  .readout .n{font-family:var(--mono);font-size:58px;font-weight:800;line-height:.85;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+  .readout .o{font-size:12px;color:var(--muted);font-weight:600;margin-top:3px}
+  .grow{flex:1}
+  .g-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;flex-wrap:wrap;position:relative}
+  .band-pill{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:10px;font-weight:800;font-size:13px}
+  .band-pill .d{width:9px;height:9px;border-radius:50%}
+  .wsum{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700}
+  .wsum .dot{width:8px;height:8px;border-radius:50%}
+  .scalekey{display:flex;gap:14px;margin-top:14px;position:relative}
+  .scalekey .k{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);font-weight:600}
+  .scalekey .sw{width:10px;height:10px;border-radius:3px}
+
+  /* readout side */
+  .side{padding:22px 22px;display:flex;flex-direction:column}
+  .dims{display:flex;flex-direction:column;gap:13px;margin-top:16px}
+  .dimrow{display:grid;grid-template-columns:88px 1fr 46px;align-items:center;gap:12px}
+  .dimtag{font-size:12px;font-weight:800}
+  .dimbar{height:10px;border-radius:99px;background:var(--card2);overflow:hidden;border:1px solid var(--line)}
+  .dimbar > span{display:block;height:100%;border-radius:99px;transition:width .6s cubic-bezier(.22,1,.36,1)}
+  .dimval{font-family:var(--mono);font-size:13px;font-weight:800;text-align:right;font-variant-numeric:tabular-nums}
+  .opp{margin-top:20px;padding:16px 16px;border-radius:12px;background:linear-gradient(135deg,#f3f0ff,#eef4ff);border:1px solid #e0e2fb}
+  .opp .lbl{font-size:10.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+  .opp .big{font-size:16px;font-weight:800;margin:6px 0 5px;line-height:1.25}
+  .opp .sub{font-size:12.5px;color:var(--muted);line-height:1.5}
+  .opp .tag{display:inline-block;margin-top:11px;font-family:var(--mono);font-size:12px;font-weight:800;color:#fff;background:var(--accent);padding:6px 12px;border-radius:8px}
+
+  /* builder */
+  .builder{margin-top:16px;padding:22px 22px 20px}
+  .bhd{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:10px}
+  .bhd h2{font-size:18px;font-weight:800;letter-spacing:-.01em}
+  .row{display:grid;grid-template-columns:16px 1.9fr .72fr .8fr .72fr;gap:14px;align-items:center;padding:15px 0;border-top:1px solid var(--line)}
+  .row.head{border-top:none;padding:10px 0 4px}
+  .row.head span{font-size:10.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--dim)}
+  .spine{width:5px;height:38px;border-radius:99px;align-self:start;margin-top:2px}
+  .m-name{font-size:14.5px;font-weight:750}
+  .m-meta{display:flex;align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap}
+  .chip{font-size:10px;font-weight:800;letter-spacing:.04em;padding:3px 8px;border-radius:6px;text-transform:uppercase}
+  .corr{font-size:10.5px;font-weight:700;color:var(--muted)}
+  .why{grid-column:2 / -1;font-size:12px;color:var(--muted);line-height:1.5;margin-top:8px}
+  .m-mini{grid-column:2 / -1;height:6px;border-radius:99px;background:var(--card2);overflow:hidden;border:1px solid var(--line);margin-top:9px}
+  .m-mini > span{display:block;height:100%;border-radius:99px;transition:width .5s cubic-bezier(.22,1,.36,1),background .3s}
+  .w-wrap{position:relative}
+  .w-in{width:100%;background:var(--card2);border:1px solid var(--line2);color:var(--ink);font-family:var(--mono);font-weight:700;
+    border-radius:10px;padding:11px 22px 11px 10px;font-size:15px;text-align:center;font-variant-numeric:tabular-nums}
+  .w-in:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .w-wrap::after{content:"%";position:absolute;right:11px;top:50%;transform:translateY(-50%);color:var(--dim);font-family:var(--mono);font-size:12px;pointer-events:none}
+  .s-sel{width:100%;background:var(--card2);border:1px solid var(--line2);color:var(--ink);font-family:var(--mono);font-weight:700;
+    border-radius:10px;padding:11px 10px;font-size:15px;cursor:pointer;appearance:none;text-align:center;text-align-last:center}
+  .s-sel:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .wtd{font-family:var(--mono);font-size:20px;font-weight:800;text-align:right;font-variant-numeric:tabular-nums}
+  .w-in:focus-visible,.s-sel:focus-visible,.reset:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .scale{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+  .scale .s{font-size:11px;color:var(--muted);background:var(--card2);border:1px solid var(--line);border-radius:7px;padding:5px 9px}
+  .scale .s b{color:var(--ink);font-family:var(--mono)}
+  .reset{background:var(--card2);border:1px solid var(--line2);color:var(--muted);font-family:var(--sans);font-weight:700;font-size:12.5px;padding:8px 14px;border-radius:9px;cursor:pointer}
+  .reset:hover{border-color:var(--accent);color:var(--ink)}
+
+  .note{margin-top:16px;padding:18px 20px;border-radius:14px;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--reten);font-size:13.5px;line-height:1.6;color:var(--muted)}
+  .note b{color:var(--ink)}
+  .foot{margin-top:18px;font-size:12px;color:var(--dim);line-height:1.6}
+  .foot b{color:var(--muted)}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Module 3 · Engagement Instrument</div>
+    <h1>FinWise Engagement Scorecard</h1>
+    <p class="lede">One weighted KPI across <b>depth</b>, <b>breadth</b>, <b>frequency</b> and <b>retention</b> — each metric weighted by how strongly it predicts whether users stay. Turn any dial; the needle moves live.</p>
+  </header>
+
+  <div class="grid">
+    <!-- GAUGE -->
+    <section class="card gaugeCard">
+      <div class="panel-h" style="position:relative">Weighted engagement KPI</div>
+      <div class="gauge-wrap">
+        <svg class="gauge" viewBox="0 0 300 168" role="img" aria-label="Engagement gauge">
+          <path class="zone" style="stroke:var(--bad)"  d="M30,150 A120,120 0 0 1 112.92,35.88"/>
+          <path class="zone" style="stroke:var(--mid)"  d="M112.92,35.88 A120,120 0 0 1 220.53,52.92"/>
+          <path class="zone" style="stroke:var(--good)" d="M220.53,52.92 A120,120 0 0 1 270,150"/>
+          <g id="needle">
+            <line x1="150" y1="150" x2="150" y2="46" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/>
+          </g>
+          <circle cx="150" cy="150" r="8" fill="var(--ink)"/>
+          <circle cx="150" cy="150" r="3.4" fill="var(--card)"/>
+        </svg>
+        <div class="readout">
+          <div class="n" id="kpiNum">0.0</div>
+          <div class="o">out of 10</div>
+        </div>
+      </div>
+      <div class="g-foot">
+        <span class="band-pill" id="bandPill"><span class="d"></span><span id="bandTxt">—</span></span>
+        <span class="wsum" id="wsum"><span class="dot"></span><span id="wsumTxt">100%</span></span>
+      </div>
+      <div class="scalekey">
+        <span class="k"><span class="sw" style="background:var(--bad)"></span>0–4 Needs work</span>
+        <span class="k"><span class="sw" style="background:var(--mid)"></span>4–7 Moderate</span>
+        <span class="k"><span class="sw" style="background:var(--good)"></span>7+ Strong</span>
+      </div>
+    </section>
+
+    <!-- READOUT -->
+    <section class="card side">
+      <div class="panel-h">Where the score comes from</div>
+      <div class="dims">
+        <div class="dimrow"><div class="dimtag" style="color:var(--depth)">Depth</div><div class="dimbar"><span id="dDepth" style="background:var(--depth)"></span></div><div class="dimval" id="vDepth">0.0</div></div>
+        <div class="dimrow"><div class="dimtag" style="color:var(--breadth)">Breadth</div><div class="dimbar"><span id="dBreadth" style="background:var(--breadth)"></span></div><div class="dimval" id="vBreadth">0.0</div></div>
+        <div class="dimrow"><div class="dimtag" style="color:var(--freq)">Frequency</div><div class="dimbar"><span id="dFreq" style="background:var(--freq)"></span></div><div class="dimval" id="vFreq">0.0</div></div>
+        <div class="dimrow"><div class="dimtag" style="color:var(--reten)">Retention</div><div class="dimbar"><span id="dReten" style="background:var(--reten)"></span></div><div class="dimval" id="vReten">0.0</div></div>
+      </div>
+      <div class="opp">
+        <div class="lbl">Biggest opportunity</div>
+        <div class="big" id="oppName">—</div>
+        <div class="sub" id="oppSub">—</div>
+        <span class="tag" id="oppTag">—</span>
+      </div>
+    </section>
+  </div>
+
+  <!-- BUILDER -->
+  <section class="card builder">
+    <div class="bhd">
+      <h2>Your engagement metrics</h2>
+      <button class="reset" id="resetBtn">↺ Reset to FinWise baseline</button>
+    </div>
+    <div class="row head"><span></span><span>Metric</span><span style="text-align:center">Weight</span><span style="text-align:center">Score</span><span style="text-align:right">Weighted</span></div>
+    <div id="rows"></div>
+    <div class="scale">
+      <span class="s"><b>10</b> excellent</span>
+      <span class="s"><b>7</b> above average</span>
+      <span class="s"><b>3</b> moderate</span>
+      <span class="s"><b>1</b> below average</span>
+      <span class="s"><b>0</b> little to none</span>
+    </div>
+  </section>
+
+  <section class="note">
+    <b>Interpret &amp; iterate.</b> FinWise's baseline lands at <b>2.6 / 10 — Needs work</b>. The heaviest drag is <b>Retention (churn)</b>, and the biggest actionable lever behind it is the <b>collaboration gap</b> — the exact bet Modules 1–2 pointed to. Churn is an <b>outcome</b>, the engagement dials are the <b>inputs</b> that move it. Revisit these weights as priorities shift; a scorecard that never updates is just a snapshot.
+  </section>
+
+  <div class="foot">
+    <b>On the numbers:</b> weights reflect each metric's retention correlation — collaboration, feature adoption and churn weighted highest; DAU and session duration lowest (for a weekly-cadence finance tool, daily use and long sessions are weak signals). <b>Churn is scored inverse</b> (low churn = high score) and sits in its own Retention dimension because it's the outcome the other dials predict. Baseline <b>scores are informed estimates</b> anchored to Module 1 signals (Sessions/User 3–9, Import-Data ~30–45%, 60% one-year churn, single-player usage) and should be replaced with real product analytics.
+  </div>
+</div>
+
+<script>
+  const BASE = [
+    {name:'Multi-seat / Collaboration Rate', dim:'Breadth', corr:'High', weight:18, score:1,
+      why:'% of accounts with 2+ active users. Module 1: multi-stakeholder accounts churn far less — the strongest actionable retention lever, and today barely used.'},
+    {name:'Churn Rate (inverse)', dim:'Retention', corr:'High', weight:20, score:1,
+      why:'The direct retention outcome — 60% of paid customers churn within a year. Scored inverse: low churn = high score. It is what the other dials predict, not an input you push directly.'},
+    {name:'Core Feature Adoption', dim:'Breadth', corr:'High', weight:18, score:3,
+      why:'How many core value areas a user touches (connect → snapshot → categorize → goals → reports). Wide + deep adoption predicts renewal.'},
+    {name:'Weekly Return Frequency (WAU/MAU)', dim:'Frequency', corr:'High', weight:15, score:3,
+      why:'The honest “came back by choice” signal. Finances move weekly, so a weekly check-in is the natural retained cadence.'},
+    {name:'Daily Active Users (DAU)', dim:'Frequency', corr:'Medium', weight:9, score:3,
+      why:'Raw daily actives. Useful, but weekly is the truer cadence for a finance tool, so DAU is a weaker retention signal — moderate weight.'},
+    {name:'Insight Engagement Rate', dim:'Depth', corr:'Medium', weight:12, score:3,
+      why:'% of users who actually act on a financial insight — the Aha follow-through, the cleaner depth signal.'},
+    {name:'Avg Session Duration', dim:'Depth', corr:'Low', weight:8, score:7,
+      why:'Included but low-weighted: for a finance tool, a short session where the user gets their answer fast is good design, not low engagement.'}
+  ];
+  const DIMC = {Depth:'var(--depth)', Breadth:'var(--breadth)', Frequency:'var(--freq)', Retention:'var(--reten)'};
+  const CORRC = {High:'var(--good)', Medium:'var(--mid)', Low:'var(--dim)'};
+  const SCORES=[0,1,3,7,10];
+  let M = JSON.parse(JSON.stringify(BASE));
+  const rowsEl=document.getElementById('rows');
+  const sc = s => s>=7?'var(--good)':s>=3?'var(--mid)':'var(--bad)';
+
+  function render(){
+    rowsEl.innerHTML='';
+    M.forEach((m,i)=>{
+      const row=document.createElement('div'); row.className='row';
+      row.innerHTML=`
+        <div class="spine" style="background:${DIMC[m.dim]}"></div>
+        <div>
+          <div class="m-name">${m.name}</div>
+          <div class="m-meta">
+            <span class="chip" style="color:${DIMC[m.dim]};background:color-mix(in srgb,${DIMC[m.dim]} 13%,transparent)">${m.dim}</span>
+            <span class="corr">retention&nbsp;fit: <b style="color:${CORRC[m.corr]}">${m.corr}</b></span>
+          </div>
+        </div>
+        <div class="w-wrap"><input class="w-in" type="number" min="0" max="100" value="${m.weight}" data-i="${i}" data-k="weight" aria-label="Weight for ${m.name}"></div>
+        <div><select class="s-sel" data-i="${i}" data-k="score" aria-label="Score for ${m.name}">${SCORES.map(s=>`<option value="${s}" ${s===m.score?'selected':''}>${s}</option>`).join('')}</select></div>
+        <div class="wtd" id="wtd${i}">0.0</div>
+        <div class="why">${m.why}</div>
+        <div class="m-mini"><span id="mini${i}"></span></div>
+      `;
+      rowsEl.appendChild(row);
+    });
+    rowsEl.querySelectorAll('input,select').forEach(el=>{
+      el.addEventListener('input',e=>{
+        const i=+e.target.dataset.i,k=e.target.dataset.k;
+        M[i][k]= k==='weight' ? (parseFloat(e.target.value)||0) : parseInt(e.target.value,10);
+        compute();
+      });
+    });
+    compute();
+  }
+
+  let shown=0;
+  function animNum(target){
+    const el=document.getElementById('kpiNum');
+    if(window.matchMedia('(prefers-reduced-motion:reduce)').matches){shown=target;el.textContent=target.toFixed(1);return;}
+    const start=shown,t0=performance.now(),dur=450;
+    function step(t){const p=Math.min(1,(t-t0)/dur);const v=start+(target-start)*(1-Math.pow(1-p,3));
+      el.textContent=v.toFixed(1); if(p<1)requestAnimationFrame(step); else shown=target;}
+    requestAnimationFrame(step);
+  }
+
+  function compute(){
+    let total=0,wsum=0,dims={Depth:0,Breadth:0,Frequency:0,Retention:0},bestGap=-1,bestIdx=0;
+    M.forEach((m,i)=>{
+      const w=m.weight/100*m.score; total+=w; wsum+=m.weight; dims[m.dim]+=w;
+      const wt=document.getElementById('wtd'+i); wt.textContent=w.toFixed(1); wt.style.color=sc(m.score);
+      const mini=document.getElementById('mini'+i); mini.style.width=(w/10*100)+'%'; mini.style.background=sc(m.score);
+      const gap=m.weight/100*(10-m.score); if(gap>bestGap){bestGap=gap;bestIdx=i;}
+    });
+    animNum(total);
+    const el=document.getElementById('kpiNum');
+    el.style.color = total>=7?'var(--good)':total>=4?'var(--mid)':'var(--bad)';
+    // needle: value 0 -> -90deg, 5 -> 0, 10 -> +90
+    document.getElementById('needle').style.transform='rotate('+((total/10*180)-90)+'deg)';
+    const band = total>=7?['Strong engagement','var(--good)']:total>=4?['Moderate engagement','var(--mid)']:['Needs work','var(--bad)'];
+    const pill=document.getElementById('bandPill');
+    pill.style.background='color-mix(in srgb,'+band[1]+' 13%,transparent)'; pill.style.color=band[1];
+    pill.querySelector('.d').style.background=band[1];
+    document.getElementById('bandTxt').textContent=band[0];
+    const maxD=Math.max(dims.Depth,dims.Breadth,dims.Frequency,dims.Retention,0.01);
+    [['Depth','dDepth','vDepth'],['Breadth','dBreadth','vBreadth'],['Frequency','dFreq','vFreq'],['Retention','dReten','vReten']].forEach(([k,b,v])=>{
+      document.getElementById(b).style.width=(dims[k]/maxD*100)+'%';
+      document.getElementById(v).textContent=dims[k].toFixed(1);
+    });
+    const ok=Math.round(wsum)===100;
+    const ws=document.getElementById('wsum');
+    ws.querySelector('.dot').style.background=ok?'var(--good)':'var(--mid)'; ws.style.color=ok?'var(--good)':'var(--mid)';
+    document.getElementById('wsumTxt').textContent=ok?'✓ weights = 100%':('weights = '+wsum+'%');
+    const m=M[bestIdx];
+    document.getElementById('oppName').textContent=m.name;
+    document.getElementById('oppSub').textContent='Highest weighted headroom — the dial with the most points to gain toward the KPI.';
+    document.getElementById('oppTag').textContent='+'+bestGap.toFixed(1)+' KPI points available';
+  }
+
+  document.getElementById('resetBtn').addEventListener('click',()=>{M=JSON.parse(JSON.stringify(BASE));shown=0;render();});
+  render();
+</script>
+</body>
+</html>

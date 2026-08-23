@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinWise Experiment Brief</title>
+<style>
+  :root{
+    --bg:#eaeef6; --card:#ffffff; --card2:#f5f7fc; --ink:#0f1836; --muted:#5c6a89; --dim:#93a0be;
+    --brand:#2f4bff; --brand-ink:#1b2ea8; --brand-soft:#eaeeff;
+    --green:#10b981; --green-soft:#e7f7f0; --amber:#f59e0b; --amber-soft:#fef3e2;
+    --red:#ef4444; --red-soft:#fdecec; --line:#e0e5f0; --line2:#cfd6e6;
+    --mono:'SFMono-Regular',ui-monospace,'Consolas',monospace;
+    --sans:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    --shadow:0 12px 36px rgba(20,32,74,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--ink);min-height:100vh;
+    background:radial-gradient(900px 500px at 88% -8%,#dee6fb 0%,transparent 58%),var(--bg);
+    padding:32px 20px 56px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto}
+  .eyebrow{font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--brand);margin-bottom:10px}
+  h1{font-size:32px;font-weight:850;letter-spacing:-.025em;line-height:1.04}
+  .sub{font-size:15px;color:var(--muted);margin-top:6px;font-weight:600}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .chip{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:700;padding:7px 12px;border-radius:9px;background:var(--card);border:1px solid var(--line);color:var(--ink)}
+  .chip.big{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .chip .k{color:var(--dim);font-weight:600}
+  .chip.big .k{color:#c9d3ff}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+  .sec{margin-top:18px;padding:22px 24px}
+  .sh{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+  .sh .num{width:24px;height:24px;border-radius:7px;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:800;flex:none}
+  .sh h2{font-size:17px;font-weight:800;letter-spacing:-.01em}
+
+  /* hypothesis hero */
+  .hypo{margin-top:22px;padding:24px 26px;border-radius:18px;background:linear-gradient(135deg,#132158,#2f4bff);color:#fff;position:relative;overflow:hidden}
+  .hypo::after{content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.07)}
+  .hypo .lab{font-size:11px;font-weight:800;letter-spacing:.14em;opacity:.8;margin-bottom:12px}
+  .hline{display:flex;gap:12px;margin-bottom:12px;position:relative}
+  .hline:last-child{margin-bottom:0}
+  .htag{font-family:var(--mono);font-size:12px;font-weight:800;background:rgba(255,255,255,.16);border-radius:6px;padding:4px 9px;height:fit-content;flex:none;min-width:64px;text-align:center}
+  .htag.then{background:#7ef0c0;color:#0a3d2c}
+  .htag.meas{background:rgba(255,255,255,.9);color:var(--brand-ink)}
+  .htxt{font-size:15.5px;line-height:1.5;font-weight:600;padding-top:3px}
+
+  /* A/B split */
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:680px){.split{grid-template-columns:1fr}}
+  .arm{border:1.5px solid var(--line);border-radius:14px;padding:16px;background:var(--card2)}
+  .arm.b{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+  .arm .albl{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  .arm .who{font-size:12px;font-weight:800;letter-spacing:.03em;text-transform:uppercase}
+  .arm.a .who{color:var(--muted)}.arm.b .who{color:var(--brand)}
+  .arm .pct{font-family:var(--mono);font-size:12px;font-weight:800;color:var(--dim)}
+  .screen{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;min-height:150px;display:flex;flex-direction:column;gap:10px}
+  .screen .st{font-size:13px;font-weight:800}
+  .screen .ss{font-size:11.5px;color:var(--muted);line-height:1.4}
+  .mockbtn{border-radius:9px;padding:10px;text-align:center;font-size:12px;font-weight:800}
+  .mockbtn.primary{background:var(--brand);color:#fff}
+  .mockbtn.ghost{background:var(--card2);color:var(--ink);border:1.5px solid var(--line)}
+  .mockbtn.new{background:var(--green-soft);color:#0b7a55;border:1.5px dashed var(--green)}
+  .stall{font-size:11px;color:var(--red);font-weight:700;text-align:center;margin-top:auto}
+  .win{font-size:11px;color:var(--green);font-weight:700;text-align:center;margin-top:auto}
+
+  /* method trade-offs */
+  .mt{display:grid;grid-template-columns:1.1fr 1fr;gap:18px}
+  @media(max-width:720px){.mt{grid-template-columns:1fr}}
+  .just{font-size:13.5px;color:var(--muted);line-height:1.6}
+  .just b{color:var(--ink)}
+  .mtable{width:100%;border-collapse:collapse;font-size:12px}
+  .mtable th{font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);font-weight:800;padding:6px 6px;text-align:center}
+  .mtable th:first-child{text-align:left}
+  .mtable td{padding:9px 6px;border-top:1px solid var(--line)}
+  .mtable td:first-child{font-weight:750}
+  .mrow.pick td{background:var(--brand-soft)}
+  .mrow.pick td:first-child{color:var(--brand-ink)}
+  .dots{display:flex;gap:3px;justify-content:center}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--line2)}
+  .dot.s{background:var(--brand)}.dot.p{background:var(--green)}.dot.c{background:var(--amber)}
+  .unit{font-family:var(--mono);font-size:10.5px;color:var(--muted)}
+  .pickchip{font-size:9px;font-weight:800;color:#fff;background:var(--brand);border-radius:5px;padding:2px 6px;margin-left:6px;vertical-align:middle}
+
+  /* spec cards */
+  .specs{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  @media(max-width:680px){.specs{grid-template-columns:1fr}}
+  .spec{border:1px solid var(--line);border-radius:12px;padding:14px 15px;border-left-width:4px}
+  .spec.obj{border-left-color:var(--brand)}
+  .spec.prim{border-left-color:var(--brand)}
+  .spec.thresh{border-left-color:var(--green)}
+  .spec.guard{border-left-color:var(--red)}
+  .spec .sl{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+  .spec .sv{font-size:13.5px;line-height:1.5;font-weight:600}
+  .spec .sv b{color:var(--ink)}
+
+  /* what testing */
+  .wt{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+  @media(max-width:720px){.wt{grid-template-columns:1fr}}
+  .wt .b{border:1px solid var(--line);border-radius:12px;padding:14px}
+  .wt .b .l{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+  .wt .b .t{font-size:13px;line-height:1.5;color:var(--muted)}
+  .wt .b .t b{color:var(--ink)}
+
+  /* decision tree */
+  .tree{display:flex;flex-direction:column;align-items:center;gap:0}
+  .pred{background:var(--brand-soft);border:1.5px solid var(--brand);border-radius:12px;padding:14px 18px;text-align:center;max-width:640px}
+  .pred .l{font-size:10.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--brand);margin-bottom:5px}
+  .pred .t{font-size:13.5px;font-weight:600;line-height:1.5}
+  .connector{width:2px;height:20px;background:var(--line2)}
+  .branches{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;margin-top:2px}
+  @media(max-width:680px){.branches{grid-template-columns:1fr}}
+  .branch{border:1px solid var(--line);border-radius:12px;padding:15px;border-top-width:3px}
+  .branch.ok{border-top-color:var(--green);background:var(--green-soft)}
+  .branch.no{border-top-color:var(--red);background:var(--red-soft)}
+  .branch .h{font-size:13px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:7px}
+  .branch.ok .h{color:#0b7a55}.branch.no .h{color:#b42318}
+  .branch ul{margin:0;padding-left:16px}
+  .branch li{font-size:12.5px;line-height:1.55;color:var(--ink);margin-bottom:5px}
+  .branch li b{font-weight:750}
+
+  .foot{margin-top:18px;font-size:12px;color:var(--dim);line-height:1.6;text-align:center}
+  .foot b{color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Module 5 · Experiment Brief</div>
+    <h1>Sample-Data On-Ramp</h1>
+    <div class="sub">Get-Started Activation Test</div>
+    <div class="chips">
+      <span class="chip big"><span class="k">Method</span> A/B Test</span>
+      <span class="chip"><span class="k">Split</span> 50 / 50</span>
+      <span class="chip"><span class="k">Segment</span> New trial signups</span>
+      <span class="chip"><span class="k">Read date</span> ~6 weeks (pre-set)</span>
+      <span class="chip"><span class="k">Owner</span> PM</span>
+    </div>
+  </header>
+
+  <!-- hypothesis -->
+  <div class="hypo">
+    <div class="lab">HYPOTHESIS</div>
+    <div class="hline"><span class="htag">IF</span><span class="htxt">we add an <b>"Explore with sample data"</b> path on the Get-Started / Connect screen for new FinWise trial users,</span></div>
+    <div class="hline"><span class="htag then">THEN</span><span class="htxt">more of them reach their <b>first modeling output</b> — the North Star activation event,</span></div>
+    <div class="hline"><span class="htag meas">MEASURED&nbsp;BY</span><span class="htxt">the <b>first-modeling-output rate</b> within 7 days of signup (M4 leading indicator).</span></div>
+  </div>
+
+  <!-- A/B split -->
+  <div class="card sec">
+    <div class="sh"><span class="num">◧</span><h2>The test — one change, split 50/50</h2></div>
+    <div class="split">
+      <div class="arm a">
+        <div class="albl"><span class="who">Control · A</span><span class="pct">50%</span></div>
+        <div class="screen">
+          <div class="st">Connect your accounts</div>
+          <div class="ss">Read-only · bank-level encryption</div>
+          <div class="mockbtn primary">🔗 Connect my bank</div>
+          <div class="stall">⚠ Not ready to connect → user stalls, never reaches a modeling output</div>
+        </div>
+      </div>
+      <div class="arm b">
+        <div class="albl"><span class="who">Variant · B</span><span class="pct">50%</span></div>
+        <div class="screen">
+          <div class="st">Connect your accounts</div>
+          <div class="ss">Read-only · bank-level encryption</div>
+          <div class="mockbtn primary">🔗 Connect my bank</div>
+          <div class="mockbtn new">✨ Explore with sample data</div>
+          <div class="win">✓ Reaches a first modeling output immediately, then prompted to connect real data</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- step 1 method -->
+  <div class="card sec">
+    <div class="sh"><span class="num">1</span><h2>Choose your method — and why not the others</h2></div>
+    <div class="mt">
+      <div class="just">
+        <p>A single onboarding-screen change randomizes cleanly at the <b>individual trial-user</b> level, and the signal (reaching a modeling output) appears within the <b>first session</b>. That makes a <b>standard A/B test</b> the cleanest, most logical tool — the deck's rule is "if A/B is enough, don't overcomplicate it."</p>
+        <p style="margin-top:10px"><b>Why not the rest:</b> no scarce-conversion pressure → no <b>MAB</b>; no marketplace / pricing / network effects → no <b>Geo</b> or <b>Switchback</b>; the signal is fast → no <b>Holdout</b> needed now (though a Holdout is the right <i>follow-up</i> to measure the retention tail).</p>
+      </div>
+      <table class="mtable">
+        <thead><tr><th>Method</th><th>Speed</th><th>Precision</th><th>Scale</th></tr></thead>
+        <tbody id="mbody"></tbody>
+      </table>
+    </div>
+    <div class="unit" style="margin-top:10px;color:var(--dim)">Dots = Module 5 trade-offs framework (Speed · Precision · Scale). Chosen method highlighted.</div>
+  </div>
+
+  <!-- step 2 spec -->
+  <div class="card sec">
+    <div class="sh"><span class="num">2</span><h2>Define the experiment</h2></div>
+    <div class="specs">
+      <div class="spec obj"><div class="sl">Objective (→ North Star)</div><div class="sv">Lift <b>activated trial users</b> (import data + reach first modeling output) by removing the connect-a-bank wall.</div></div>
+      <div class="spec prim"><div class="sl">Primary metric</div><div class="sv"><b>% of new trial users reaching their first modeling output</b> within 7 days.</div></div>
+      <div class="spec thresh"><div class="sl">Success threshold</div><div class="sv">Significant (<b>p &lt; 0.05</b>) <b>≥ 5pp absolute lift</b> vs control, read at a pre-set date ~6 weeks out. Extend rather than peek early.</div></div>
+      <div class="spec guard"><div class="sl">Guardrail (must not break)</div><div class="sv"><b>Trial→Paid conversion</b> of the sample-data cohort must not significantly drop — guards the vanity-activation trap.</div></div>
+    </div>
+  </div>
+
+  <!-- step 3 what -->
+  <div class="card sec">
+    <div class="sh"><span class="num">3</span><h2>What we're testing</h2></div>
+    <div class="wt">
+      <div class="b"><div class="l">Current experience</div><div class="t">Users hit <b>"Connect your bank"</b>; if not ready, they <b>stall</b> and never reach a modeling output.</div></div>
+      <div class="b"><div class="l">The single change</div><div class="t">Add one option — <b>"Explore with sample data"</b> — so they reach a first modeling output now, then connect real data.</div></div>
+      <div class="b"><div class="l">Target segment</div><div class="t"><b>New trial signups</b> in the reverse trial, randomized 50/50 at signup.</div></div>
+    </div>
+  </div>
+
+  <!-- step 4 outcome tree -->
+  <div class="card sec">
+    <div class="sh"><span class="num">4</span><h2>Predict the outcome</h2></div>
+    <div class="tree">
+      <div class="pred">
+        <div class="l">Predicted</div>
+        <div class="t">First-modeling-output rate rises <b>≥ 5pp</b> vs control (the hard gate is gone), while trial→paid conversion <b>holds flat</b>.</div>
+      </div>
+      <div class="connector"></div>
+      <div class="branches">
+        <div class="branch ok">
+          <div class="h">✓ If successful</div>
+          <ul>
+            <li><b>Ship</b> the sample-data on-ramp.</li>
+            <li>Run a <b>Holdout</b> to confirm the retention / ARR tail over weeks.</li>
+            <li>Open the separate <b>pricing / paywall</b> experiment — the real 2% ceiling from M4.</li>
+          </ul>
+        </div>
+        <div class="branch no">
+          <div class="h">✗ If unsuccessful</div>
+          <ul>
+            <li><b>No lift</b> → the gate isn't the blocker; instrument Get-Started to find the true drop-off.</li>
+            <li><b>Lift but conversion falls</b> → we activated low-intent users; qualify the sample path or pivot to the pricing experiment.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot"><b>Traceability:</b> Objective → the North Star (M4) · Change → the friction removed in the M2 onboarding prototype · Leading indicator → Import/Modeling usage (M4) · Guardrail → the vanity-metric lesson (M4). Every field connects back to M1–M4.</div>
+</div>
+
+<script>
+  const M=[
+    {n:'A/B Test',s:1,p:3,c:2,pick:true},
+    {n:'Multi-Armed Bandit',s:3,p:2,c:2},
+    {n:'Holdout',s:1,p:3,c:3},
+    {n:'Geo-Testing',s:2,p:2,c:3},
+    {n:'Switchback',s:2,p:2,c:2}
+  ];
+  function dots(v,cls){let h='<div class="dots">';for(let i=1;i<=3;i++)h+='<span class="dot '+(i<=v?cls:'')+'"></span>';return h+'</div>';}
+  const tb=document.getElementById('mbody');
+  M.forEach(m=>{const tr=document.createElement('tr');tr.className='mrow'+(m.pick?' pick':'');
+    tr.innerHTML='<td>'+m.n+(m.pick?'<span class="pickchip">CHOSEN</span>':'')+'</td><td>'+dots(m.s,'s')+'</td><td>'+dots(m.p,'p')+'</td><td>'+dots(m.c,'c')+'</td>';
+    tb.appendChild(tr);});
+</script>
+</body>
+</html>

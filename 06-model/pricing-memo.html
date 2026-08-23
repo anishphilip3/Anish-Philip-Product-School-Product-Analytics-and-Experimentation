@@ -1,0 +1,224 @@
+<title>FinWise Pricing Memo</title>
+<style>
+  :root {
+    --bg: #f8f7f4; --fg: #1a1a1a; --muted: #5a5a5a;
+    --emerald: #12805A; --emerald-light: #e8f5ef;
+    --gold: #BD8500; --gold-light: #fff8e6;
+    --coral: #CF4F3B; --coral-light: #fdeae7;
+    --card-bg: #ffffff; --card-border: #e5e5e5;
+    --accent-line: var(--emerald);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1419; --fg: #e8e6e1; --muted: #9a9a9a;
+      --emerald-light: #12805A22; --gold-light: #BD850022; --coral-light: #CF4F3B22;
+      --card-bg: #1a2028; --card-border: #2a3038;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1419; --fg: #e8e6e1; --muted: #9a9a9a;
+    --emerald-light: #12805A22; --gold-light: #BD850022; --coral-light: #CF4F3B22;
+    --card-bg: #1a2028; --card-border: #2a3038;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Georgia', serif; background: var(--bg); color: var(--fg); line-height: 1.7; padding: 3rem 1.5rem; }
+  .container { max-width: 780px; margin: 0 auto; }
+
+  .kicker { font-family: system-ui, sans-serif; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold); font-weight: 700; margin-bottom: 0.5rem; }
+  .kicker::before { content: '◆ '; }
+
+  h1 { font-size: 2.2rem; line-height: 1.15; margin-bottom: 0.5rem; color: var(--fg); }
+  h1 span { color: var(--emerald); }
+  .subtitle { font-size: 1.05rem; color: var(--muted); margin-bottom: 2.5rem; font-style: italic; }
+
+  h2 { font-family: system-ui, sans-serif; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--emerald); font-weight: 700; margin: 2.5rem 0 1rem; padding-bottom: 0.4rem; border-bottom: 2px solid var(--emerald); }
+
+  p { margin-bottom: 1rem; }
+  strong { color: var(--fg); }
+
+  .memo-box { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 2rem; margin: 2rem 0; }
+  .memo-box h3 { font-family: system-ui, sans-serif; font-size: 1rem; margin-bottom: 1rem; color: var(--emerald); }
+
+  .step-grid { display: grid; gap: 1.5rem; margin: 1.5rem 0; }
+  .step-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 1.5rem; border-left: 4px solid var(--emerald); }
+  .step-card.gold { border-left-color: var(--gold); }
+  .step-card.coral { border-left-color: var(--coral); }
+  .step-num { font-family: system-ui, sans-serif; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin-bottom: 0.3rem; }
+  .step-card h3 { font-size: 1.1rem; margin-bottom: 0.75rem; }
+
+  .field-row { display: flex; gap: 1rem; margin-bottom: 1rem; align-items: flex-start; }
+  .field-label { font-family: system-ui, sans-serif; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--emerald); font-weight: 700; min-width: 140px; padding-top: 0.25rem; flex-shrink: 0; }
+  .field-label.gold { color: var(--gold); }
+  .field-label.coral { color: var(--coral); }
+  .field-value { flex: 1; font-size: 0.95rem; }
+
+  .callout { background: var(--emerald-light); border-left: 3px solid var(--emerald); padding: 1rem 1.25rem; margin: 1.5rem 0; border-radius: 0 6px 6px 0; font-size: 0.9rem; }
+  .callout.gold-bg { background: var(--gold-light); border-left-color: var(--gold); }
+  .callout.coral-bg { background: var(--coral-light); border-left-color: var(--coral); }
+  .callout .callout-label { font-family: system-ui, sans-serif; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; margin-bottom: 0.3rem; }
+  .callout.gold-bg .callout-label { color: var(--gold); }
+  .callout.coral-bg .callout-label { color: var(--coral); }
+
+  .memo-final { background: var(--card-bg); border: 2px solid var(--emerald); border-radius: 10px; padding: 2.5rem; margin: 2rem 0; }
+  .memo-final h3 { font-size: 1.3rem; margin-bottom: 0.3rem; }
+  .memo-final .memo-to { font-family: system-ui, sans-serif; font-size: 0.8rem; color: var(--muted); margin-bottom: 1.5rem; }
+  .memo-final h4 { font-size: 1rem; color: var(--emerald); margin: 1.5rem 0 0.5rem; font-family: system-ui, sans-serif; }
+
+  ul { padding-left: 1.25rem; margin-bottom: 1rem; }
+  li { margin-bottom: 0.4rem; font-size: 0.95rem; }
+  li::marker { color: var(--emerald); }
+
+  .principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+  .principle { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 1rem; text-align: center; }
+  .principle .num { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; font-family: system-ui, sans-serif; font-size: 0.75rem; font-weight: 700; color: white; margin-bottom: 0.5rem; }
+  .principle .num.em { background: var(--emerald); }
+  .principle .num.go { background: var(--gold); }
+  .principle .num.co { background: var(--coral); }
+  .principle p { font-size: 0.85rem; color: var(--muted); margin: 0; }
+  .principle strong { display: block; font-size: 0.9rem; margin-bottom: 0.25rem; color: var(--fg); }
+
+  @media (max-width: 600px) {
+    body { padding: 1.5rem 1rem; }
+    h1 { font-size: 1.6rem; }
+    .field-row { flex-direction: column; gap: 0.2rem; }
+    .field-label { min-width: 0; }
+  }
+</style>
+
+<div class="container">
+  <div class="kicker">Module 6 Deliverable</div>
+  <h1>FinWise <span>Pricing Memo</span></h1>
+  <p class="subtitle">A pricing recommendation for the FinWise leadership team, grounded in Modules 1-5.</p>
+
+  <!-- STEP 1 -->
+  <h2>Step 1 &middot; Monetization Stage</h2>
+  <div class="step-card">
+    <div class="step-num">Assessment</div>
+    <h3>Stage 2: Revenue Expansion</h3>
+
+    <div class="field-row">
+      <div class="field-label">Current stage</div>
+      <div class="field-value"><strong>Stage 2 &mdash; Revenue Expansion.</strong> Value is proven, users engage, but the structural pricing decisions (where the paywall sits, how revenue scales) haven't been made.</div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label">Evidence 1</div>
+      <div class="field-value"><strong>$10M ARR confirms PMF.</strong> FinWise has proven value creation &mdash; enough customers pay enough money to sustain a real business. Stage 1 (Value Creation) is complete.</div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label">Evidence 2</div>
+      <div class="field-value"><strong>2% trial&rarr;paid conversion is a structural ceiling, not an activation problem.</strong> Module 4 showed that Financial Modeling Usage nearly doubled (index 100 &rarr; 187) while conversion never left the 97&ndash;108 band (Pearson r &asymp; 0.24, not significant). Deepening product value didn't move conversion &mdash; the cap is in pricing/paywall/packaging, exactly the work of Stage 2.</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-label">Why not Stage 3?</div>
+    Stage 3 (Optimization) assumes the model is set and you're tuning the edges &mdash; segment pricing, discounts, bundles. FinWise hasn't made the foundational structural decision yet: where the paywall sits and what the conversion path even looks like. That's a Stage 2 problem.
+  </div>
+
+  <!-- STEP 2 -->
+  <h2>Step 2 &middot; Pricing Model</h2>
+  <div class="step-card gold">
+    <div class="step-num">Model selection</div>
+    <h3>Freemium (Reverse-Trial)</h3>
+
+    <div class="field-row">
+      <div class="field-label gold">Recommended model</div>
+      <div class="field-value"><strong>Freemium.</strong> FinWise delivers value continuously (ongoing financial management), but users need to experience their first modeling output before they'll pay. A free tier drives adoption and habit; the paid tier captures committed users who've crossed the value threshold. The reverse-trial variant gives new users 14 days of full access so they feel premium value before landing on the free tier.</div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label gold">Key trade-off</div>
+      <div class="field-value">A pure subscription with no free tier would protect ARPU but leaves the top of funnel broken &mdash; 98% of trial users never convert, and FinWise relies on expensive paid acquisition to replace them. Trading some short-term revenue for a permanent free tier gives users time to build the habit that makes paying feel inevitable, and creates a compounding organic base that reduces acquisition dependence.</div>
+    </div>
+  </div>
+
+  <div class="callout gold-bg">
+    <div class="callout-label">Why not subscription or transaction?</div>
+    Pure subscription is what FinWise effectively runs today (time-limited trial &rarr; paid). It produces a 2% conversion rate. Transaction doesn't fit &mdash; financial management is continuous, not discrete moments. Advertising conflicts with the trust required in fintech. Freemium is the structural fix: let users feel the value, then monetize the users who've already crossed the willingness-to-pay threshold.
+  </div>
+
+  <!-- STEP 3 -->
+  <h2>Step 3 &middot; The Recommendation</h2>
+  <div class="step-card coral">
+    <div class="step-num">Pricing change</div>
+    <h3>Shift the Paywall to Where Value Is Felt</h3>
+
+    <div class="field-row">
+      <div class="field-label coral">Recommendation</div>
+      <div class="field-value"><strong>Move from a time-limited trial to a reverse-trial freemium model.</strong> Every new user gets 14 days of full premium access, then drops to a permanent free tier that includes data import and basic financial modeling. Gate the advanced features &mdash; cash-flow forecasting, multi-entity consolidation, team collaboration, and custom reports &mdash; behind the paid plan. The paywall lands where engaged users feel they need more, not at an arbitrary time boundary.</div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label coral">Justification (M4)</div>
+      <div class="field-value">This targets <strong>Get-Started Import Usage %</strong> (Leading Indicator 1 from Module 4), currently stuck at a ~40% ceiling. Many trial users never reach the Aha moment before the trial clock runs out. A permanent free tier with import + basic modeling removes the time pressure, letting more users cross the activation threshold and reach their first modeling output (the North Star). The paywall sits at the depth boundary, so conversions should cluster tightly where engaged users feel they need more &mdash; not scatter across arbitrary expiration dates.</div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label coral">The pricing bet</div>
+      <div class="field-value"><strong>Packaging matched to value.</strong> We're validating that the free/paid line sits where users feel they need more. The signal: conversions cluster tightly at the feature boundary (users who outgrow basic modeling upgrade). If conversions are diffuse or don't increase, the line is in the wrong place and we iterate the boundary, not the price.</div>
+    </div>
+  </div>
+
+  <!-- MEMO -->
+  <h2>Step 4 &middot; The Pricing Memo</h2>
+  <div class="memo-final">
+    <h3>Pricing Recommendation: Reverse-Trial Freemium</h3>
+    <div class="memo-to">To: FinWise Leadership &nbsp;&bull;&nbsp; From: Senior PM &nbsp;&bull;&nbsp; Re: Addressing the 2% conversion ceiling</div>
+
+    <h4>The Problem</h4>
+    <p>FinWise has reached $10M ARR and proven product-market fit, but growth economics are under pressure. Only <strong>2% of trial users convert to paid</strong>, 40% annual retention means we lose 60% of paying customers each year, and growth depends on paid acquisition &mdash; an expensive, non-compounding motion. The instinct is to adjust the price, but Module 4's signal analysis points at a different root cause.</p>
+
+    <h4>The Diagnosis</h4>
+    <p>Over 13 months, Financial Modeling Usage nearly doubled (index 100 &rarr; 187) while trial-to-paid conversion never left the 97&ndash;108 band (r &asymp; 0.24, not significant). <strong>Users who reach the product's core value still don't convert.</strong> The 2% isn't a price problem or an activation problem &mdash; it's a packaging problem. The paywall is in the wrong place: a time-limited trial expires before most users build enough habit to pay, and no free tier exists to keep them in the ecosystem. Get-Started Import Usage plateaus at ~40%, suggesting that most users never even reach the modeling output that would make the product indispensable.</p>
+
+    <h4>The Recommendation</h4>
+    <p><strong>Move from a time-limited trial to a reverse-trial freemium model.</strong></p>
+    <ul>
+      <li><strong>Day 1&ndash;14:</strong> Full premium access. Every new user experiences cash-flow forecasting, multi-entity views, and team collaboration &mdash; the features that make FinWise indispensable.</li>
+      <li><strong>Day 15+:</strong> Drop to a permanent free tier &mdash; data import and basic financial modeling stay free forever. Advanced features (forecasting, consolidation, team seats, custom reports) move behind the paid plan.</li>
+      <li><strong>The paywall sits at the feature boundary</strong>, not a time boundary. Users who outgrow basic modeling feel the pull to upgrade because they've already experienced what they're missing.</li>
+    </ul>
+
+    <h4>Why This, Why Now</h4>
+    <p>This targets our most actionable leading indicator: <strong>Get-Started Import Usage %</strong>, stuck at a ~40% ceiling. Removing the time wall lets more users cross the activation threshold, reach their first modeling output (our North Star), and build the habit that makes paying feel like a natural next step &mdash; not a gate. It also creates a compounding organic base that reduces our paid-acquisition dependence over time.</p>
+
+    <h4>The Bet and How We Validate</h4>
+    <p>This is a <strong>packaging-matched-to-value</strong> bet. We validate with a cohort-based test: new signups enter the reverse-trial freemium path; the existing trial path serves as baseline. Primary metric: trial-to-paid conversion rate at 30 and 60 days. Guardrails: ARPU must not significantly decline, and free-tier users must show higher Import Usage % than current trial users at the same tenure. Read at 8 weeks &mdash; pricing signals take longer to mature than product signals.</p>
+    <p>If conversions cluster tightly at the feature boundary, the line is right and we scale. If they're diffuse, we iterate the boundary before adjusting price.</p>
+
+    <h4>What This Is Not</h4>
+    <p>This is not a price decrease. The paid plan's price stays unchanged. We're restructuring <em>when and where</em> users encounter the paywall &mdash; aligning it with the moment value is felt, not the moment a clock runs out. The risk is that some users who would have converted under time pressure now stay free longer. We accept that trade: a user who converts because they need the product retains better than one who converts because a trial expired.</p>
+  </div>
+
+  <h2>Assessment Principles</h2>
+  <div class="principles">
+    <div class="principle">
+      <div class="num em">1</div>
+      <strong>Stage before method</strong>
+      <p>Stage 2 identified first; the model follows from where FinWise actually sits.</p>
+    </div>
+    <div class="principle">
+      <div class="num em">2</div>
+      <strong>Model follows value</strong>
+      <p>Freemium fits how FinWise delivers value (continuous), not what sounds right for fintech.</p>
+    </div>
+    <div class="principle">
+      <div class="num go">3</div>
+      <strong>Specific beats safe</strong>
+      <p>Names the change (reverse-trial freemium), who it's for (trial users), and the signal (cluster at boundary).</p>
+    </div>
+    <div class="principle">
+      <div class="num go">4</div>
+      <strong>Tied to M4 indicator</strong>
+      <p>Targets Get-Started Import Usage % &mdash; the leading indicator with headroom.</p>
+    </div>
+    <div class="principle">
+      <div class="num co">5</div>
+      <strong>Knows when not to</strong>
+      <p>Explicitly says this is not a price change &mdash; it's a packaging restructure. Restraint is the rarer skill.</p>
+    </div>
+  </div>
+</div>

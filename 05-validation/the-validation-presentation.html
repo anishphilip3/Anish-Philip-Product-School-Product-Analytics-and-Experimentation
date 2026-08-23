@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Validation — FinWise M5</title>
+<style>
+  :root{
+    --paper:#ffffff; --paper2:#f4f7f4; --ink:#16241e; --muted:#5e6b64; --dim:#9aa89f; --line:#e3e8e3;
+    --green:#12805a; --green-d:#0e4a34; --green-dd:#0a3325; --mint:#57d3a3; --gold:#bd8500; --gold-soft:#f7edcf; --coral:#cf4f3b; --coral-soft:#f8e6e2;
+    --cream:#f2efe6; --blue:#2563eb;
+    --serif:'Georgia','Iowan Old Style','Times New Roman',serif;
+    --sans:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+    --mono:'SFMono-Regular',ui-monospace,'Consolas',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:var(--sans);color:var(--ink);overflow:hidden;background:var(--paper);-webkit-font-smoothing:antialiased}
+  .stage{position:relative;height:100vh;width:100vw;overflow:hidden}
+  .slide{position:absolute;inset:0;display:none;flex-direction:column;justify-content:center;padding:8vh 9vw;background:var(--paper);animation:fade .5s ease}
+  .slide.active{display:flex}
+  @keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  .slide.dark{background:radial-gradient(1100px 700px at 82% -10%,#155c40 0%,transparent 55%),linear-gradient(160deg,var(--green-d),var(--green-dd));color:var(--cream)}
+  .slide.dark .kicker{color:var(--mint)} .slide.dark .muted{color:#bcd3c7}
+  .kicker{font-family:var(--sans);font-size:13px;font-weight:800;letter-spacing:.26em;text-transform:uppercase;color:var(--green);margin-bottom:22px}
+  h1{font-family:var(--serif);font-size:clamp(46px,9vw,110px);font-weight:700;letter-spacing:-.01em;line-height:.98}
+  h1 em{font-style:italic;color:var(--mint)}
+  h2{font-family:var(--serif);font-size:clamp(30px,5vw,56px);font-weight:700;letter-spacing:-.01em;line-height:1.06;margin-bottom:30px;max-width:22ch}
+  h2 em{font-style:italic;color:var(--green)}
+  .lead{font-size:clamp(18px,2.2vw,26px);color:var(--muted);line-height:1.5;max-width:36ch;font-weight:400}
+  .sub{font-size:clamp(15px,1.7vw,19px);color:var(--muted);line-height:1.6;max-width:64ch}
+  .foot{position:absolute;left:9vw;bottom:5vh;font-size:12.5px;color:var(--dim);font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+  .mark{display:inline-block;width:11px;height:11px;background:var(--gold);transform:rotate(45deg);margin-right:12px;vertical-align:middle}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+  .bullets{list-style:none;display:flex;flex-direction:column;gap:20px}
+  .bullets li{font-size:clamp(16px,1.9vw,21px);line-height:1.45;padding-left:30px;position:relative}
+  .bullets li::before{content:"";position:absolute;left:0;top:.5em;width:11px;height:11px;background:var(--green);transform:rotate(45deg)}
+  .bullets li b{font-weight:800}
+  .rows{display:flex;flex-direction:column;gap:0;margin-top:8px}
+  .row{display:grid;grid-template-columns:200px 1fr;gap:34px;align-items:baseline;padding:22px 0;border-top:1px solid var(--line)}
+  .row:last-child{border-bottom:1px solid var(--line)}
+  .row .n{font-family:var(--serif);font-size:clamp(30px,4vw,50px);font-weight:700;line-height:1;letter-spacing:-.02em}
+  .row.g .n{color:var(--green)}.row.a .n{color:var(--gold)}.row.r .n{color:var(--coral)}
+  .row .h{font-size:18px;font-weight:800;margin-bottom:5px}
+  .row .d{font-size:15px;color:var(--muted);line-height:1.5;max-width:60ch}
+  .quote{font-family:var(--serif);font-size:clamp(22px,3vw,40px);line-height:1.25;font-weight:400;max-width:24ch}
+  .quote em{font-style:italic;color:var(--mint)}
+
+  /* hypothesis card */
+  .hypo-card{background:linear-gradient(135deg,var(--green-d),var(--green-dd));border-radius:14px;padding:28px 30px;margin-top:16px;color:var(--cream)}
+  .hypo-card .tag{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--mint);margin-bottom:16px}
+  .hline{display:flex;gap:14px;margin-bottom:14px;align-items:baseline}
+  .hline:last-child{margin-bottom:0}
+  .htag{font-family:var(--mono);font-size:12px;font-weight:800;background:rgba(255,255,255,.16);border-radius:6px;padding:5px 10px;flex:none;min-width:70px;text-align:center;color:var(--cream)}
+  .htag.then{background:#7ef0c0;color:#0a3d2c}
+  .htag.meas{background:rgba(255,255,255,.85);color:var(--green-d)}
+  .htxt{font-size:clamp(15px,1.7vw,19px);line-height:1.5;font-weight:600}
+
+  /* spec cards */
+  .specs{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:16px}
+  .spec{border:1px solid var(--line);border-radius:10px;padding:18px 18px;border-left-width:4px}
+  .spec.obj{border-left-color:var(--blue)} .spec.prim{border-left-color:var(--green)}
+  .spec.thresh{border-left-color:var(--gold)} .spec.guard{border-left-color:var(--coral)}
+  .spec .sl{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+  .spec .sv{font-size:clamp(14px,1.5vw,17px);line-height:1.5;color:var(--muted)}
+  .spec .sv b{color:var(--ink)}
+
+  /* A/B split visual */
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:16px}
+  .arm{border:2px solid var(--line);border-radius:12px;padding:20px 18px}
+  .arm.b{border-color:var(--green);background:#f7fdf9}
+  .arm .who{font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+  .arm.b .who{color:var(--green)}
+  .arm .screen-title{font-size:16px;font-weight:800;margin-bottom:10px}
+  .mockbtn{border-radius:9px;padding:11px;text-align:center;font-size:13px;font-weight:800;margin-top:8px}
+  .mockbtn.primary{background:var(--green);color:#fff}
+  .mockbtn.new{background:#e6f4ed;color:#0b7a55;border:1.5px dashed var(--green)}
+
+  /* method table */
+  .mtable{width:100%;border-collapse:collapse;margin-top:12px;font-size:clamp(13px,1.5vw,16px)}
+  .mtable th{text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);font-weight:800;padding:10px 10px}
+  .mtable td{padding:10px 10px;border-top:1px solid var(--line)}
+  .mtable td.m{font-weight:700;color:var(--ink)}
+  .mtable .pick{background:#e6f4ed}
+  .mtable .pick td.m{color:var(--green)}
+
+  /* stats grid */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:52px;margin-top:14px}
+  .stat .n{font-family:var(--serif);font-size:clamp(46px,7vw,86px);font-weight:700;line-height:.9;letter-spacing:-.02em}
+  .stat.r .n{color:var(--coral)} .stat.a .n{color:var(--gold)} .stat.g .n{color:var(--green)}
+  .stat .h{font-size:17px;font-weight:800;margin:16px 0 7px;padding-top:14px;border-top:1px solid var(--line)}
+  .stat .d{font-size:14.5px;color:var(--muted);line-height:1.5}
+
+  /* evidence charts */
+  .evi{display:grid;grid-template-columns:repeat(3,1fr);gap:38px;margin-top:12px}
+  .evi .ch{background:var(--paper2);border:1px solid var(--line);border-radius:8px;padding:12px 12px 6px}
+  .evi .ch svg{display:block;width:100%;height:auto}
+  .evi .ct{font-family:var(--serif);font-size:clamp(18px,2vw,23px);font-weight:700;margin-top:18px;color:var(--ink)}
+  .evi .ct em{font-style:italic;color:var(--green)}
+  .evi .cs{font-size:14px;color:var(--muted);line-height:1.5;margin-top:7px}
+
+  /* lenses */
+  .lenses{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:16px}
+  .lens{border:1px solid var(--line);border-radius:10px;padding:16px;border-top-width:4px}
+  .lens.warn{border-top-color:var(--gold)} .lens.ok{border-top-color:var(--green)}
+  .lens .lt{font-size:13px;font-weight:800;margin-bottom:8px}
+  .lens .lv{font-size:12.5px;color:var(--muted);line-height:1.5}
+  .lens .lv b{color:var(--ink)}
+
+  /* verdict */
+  .verdict{margin-top:20px;padding:24px 28px;border-radius:14px;background:var(--paper2);border:2px solid var(--gold);text-align:center}
+  .verdict .scn{font-family:var(--serif);font-size:clamp(26px,4vw,42px);font-weight:700;color:var(--gold)}
+  .verdict .arrow{color:var(--dim);margin:0 14px}
+  .verdict .call{font-family:var(--serif);font-size:clamp(26px,4vw,42px);font-weight:700;color:var(--green)}
+
+  .nav{position:fixed;right:24px;bottom:20px;display:flex;align-items:center;gap:14px;z-index:20}
+  .btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.85);color:var(--ink);font-size:19px;cursor:pointer;display:grid;place-items:center;transition:.15s}
+  .btn:hover{border-color:var(--green);color:var(--green)}
+  .counter{font-family:var(--serif);font-size:14px;color:var(--muted);min-width:54px;text-align:center}
+  .dots-wrap{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;display:flex;gap:9px;z-index:20}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--line);cursor:pointer;transition:.2s}
+  .dot.on{background:var(--green);width:26px;border-radius:8px}
+  .hint{position:fixed;left:24px;bottom:22px;font-size:11.5px;color:var(--dim);z-index:20}
+  @media(max-width:760px){.stats{grid-template-columns:1fr;gap:22px}.two{grid-template-columns:1fr;gap:24px}.split{grid-template-columns:1fr}.specs{grid-template-columns:1fr}.lenses{grid-template-columns:1fr 1fr}.evi{grid-template-columns:1fr;gap:20px}.row{grid-template-columns:1fr;gap:8px}}
+  @media(prefers-reduced-motion:reduce){.slide{animation:none}}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+
+  <!-- 1 Title (dark) -->
+  <section class="slide dark active">
+    <div class="kicker">FinWise &middot; Module 5 &middot; Experimentation Methods</div>
+    <h1>The <em>Validation</em></h1>
+    <p class="lead" style="margin-top:28px">Design the experiment. Read a real result. Make a defensible call.</p>
+    <div class="foot" style="color:#8fb3a1">Product Analytics &amp; Experimentation</div>
+  </section>
+
+  <!-- PART 1 -->
+
+  <!-- 2 Why this experiment -->
+  <section class="slide">
+    <div class="kicker"><span class="mark"></span>Part 1 &middot; why this experiment</div>
+    <h2>Module 4 said the pool is <em>capped</em>.</h2>
+    <ul class="bullets">
+      <li><b>Import Usage sits at a ~40% ceiling</b> &mdash; the gateway to the North Star is stuck. Users who never connect data never see value.</li>
+      <li><b>The connect-a-bank wall</b> is the single biggest friction point before the Aha. Not everyone is ready to hand over bank credentials on day one.</li>
+      <li><b>The fix:</b> offer an "Explore with sample data" path &mdash; let users feel the Aha <em>before</em> asking them to connect real data.</li>
+    </ul>
+    <div class="foot">The Validation &middot; 02</div>
+  </section>
+
+  <!-- 3 Hypothesis -->
+  <section class="slide">
+    <div class="kicker"><span class="mark"></span>The hypothesis</div>
+    <h2>The <em>Sample-Data On-Ramp</em>.</h2>
+    <div class="hypo-card">
+      <div class="tag">Hypothesis</div>
+      <div class="hline"><span class="htag">IF</span><span class="htxt">we add an "Explore with sample data" path on the Get-Started screen for new trial users,</span></div>
+      <div class="hline"><span class="htag then">THEN</span><span class="htxt">more of them reach their first modeling output &mdash; the North Star activation event,</span></div>
+      <div class="hline"><span class="htag meas">MEASURED BY</span><span class="htxt">the first-modeling-output rate within 7 days of signup.</span></div>
+    </div>
+    <div class="foot">The Validation &middot; 03</div>
+  </section>
+
+  <!-- 4 The A/B split -->
+  <section class="slide">
+    <div class="kicker"><span class="mark"></span>The test &middot; one change, 50/50</div>
+    <h2>Control vs <em>Sample-Data</em> variant.</h2>
+    <div class="split">
+      <div class="arm">
+        <div class="who">Control &middot; A &mdash; 50%</div>
+        <div class="screen-title">Connect your accounts</div>
+        <div class="mockbtn primary">&#128279; Connect my bank</div>
+        <p style="font-size:12px;color:var(--coral);margin-top:12px;font-weight:700;text-align:center">&#9888; Not ready to connect &rarr; user stalls, never reaches modeling output</p>
+      </div>
+      <div class="arm b">
+        <div class="who">Variant &middot; B &mdash; 50%</div>
+        <div class="screen-title">Connect your accounts</div>
+        <div class="mockbtn primary">&#128279; Connect my bank</div>
+        <div class="mockbtn new">&#10024; Explore with sample data</div>
+        <p style="font-size:12px;color:var(--green);margin-top:12px;font-weight:700;text-align:center">&#10003; Reaches modeling output immediately, then prompted for real data</p>
+      </div>
+    </div>
+    <div class="foot">The Validation &middot; 04</div>
+  </section>
+
+  <!-- 5 Why A/B (method) -->
+  <section class="slide">
+    <div class="kicker"><span class="mark"></span>Why A/B &mdash; and why not the others</div>
+    <h2>If A/B is enough, <em>don't overcomplicate</em>.</h2>
+    <table class="mtable">
+      <thead><tr><th>Method</th><th>Speed</th><th>Precision</th><th>Why not</th></tr></thead>
+      <tbody>
+        <tr class="pick"><td class="m">A/B Test &#10003;</td><td>Fast</td><td>High</td><td style="color:var(--green);font-weight:700">Chosen &mdash; clean per-user randomization, fast signal</td></tr>
+        <tr><td class="m">MAB</td><td>Faster</td><td>Lower</td><td>No scarce-conversion pressure &mdash; we can afford equal arms</td></tr>
+        <tr><td class="m">Holdout</td><td>Slow</td><td>High</td><td>Signal appears in first session &mdash; no need to wait. Good <em>follow-up</em>.</td></tr>
+        <tr><td class="m">Geo-Test</td><td>Slow</td><td>Moderate</td><td>No marketplace or network effects &mdash; no need for geo splitting</td></tr>
+        <tr><td class="m">Switchback</td><td>Moderate</td><td>Moderate</td><td>No temporal carry-over effects &mdash; unnecessary complexity</td></tr>
+      </tbody>
+    </table>
+    <div class="foot">The Validation &middot; 05</div>
+  </section>
+
+  <!-- 6 Spec cards -->
+  <section class="slide">
+    <div class="kicker"><span class="mark"></span>The experiment spec</div>
+    <h2>Four fields, <em>pre-set</em>.</h2>
+    <div class="specs">
+      <div class="spec obj"><div class="sl">Objective</div><div class="sv">Lift <b>activated trial users</b> (import + first modeling output) by removing the connect-a-bank wall.</div></div>
+      <div class="spec prim"><div class="sl">Primary metric</div><div class="sv"><b>% of new trial users reaching first modeling output</b> within 7 days.</div></div>
+      <div class="spec thresh"><div class="sl">Success threshold</div><div class="sv">Significant (p &lt; 0.05), <b>&ge;5pp absolute lift</b> vs control. Read at a pre-set <b>~6 week</b> date. Extend rather than peek.</div></div>
+      <div class="spec guard"><div class="sl">Guardrail</div><div class="sv"><b>Trial&rarr;Paid conversion</b> must not significantly drop &mdash; guards the vanity-activation trap.</div></div>
+    </div>
+    <p class="sub" style="margin-top:22px"><b>If successful:</b> ship &rarr; Holdout for the retention tail &rarr; open the pricing experiment (Module 6). <b>If not:</b> instrument Get-Started to find the true drop-off, or pivot to pricing.</p>
+    <div class="foot">The Validation &middot; 06</div>
+  </section>
+
+  <!-- PART 2 -->
+
+  <!-- 7 Part 2 intro -->
+  <section class="slide">
+    <div class="kicker"><span class="mark"></span>Part 2 &middot; reading a real result</div>
+    <h2>Another team's A/B. <em>My call</em>.</h2>
+    <div class="stats">
+      <div class="stat g"><div class="n">70%</div><div class="h">A converts</div><div class="d">Version A (control) converts at 70% &mdash; 7 of 10 users.</div></div>
+      <div class="stat a"><div class="n">3.5m</div><div class="h">B engages</div><div class="d">Version B has 15% longer sessions (3.5 vs 3.0 min).</div></div>
+      <div class="stat r"><div class="n">n=20</div><div class="h">Too small</div><div class="d">10 per group. Neither difference is statistically significant at this sample.</div></div>
+    </div>
+    <div class="foot">The Validation &middot; 07</div>
+  </section>
+
+  <!-- 8 The four lenses -->
+  <section class="slide">
+    <div class="kicker"><span class="mark"></span>The four lenses</div>
+    <h2>All four flash <em>amber</em>.</h2>
+    <div class="lenses">
+      <div class="lens warn"><div class="lt">&#9888; Significance</div><div class="lv">p &asymp; 0.36 (&chi;&sup2; = 0.83). <b>Not significant</b> at n=20 &mdash; too small to trust either direction.</div></div>
+      <div class="lens warn"><div class="lt">&#9888; Practical (MDE)</div><div class="lv">At n=10/group the MDE is ~30pp &mdash; we <b>can't detect</b> a real difference this small.</div></div>
+      <div class="lens warn"><div class="lt">&#9888; Confidence interval</div><div class="lv">95% CI spans <b>[&minus;15pp, +55pp]</b> &mdash; includes zero <em>and</em> massive effects. Too wide.</div></div>
+      <div class="lens warn"><div class="lt">&#9888; Guardrail</div><div class="lv">Conversion is the metric that <b>pays</b>. B trades it for session time &mdash; engagement only <b>+1.6pp</b>.</div></div>
+    </div>
+    <div class="foot">The Validation &middot; 08</div>
+  </section>
+
+  <!-- 9 The verdict -->
+  <section class="slide">
+    <div class="kicker"><span class="mark"></span>The scenario &amp; the call</div>
+    <h2>Mixed Signal &rarr; <em>Investigate</em>.</h2>
+    <div class="verdict">
+      <span class="scn">Mixed Signal</span><span class="arrow">&rarr;</span><span class="call">Investigate</span>
+    </div>
+    <div class="rows" style="margin-top:24px">
+      <div class="row r"><div class="n">1</div><div><div class="h">Re-run at proper power</div><div class="d">n=10/group is noise. Target ~500/arm to detect a 5pp conversion difference.</div></div></div>
+      <div class="row a"><div class="n">2</div><div><div class="h">Isolate the driver</div><div class="d">B bundled CTA + design changes. Test B's design with A's CTA to find which moved what.</div></div></div>
+      <div class="row g"><div class="n">3</div><div><div class="h">Segment &amp; measure downstream</div><div class="d">Organic converts higher than Paid in both groups. Check if B's longer sessions &rarr; better week-4 retention.</div></div></div>
+    </div>
+    <div class="foot">The Validation &middot; 09</div>
+  </section>
+
+  <!-- 10 Closing (dark) -->
+  <section class="slide dark">
+    <div class="kicker">The discipline</div>
+    <div class="quote">Design the experiment <em>before</em> you need the answer. Read the result with <em>no attachment</em>. Ship, iterate, or kill &mdash; but never ignore the guardrail.</div>
+    <p class="sub" style="margin-top:34px;color:#bcd3c7;max-width:60ch">Next: if the activation experiment ships, open the structural-ceiling test &mdash; pricing, paywall timing, and packaging (Module 6).</p>
+    <div class="foot" style="color:#8fb3a1">The Validation &middot; 10</div>
+  </section>
+
+</div>
+
+<div class="dots-wrap" id="dots"></div>
+<div class="nav">
+  <button class="btn" id="prev" aria-label="Previous">&#8249;</button>
+  <span class="counter" id="counter">1 / 10</span>
+  <button class="btn" id="next" aria-label="Next">&#8250;</button>
+</div>
+<div class="hint">&larr; &rarr; or Space &middot; F for fullscreen</div>
+
+<script>
+  var slides=[].slice.call(document.querySelectorAll('.slide'));
+  var dotsWrap=document.getElementById('dots');
+  var i=0;
+  slides.forEach(function(_,k){var d=document.createElement('span');d.className='dot'+(k===0?' on':'');d.onclick=function(){go(k)};dotsWrap.appendChild(d);});
+  var allDots=[].slice.call(document.querySelectorAll('.dot'));
+  function go(n){i=Math.max(0,Math.min(slides.length-1,n));
+    slides.forEach(function(s,k){s.classList.toggle('active',k===i)});
+    allDots.forEach(function(d,k){d.classList.toggle('on',k===i)});
+    document.getElementById('counter').textContent=(i+1)+' / '+slides.length;}
+  document.getElementById('next').onclick=function(){go(i+1)};
+  document.getElementById('prev').onclick=function(){go(i-1)};
+  document.addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(i+1);}
+    else if(e.key==='ArrowLeft'){go(i-1);}
+    else if(e.key.toLowerCase()==='f'){if(!document.fullscreenElement)document.documentElement.requestFullscreen();else document.exitFullscreen();}
+  });
+  document.getElementById('stage').addEventListener('click',function(e){if(!e.target.closest('.nav')&&!e.target.closest('.dots-wrap'))go(i+1);});
+</script>
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinWise Signals Dashboard</title>
+<style>
+  /* Committed dark analytics surface. Series colors validated (dataviz six-checks, dark). */
+  :root{
+    --bg:#0e1119; --surface:#161a24; --surface2:#1b2030; --line:#28304a; --line2:#333d5c;
+    --ink:#eaf0ff; --muted:#98a4c6; --dim:#697596;
+    --blue:#4c8dff; --amber:#cf7d10;
+    --p-ceiling:#f0a017; --p-cliff:#e5484d; --p-leak:#ef7d3b; --p-growth:#35b37e;
+    --series:#7f93c4;
+    --mono:'SFMono-Regular',ui-monospace,'Cascadia Code','Consolas',monospace;
+    --sans:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--sans);color:var(--ink);min-height:100vh;
+    background:radial-gradient(1000px 560px at 88% -8%,#182038 0%,transparent 55%),radial-gradient(760px 460px at 0% 4%,#141a2c 0%,transparent 55%),var(--bg);
+    padding:34px 20px 60px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto}
+  .eyebrow{font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);margin-bottom:11px}
+  h1{font-size:32px;font-weight:850;letter-spacing:-.025em;line-height:1.05;text-wrap:balance}
+  .lede{color:var(--muted);font-size:14.5px;line-height:1.55;margin-top:11px;max-width:74ch}
+  .lede b{color:var(--ink)}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:16px}
+  .ph{font-size:11px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--dim)}
+
+  /* Aim Move Prove */
+  .amp{display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:12px;margin-top:24px}
+  @media(max-width:820px){.amp{grid-template-columns:1fr}}
+  .layer{padding:16px 17px;border-radius:14px;border:1px solid var(--line);background:var(--surface)}
+  .layer .tag{font-size:10.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+  .layer h3{font-size:15px;font-weight:800;margin:5px 0 4px;letter-spacing:-.01em}
+  .layer p{font-size:12px;color:var(--muted);line-height:1.5}
+  .layer.aim{border-color:#3a4d8a}.layer.aim .tag{color:var(--blue)}
+  .layer.move{border-color:#2f6b4f}.layer.move .tag{color:var(--p-growth)}
+  .layer.prove{border-color:#5b3f78}.layer.prove .tag{color:#b07de0}
+  .li{border-top:1px solid var(--line);padding-top:9px;margin-top:9px}
+  .li:first-of-type{border-top:none;padding-top:0;margin-top:8px}
+  .li .n{font-size:13px;font-weight:750}
+  .li .w{font-size:11.5px;color:var(--muted);line-height:1.45;margin-top:2px}
+
+  .sechead{display:flex;align-items:baseline;justify-content:space-between;margin:30px 0 14px;flex-wrap:wrap;gap:8px}
+  .sechead h2{font-size:19px;font-weight:800;letter-spacing:-.01em}
+  .sechead .s{font-size:12.5px;color:var(--muted)}
+
+  /* small multiples */
+  .sm{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+  .spark{padding:15px 16px 12px;position:relative}
+  .spark .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:2px}
+  .spark .mname{font-size:12.5px;font-weight:750;line-height:1.25}
+  .spark .val{font-family:var(--mono);font-size:19px;font-weight:800;margin-top:6px;font-variant-numeric:tabular-nums}
+  .pill{font-size:10px;font-weight:800;letter-spacing:.04em;padding:4px 9px;border-radius:7px;text-transform:uppercase;white-space:nowrap;flex:none}
+  .chart-h{position:relative}
+  .chart-h svg{display:block;width:100%;height:auto}
+  .axm{display:flex;justify-content:space-between;font-size:10px;color:var(--dim);font-family:var(--mono);margin-top:4px}
+  .tip{position:absolute;pointer-events:none;background:#0a0d15;border:1px solid var(--line2);border-radius:8px;padding:7px 9px;font-size:11.5px;
+    color:var(--ink);transform:translate(-50%,-120%);white-space:nowrap;opacity:0;transition:opacity .1s;z-index:5;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+  .tip .tm{color:var(--muted);font-size:10.5px;margin-bottom:3px;font-family:var(--mono)}
+  .tip .tr{display:flex;align-items:center;gap:7px;font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .tip .sw{width:9px;height:9px;border-radius:2px}
+
+  /* hero correlation */
+  .hero{padding:20px 22px 18px;margin-top:14px}
+  .hero .legend{display:flex;gap:16px;margin:2px 0 12px;flex-wrap:wrap}
+  .hero .lg{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink);font-weight:600}
+  .hero .lg .ln{width:22px;height:0;border-top:3px solid}
+  .hero .lg .ln.dash{border-top-style:dashed}
+  .cap{font-size:12.5px;color:var(--muted);line-height:1.55;margin-top:12px;border-left:3px solid var(--blue);padding-left:12px}
+  .cap b{color:var(--ink)}
+
+  /* table + callout */
+  .ptable{width:100%;border-collapse:collapse;margin-top:6px;font-size:13px}
+  .ptable th{text-align:left;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);font-weight:800;padding:9px 10px;border-bottom:1px solid var(--line)}
+  .ptable td{padding:11px 10px;border-bottom:1px solid var(--line);color:var(--muted);vertical-align:top}
+  .ptable td.m{color:var(--ink);font-weight:700}
+  .ptable .pill{display:inline-block}
+  .callout{margin-top:16px;padding:18px 20px;border-radius:14px;background:var(--surface2);border:1px solid var(--line);border-left:4px solid var(--amber)}
+  .callout h4{font-size:14px;font-weight:800;margin-bottom:7px}
+  .callout p{font-size:13px;color:var(--muted);line-height:1.6}
+  .callout b{color:var(--ink)}
+  .foot{margin-top:16px;font-size:11.5px;color:var(--dim);line-height:1.6}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Module 4 · Read the Signals</div>
+    <h1>FinWise Signals Dashboard</h1>
+    <p class="lede">Thirteen months of FinWise's five key metrics, each classified as a <b>Cliff</b>, <b>Slow Leak</b> or <b>Ceiling</b> — then the test that matters: does the leading indicator actually move <b>Trial-to-Paid conversion</b>? Built from the Module 1 data.</p>
+  </header>
+
+  <!-- Aim Move Prove -->
+  <div class="amp">
+    <div class="layer aim">
+      <div class="tag">🎯 Aim · North Star</div>
+      <h3>Activated trial users</h3>
+      <p># of trial users who import financial data <b style="color:var(--ink)">and</b> reach their first modeling output — the single behavior that proves they felt core value.</p>
+    </div>
+    <div class="layer move">
+      <div class="tag">⚙️ Move · Leading indicators</div>
+      <div class="li"><div class="n">1 · Get-Started Import Usage %</div><div class="w">The gateway to the North Star; sits at the Trial→Paid drop-off and is stuck at a ~40% ceiling — headroom to grow.</div></div>
+      <div class="li"><div class="n">2 · Financial Modeling Usage %</div><div class="w">Reaching a modeling output <i>is</i> the Aha — the closest proxy for felt value, so the signal most worth experimenting on.</div></div>
+    </div>
+    <div class="layer prove">
+      <div class="tag">✓ Prove · Lagging</div>
+      <h3>Net Dollar Retention / ARR</h3>
+      <p>Earned, not moved directly — you win it by lifting import→modeling activation, which then lifts conversion and cuts the 60% churn.</p>
+    </div>
+  </div>
+
+  <!-- small multiples -->
+  <div class="sechead">
+    <h2>13-month signal trends</h2>
+    <span class="s">Hover any line for the monthly value · pattern labelled per chart</span>
+  </div>
+  <div class="sm" id="sm"></div>
+
+  <!-- hero correlation -->
+  <div class="sechead" style="margin-bottom:8px">
+    <h2>The correlation test</h2>
+    <span class="s">Both indexed to 100 at Oct '23 (single axis — no dual scale)</span>
+  </div>
+  <div class="card hero">
+    <div class="legend">
+      <span class="lg"><span class="ln" style="border-color:var(--blue)"></span>Financial Modeling Usage %</span>
+      <span class="lg"><span class="ln dash" style="border-color:var(--amber)"></span>Trial-to-Paid Conversion</span>
+    </div>
+    <div class="chart-h" id="heroChart"></div>
+    <div class="cap"><b>They're decoupled.</b> Modeling usage climbs to ~187 (nearly 2× its base) while conversion never leaves the 97–108 band. Pushing modeling <i>depth</i> did not move conversion — so the 2% is a <b>structural ceiling</b>, not an activation-depth problem.</div>
+  </div>
+
+  <!-- scatter -->
+  <div class="sechead" style="margin-bottom:8px">
+    <h2>Correlation, plotted directly</h2>
+    <span class="s">Each dot = one month · dashed line = best fit · hover for values</span>
+  </div>
+  <div class="card hero">
+    <div class="chart-h" id="scatterChart"></div>
+    <div class="cap"><b>r ≈ 0.24</b> — weak and <b>not statistically significant</b> (n = 13; the p = 0.05 threshold is ~0.55, and r² ≈ 0.06). The best-fit line is nearly flat: across the full modeling range (11% → 58%), predicted conversion moves only ~1.96% → 2.01%. <b>Modeling usage does not predict conversion</b> — the 2% is a structural ceiling. <i>Caveat: a user-level cut (do users who reach a modeling output convert higher than those who don't?) could still find a within-ceiling effect this monthly aggregate can't see.</i></div>
+  </div>
+
+  <!-- pattern table -->
+  <div class="sechead"><h2>Pattern diagnosis</h2></div>
+  <div class="card" style="padding:6px 16px 10px">
+    <table class="ptable">
+      <thead><tr><th>Metric</th><th>Pattern</th><th>What the data shows</th></tr></thead>
+      <tbody id="ptbody"></tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <h4>Confirm / update the hypothesis</h4>
+    <p>Module 1's "the leak is at conversion/activation" is <b>partly confirmed</b> — activation is weak (Import stuck at a ceiling). But the correlation test <b>sharpens it</b>: deepening modeling usage historically did <b>not</b> move conversion, so the 2% is a <b>structural ceiling</b> (pricing / paywall timing / packaging). Experiment priority splits: <b>(a)</b> lift <b>Import Usage</b> to grow the North Star pool, and <b>(b)</b> run a <b>separate structural conversion experiment</b> — you can't convert up by pushing modeling depth alone.</p>
+  </div>
+
+  <div class="foot">Source: Module 1 FinWise 13-month funnel table (Oct 2023 – Oct 2024). Conversion = Paid ÷ Trials. Series colors validated with the dataviz six-checks against the dark surface; conversion dashed + direct-labelled as secondary encoding for CVD safety.</div>
+</div>
+
+<script>
+  const labels=["Oct’23","Nov’23","Dec’23","Jan’24","Feb’24","Mar’24","Apr’24","May’24","Jun’24","Jul’24","Aug’24","Sep’24","Oct’24"];
+  const conv=[1.93,2.05,1.92,1.96,2.01,2.02,2.06,1.99,1.87,1.96,1.96,2.08,2.04];
+  const imp =[40.17,36.29,42.73,30.63,32.16,30.51,38.55,40.45,39.88,45.42,41.23,45.22,44.26];
+  const mod =[31.17,10.78,18.26,24.81,23.8,40.35,58.26,39.34,36.98,47.37,52.23,58.06,36.04];
+  const sess=[5.95,9.49,13.5,14.15,11.51,14.26,11.06,12.9,12.11,6.99,5.14,7.93,8.95];
+  const spu =[9,7,5,3,5,5,8,6,5,7,8,9,9];
+
+  const PAT={
+    ceiling:{c:'var(--p-ceiling)',bg:'rgba(240,160,23,.15)',l:'Ceiling'},
+    cliff:{c:'var(--p-cliff)',bg:'rgba(229,72,77,.15)',l:'Cliff'},
+    leak:{c:'var(--p-leak)',bg:'rgba(239,125,59,.15)',l:'Slow Leak'},
+    growth:{c:'var(--p-growth)',bg:'rgba(53,179,126,.15)',l:'Growth'}
+  };
+
+  // reusable line chart with hover crosshair + tooltip
+  function chart(el, cfg){
+    const W=cfg.W||340, H=cfg.H||96, pl=cfg.pl||8, pr=cfg.pr||8, pt=cfg.pt||12, pb=cfg.pb||10;
+    const all=cfg.series.flatMap(s=>s.values);
+    let mn=Math.min(...all), mx=Math.max(...all);
+    if(cfg.min!==undefined)mn=Math.min(mn,cfg.min);
+    if(cfg.max!==undefined)mx=Math.max(mx,cfg.max);
+    const pad=(mx-mn)*0.16||1; mn-=pad; mx+=pad;
+    const n=labels.length;
+    const X=i=> pl + i*(W-pl-pr)/(n-1);
+    const Y=v=> pt + (1-(v-mn)/(mx-mn))*(H-pt-pb);
+    const svgns='http://www.w3.org/2000/svg';
+    const svg=document.createElementNS(svgns,'svg');
+    svg.setAttribute('viewBox','0 0 '+W+' '+H); svg.setAttribute('preserveAspectRatio','none'); svg.style.width='100%';
+    // baseline
+    if(cfg.baseline!==undefined){
+      const bl=document.createElementNS(svgns,'line');
+      bl.setAttribute('x1',pl);bl.setAttribute('x2',W-pr);bl.setAttribute('y1',Y(cfg.baseline));bl.setAttribute('y2',Y(cfg.baseline));
+      bl.setAttribute('stroke','var(--line2)');bl.setAttribute('stroke-width','1');bl.setAttribute('stroke-dasharray','3 4');bl.setAttribute('vector-effect','non-scaling-stroke');
+      svg.appendChild(bl);
+    }
+    cfg.series.forEach(s=>{
+      const pts=s.values.map((v,i)=>X(i)+','+Y(v)).join(' ');
+      const pl2=document.createElementNS(svgns,'polyline');
+      pl2.setAttribute('points',pts);pl2.setAttribute('fill','none');pl2.setAttribute('stroke',s.color);
+      pl2.setAttribute('stroke-width',s.width||2);pl2.setAttribute('stroke-linejoin','round');pl2.setAttribute('stroke-linecap','round');
+      pl2.setAttribute('vector-effect','non-scaling-stroke');
+      if(s.dash)pl2.setAttribute('stroke-dasharray','6 5');
+      svg.appendChild(pl2);
+      // end dot
+      const li=s.values.length-1;
+      const dot=document.createElementNS(svgns,'circle');
+      dot.setAttribute('cx',X(li));dot.setAttribute('cy',Y(s.values[li]));dot.setAttribute('r',cfg.endR||3.2);
+      dot.setAttribute('fill',s.dotColor||s.color);
+      svg.appendChild(dot);
+      if(s.endLabel){
+        const tx=document.createElementNS(svgns,'text');
+        tx.setAttribute('x',X(li)-4);tx.setAttribute('y',Y(s.values[li])-7);tx.setAttribute('text-anchor','end');
+        tx.setAttribute('fill',s.color);tx.setAttribute('font-size','11');tx.setAttribute('font-weight','800');tx.setAttribute('font-family','var(--mono)');
+        tx.textContent=s.endLabel; svg.appendChild(tx);
+      }
+    });
+    // crosshair + hover dots
+    const cross=document.createElementNS(svgns,'line');
+    cross.setAttribute('stroke','var(--line2)');cross.setAttribute('stroke-width','1');cross.setAttribute('vector-effect','non-scaling-stroke');cross.setAttribute('opacity','0');
+    svg.appendChild(cross);
+    const hdots=cfg.series.map(s=>{const d=document.createElementNS(svgns,'circle');d.setAttribute('r','4');d.setAttribute('fill',s.color);d.setAttribute('stroke','#0a0d15');d.setAttribute('stroke-width','1.5');d.setAttribute('opacity','0');svg.appendChild(d);return d;});
+    el.appendChild(svg);
+    const tip=document.createElement('div');tip.className='tip';el.appendChild(tip);
+    svg.addEventListener('mousemove',e=>{
+      const r=svg.getBoundingClientRect();
+      const vx=(e.clientX-r.left)/r.width*W;
+      let i=Math.round((vx-pl)/((W-pl-pr)/(n-1))); i=Math.max(0,Math.min(n-1,i));
+      cross.setAttribute('x1',X(i));cross.setAttribute('x2',X(i));cross.setAttribute('y1',pt);cross.setAttribute('y2',H-pb);cross.setAttribute('opacity','1');
+      let rows='';
+      cfg.series.forEach((s,k)=>{hdots[k].setAttribute('cx',X(i));hdots[k].setAttribute('cy',Y(s.values[i]));hdots[k].setAttribute('opacity','1');
+        rows+='<div class="tr"><span class="sw" style="background:'+s.color+'"></span>'+(cfg.series.length>1?s.name+': ':'')+cfg.fmt(s.values[i])+'</div>';});
+      tip.innerHTML='<div class="tm">'+labels[i]+'</div>'+rows;
+      tip.style.opacity='1';
+      const cr=el.getBoundingClientRect();
+      tip.style.left=(X(i)/W*r.width + (r.left-cr.left))+'px';
+      tip.style.top=(Math.min(...cfg.series.map(s=>Y(s.values[i])))/H*r.height + (r.top-cr.top))+'px';
+    });
+    svg.addEventListener('mouseleave',()=>{cross.setAttribute('opacity','0');hdots.forEach(d=>d.setAttribute('opacity','0'));tip.style.opacity='0';});
+  }
+
+  const METRICS=[
+    {name:'Trial-to-Paid Conversion',vals:conv,pat:'ceiling',val:'2.04%',fmt:v=>v.toFixed(2)+'%'},
+    {name:'Get-Started Import Usage %',vals:imp,pat:'ceiling',val:'44.3%',fmt:v=>v.toFixed(1)+'%'},
+    {name:'Financial Modeling Usage %',vals:mod,pat:'growth',val:'36.0%',fmt:v=>v.toFixed(1)+'%'},
+    {name:'Avg Session Duration',vals:sess,pat:'cliff',val:'8.95m',fmt:v=>v.toFixed(1)+'m'},
+    {name:'Avg Sessions / User',vals:spu,pat:'leak',val:'9',fmt:v=>v.toFixed(0)}
+  ];
+  const smEl=document.getElementById('sm');
+  METRICS.forEach(m=>{
+    const p=PAT[m.pat];
+    const card=document.createElement('div');card.className='card spark';
+    card.innerHTML='<div class="top"><div class="mname">'+m.name+'</div><span class="pill" style="color:'+p.c+';background:'+p.bg+'">'+p.l+'</span></div>'+
+      '<div class="val">'+m.val+'</div><div class="chart-h"></div>'+
+      '<div class="axm"><span>'+labels[0]+'</span><span>'+labels[labels.length-1]+'</span></div>';
+    smEl.appendChild(card);
+    chart(card.querySelector('.chart-h'),{W:300,H:80,series:[{values:m.vals,color:'var(--series)',dotColor:p.c,width:2}],fmt:m.fmt});
+  });
+
+  // hero indexed chart
+  const modIdx=mod.map(v=>v/mod[0]*100);
+  const convIdx=conv.map(v=>v/conv[0]*100);
+  chart(document.getElementById('heroChart'),{
+    W:960,H:300,pl:12,pr:44,pt:18,pb:16,baseline:100,endR:4,
+    series:[
+      {name:'Modeling',values:modIdx,color:'var(--blue)',width:2.5,endLabel:'187→116',dotColor:'var(--blue)'},
+      {name:'Conversion',values:convIdx,color:'var(--amber)',width:2.5,dash:true,endLabel:'~100',dotColor:'var(--amber)'}
+    ],
+    fmt:v=>'idx '+v.toFixed(0)
+  });
+
+  // scatter: modeling % (x) vs conversion % (y)
+  function scatter(el,cfg){
+    const W=cfg.W,H=cfg.H,pl=cfg.pl,pr=cfg.pr,pt=cfg.pt,pb=cfg.pb;
+    const x0=cfg.xr[0],x1=cfg.xr[1],y0=cfg.yr[0],y1=cfg.yr[1];
+    const ns='http://www.w3.org/2000/svg';
+    const svg=document.createElementNS(ns,'svg');
+    svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.style.width='100%';svg.style.display='block';
+    const X=v=>pl+(v-x0)/(x1-x0)*(W-pl-pr);
+    const Y=v=>pt+(1-(v-y0)/(y1-y0))*(H-pt-pb);
+    cfg.yTicks.forEach(t=>{
+      const ln=document.createElementNS(ns,'line');ln.setAttribute('x1',pl);ln.setAttribute('x2',W-pr);ln.setAttribute('y1',Y(t));ln.setAttribute('y2',Y(t));ln.setAttribute('stroke','var(--line)');ln.setAttribute('stroke-width','1');ln.setAttribute('vector-effect','non-scaling-stroke');svg.appendChild(ln);
+      const tx=document.createElementNS(ns,'text');tx.setAttribute('x',pl-8);tx.setAttribute('y',Y(t)+3.5);tx.setAttribute('text-anchor','end');tx.setAttribute('fill','var(--dim)');tx.setAttribute('font-size','10.5');tx.setAttribute('font-family','var(--mono)');tx.textContent=cfg.yFmt(t);svg.appendChild(tx);
+    });
+    cfg.xTicks.forEach(t=>{
+      const tx=document.createElementNS(ns,'text');tx.setAttribute('x',X(t));tx.setAttribute('y',H-pb+16);tx.setAttribute('text-anchor','middle');tx.setAttribute('fill','var(--dim)');tx.setAttribute('font-size','10.5');tx.setAttribute('font-family','var(--mono)');tx.textContent=cfg.xFmt(t);svg.appendChild(tx);
+    });
+    const xt=document.createElementNS(ns,'text');xt.setAttribute('x',(pl+(W-pr))/2);xt.setAttribute('y',H-3);xt.setAttribute('text-anchor','middle');xt.setAttribute('fill','var(--muted)');xt.setAttribute('font-size','11');xt.setAttribute('font-weight','700');xt.textContent=cfg.xLabel;svg.appendChild(xt);
+    const yc=(pt+(H-pb))/2;
+    const yt=document.createElementNS(ns,'text');yt.setAttribute('x',14);yt.setAttribute('y',yc);yt.setAttribute('text-anchor','middle');yt.setAttribute('fill','var(--muted)');yt.setAttribute('font-size','11');yt.setAttribute('font-weight','700');yt.setAttribute('transform','rotate(-90 14 '+yc+')');yt.textContent=cfg.yLabel;svg.appendChild(yt);
+    if(cfg.reg){
+      const rl=document.createElementNS(ns,'line');
+      rl.setAttribute('x1',X(x0));rl.setAttribute('y1',Y(cfg.reg.a+cfg.reg.b*x0));rl.setAttribute('x2',X(x1));rl.setAttribute('y2',Y(cfg.reg.a+cfg.reg.b*x1));
+      rl.setAttribute('stroke','var(--amber)');rl.setAttribute('stroke-width','2');rl.setAttribute('stroke-dasharray','6 5');rl.setAttribute('vector-effect','non-scaling-stroke');svg.appendChild(rl);
+      const rt=document.createElementNS(ns,'text');rt.setAttribute('x',W-pr);rt.setAttribute('y',Y(cfg.reg.a+cfg.reg.b*x1)-8);rt.setAttribute('text-anchor','end');rt.setAttribute('fill','var(--amber)');rt.setAttribute('font-size','11');rt.setAttribute('font-weight','800');rt.setAttribute('font-family','var(--mono)');rt.textContent='r ≈ 0.24';svg.appendChild(rt);
+    }
+    el.appendChild(svg);
+    const tip=document.createElement('div');tip.className='tip';el.appendChild(tip);
+    cfg.points.forEach(p=>{
+      const c=document.createElementNS(ns,'circle');c.setAttribute('cx',X(p.x));c.setAttribute('cy',Y(p.y));c.setAttribute('r','5.5');c.setAttribute('fill','var(--blue)');c.setAttribute('stroke','#0a0d15');c.setAttribute('stroke-width','1.5');c.style.cursor='pointer';svg.appendChild(c);
+      c.addEventListener('mouseenter',()=>{tip.innerHTML='<div class="tm">'+p.l+'</div><div class="tr"><span class="sw" style="background:var(--blue)"></span>Modeling '+p.x.toFixed(1)+'%</div><div class="tr"><span class="sw" style="background:var(--amber)"></span>Conversion '+p.y.toFixed(2)+'%</div>';
+        tip.style.opacity='1';const r=svg.getBoundingClientRect();const cr=el.getBoundingClientRect();tip.style.left=(X(p.x)/W*r.width+(r.left-cr.left))+'px';tip.style.top=(Y(p.y)/H*r.height+(r.top-cr.top))+'px';});
+      c.addEventListener('mouseleave',()=>{tip.style.opacity='0';});
+    });
+  }
+  scatter(document.getElementById('scatterChart'),{
+    W:720,H:360,pl:58,pr:26,pt:20,pb:46,
+    xr:[5,62],yr:[0,2.4],
+    xTicks:[10,20,30,40,50,60],yTicks:[0,0.5,1,1.5,2],
+    xFmt:v=>v+'%',yFmt:v=>v.toFixed(1)+'%',
+    xLabel:'Financial Modeling Usage %  →',yLabel:'Trial-to-Paid Conversion %',
+    reg:{a:1.9497,b:0.0010324},
+    points:[
+      {x:31.17,y:1.93,l:'Oct’23'},{x:10.78,y:2.05,l:'Nov’23'},{x:18.26,y:1.92,l:'Dec’23'},
+      {x:24.81,y:1.96,l:'Jan’24'},{x:23.8,y:2.01,l:'Feb’24'},{x:40.35,y:2.02,l:'Mar’24'},
+      {x:58.26,y:2.06,l:'Apr’24'},{x:39.34,y:1.99,l:'May’24'},{x:36.98,y:1.87,l:'Jun’24'},
+      {x:47.37,y:1.96,l:'Jul’24'},{x:52.23,y:1.96,l:'Aug’24'},{x:58.06,y:2.08,l:'Sep’24'},
+      {x:36.04,y:2.04,l:'Oct’24'}
+    ]
+  });
+
+  // pattern table
+  const rows=[
+    ['Trial-to-Paid Conversion','ceiling','Dead flat 1.87–2.08% for all 13 months — a hard cap that never moves.'],
+    ['Get-Started Import Usage %','ceiling','Oscillates in a ~30–45% band, dips early-2024, recovers — never breaks its ~40% plateau.'],
+    ['Financial Modeling Usage %','growth','The one metric genuinely rising — ~11% → 40–58% band; a ceiling may be forming ~50%.'],
+    ['Avg Session Duration','cliff','Peaks ~14 min early-2024, then drops sharply mid-2024 (12.1 → 5.1 over Jun–Aug).'],
+    ['Avg Sessions / User','leak','Bleeds 9 → 3 into Jan-2024, then rebuilds to 9 — a slow leak with recovery (U-shape).']
+  ];
+  const tb=document.getElementById('ptbody');
+  rows.forEach(r=>{const p=PAT[r[1]];const tr=document.createElement('tr');
+    tr.innerHTML='<td class="m">'+r[0]+'</td><td><span class="pill" style="color:'+p.c+';background:'+p.bg+'">'+p.l+'</span></td><td>'+r[2]+'</td>';
+    tb.appendChild(tr);});
+</script>
+</body>
+</html>
